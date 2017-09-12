@@ -32,7 +32,7 @@ Lisa is split into modules:
 
 - core: Contains general commands like `help`, `about` or `invite` 
 - lisa: Lisa-minigame commands like `status`, `water` or `pet` 
-- fun: Miscellaneous commands for joke-commands 
+- fun: Miscellaneous commands for all kinds of stuff 
 - tag: Use and create YNA tags, based on the popular discord-bot 42's tag system. Check `$help tag` for more help.
 - pokemon: pokemon related data lookups
 - users: searches/matches users
@@ -43,6 +43,5 @@ Lisa is split into modules:
 
 Requiring node-gyp:
 ```
-uws
-hammerandchisel/erlpack
+npm install uws hammerandchisel/erlpack
 ```
