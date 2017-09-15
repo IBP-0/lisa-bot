@@ -30,7 +30,7 @@
     "dependencies": {
         "di-ngy": "^3.13.4",
         "moment": "^2.18.1",
-        "ynajs": "^4.0.1"
+        "ynajs": "^4.0.2"
     },
     "optionalDependencies": {}
 }
