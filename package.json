@@ -11,8 +11,8 @@
     "scripts": {
         "start": "node ./index.js",
         "postinstall": "npm run update-pokemon",
-        "lint": "eslint index.js lib/",
-        "test": "node test.js",
+        "lint": "eslint index.js lib/**/*.js",
+        "mock": "node test.js",
         "update-pokemon": "git clone https://github.com/Zarel/Pokemon-Showdown/ ./cache/pokemon && node lib/commands/pokemon/lib/convertData.js && rm -rf ./cache/pokemon"
     },
     "main": "index.js",
@@ -28,9 +28,9 @@
         "eslint-plugin-unicorn": "^2.1.2"
     },
     "dependencies": {
-        "di-ngy": "^3.13.2",
+        "di-ngy": "^3.13.4",
         "moment": "^2.18.1",
-        "ynajs": "^4.0.0"
+        "ynajs": "^4.0.1"
     },
     "optionalDependencies": {}
 }
