@@ -24,11 +24,11 @@
     "repository": "https://github.com/FelixRilling/lisa-bot",
     "license": "MIT",
     "devDependencies": {
-        "eslint": "^4.6.1",
+        "eslint": "^4.7.0",
         "eslint-plugin-unicorn": "^2.1.2"
     },
     "dependencies": {
-        "di-ngy": "^3.13.4",
+        "di-ngy": "^3.13.5",
         "moment": "^2.18.1",
         "ynajs": "^4.0.2"
     },
