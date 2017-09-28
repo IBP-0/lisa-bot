@@ -30,11 +30,11 @@
         "moment": "^2.18.1",
         "node-fetch": "^1.7.3",
         "promise-queue": "^2.2.3",
-        "ynajs": "^4.0.11"
+        "ynajs": "^4.0.13"
     },
     "devDependencies": {
         "eslint": "^4.7.1",
-        "eslint-plugin-node": "^5.1.1",
+        "eslint-plugin-node": "^5.2.0",
         "eslint-plugin-unicorn": "^2.1.2"
     },
     "engines": {
