@@ -24,16 +24,16 @@
     "license": "MIT",
     "dependencies": {
         "bufferutil": "^3.0.2",
-        "di-ngy": "^3.14.0",
+        "di-ngy": "^3.14.1",
         "erlpack": "github:hammerandchisel/erlpack",
         "lodash": "^4.17.4",
         "moment": "^2.18.1",
         "node-fetch": "^1.7.3",
         "promise-queue": "^2.2.3",
-        "ynajs": "^4.0.13"
+        "ynajs": "^4.0.14"
     },
     "devDependencies": {
-        "eslint": "^4.7.1",
+        "eslint": "^4.8.0",
         "eslint-plugin-node": "^5.2.0",
         "eslint-plugin-unicorn": "^2.1.2"
     },
