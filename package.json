@@ -1,6 +1,6 @@
 {
     "name": "lisa-bot",
-    "version": "5.33.0",
+    "version": "5.33.1",
     "description": "A discord bot with miscellaneous features",
     "homepage": "https://github.com/FelixRilling/lisa-bot",
     "author": {
@@ -24,13 +24,13 @@
     "license": "MIT",
     "dependencies": {
         "bufferutil": "^3.0.2",
-        "di-ngy": "^4.0.1",
+        "di-ngy": "^4.0.3",
         "erlpack": "github:hammerandchisel/erlpack",
         "lodash": "^4.17.4",
         "moment": "^2.19.1",
         "node-fetch": "^1.7.3",
         "promise-queue": "^2.2.3",
-        "ynajs": "^5.1.1"
+        "ynajs": "^5.1.2"
     },
     "devDependencies": {
         "eslint": "^4.9.0",
