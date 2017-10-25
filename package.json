@@ -30,7 +30,7 @@
         "moment": "^2.19.1",
         "node-fetch": "^1.7.3",
         "promise-queue": "^2.2.3",
-        "ynajs": "^5.1.2"
+        "ynajs": "^5.2.0"
     },
     "devDependencies": {
         "eslint": "^4.9.0",
