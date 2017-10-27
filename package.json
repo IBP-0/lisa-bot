@@ -23,9 +23,7 @@
     "repository": "https://github.com/FelixRilling/lisa-bot",
     "license": "MIT",
     "dependencies": {
-        "bufferutil": "^3.0.2",
         "di-ngy": "^4.0.3",
-        "erlpack": "github:hammerandchisel/erlpack",
         "lodash": "^4.17.4",
         "moment": "^2.19.1",
         "node-fetch": "^1.7.3",
