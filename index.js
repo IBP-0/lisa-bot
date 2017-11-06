@@ -7,7 +7,7 @@ const onConnect = require("./lib/events/onConnect");
 const onMessage = require("./lib/events/onMessage");
 
 const config = {
-    token: process.env.DISCORD_TOKEN_MAIN,
+    token: process.env.DISCORD_TOKEN_STABLE,
     prefix: "$",
     dataPersisted: {
         dir: "./data/",
