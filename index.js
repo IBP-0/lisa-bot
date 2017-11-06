@@ -42,7 +42,7 @@ const config = {
         check: () => true
     }],
     options: {
-        logLevel: "info" //Level of log messages recommended to be either "debug" or "info", but can be any supported log-level
+        logLevel: "debug" //Level of log messages recommended to be either "debug" or "info", but can be any supported log-level
     }
 };
 const events = {
