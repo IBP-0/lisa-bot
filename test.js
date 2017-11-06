@@ -7,8 +7,7 @@ const onConnect = require("./lib/events/onConnect");
 const onMessage = require("./lib/events/onMessage");
 
 const config = {
-    name: "lisa-bot",
-    token: process.env.DISCORD_KEY_TEST,
+    token: process.env.DISCORD_TOKEN_TEST,
     prefix: "$$",
     dataPersisted: {
         dir: "./data/",
