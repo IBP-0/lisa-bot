@@ -23,7 +23,7 @@
     "repository": "https://github.com/FelixRilling/lisa-bot",
     "license": "MIT",
     "dependencies": {
-        "di-ngy": "^4.0.5",
+        "di-ngy": "^4.0.6",
         "lodash": "^4.17.4",
         "moment": "^2.19.1",
         "node-fetch": "^1.7.3",
