@@ -30,9 +30,9 @@ After you've done that, running `node index.js` will start the bot.
 
 Lisa is split into modules:
 
-- core: Contains general commands like `help`, `about` or `invite` 
-- lisa: Lisa-minigame commands like `status`, `water` or `pet` 
-- fun: Miscellaneous commands for all kinds of stuff 
+- core: Contains general commands like `help`, `about` or `invite`
+- lisa: Lisa-minigame commands like `status`, `water` or `pet`
+- fun: Miscellaneous commands for all kinds of stuff
 - tag: Use and create YNA tags, based on the popular discord-bot 42's tag system. Check `$help tag` for more help.
 - pokemon: pokemon related data lookups
 - users: searches/matches users
@@ -42,6 +42,7 @@ Lisa is split into modules:
 ### Optional dependencies:
 
 Requiring node-gyp:
-```
+
+```shell
 npm install uws hammerandchisel/erlpack
 ```
