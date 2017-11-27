@@ -23,15 +23,15 @@
     "repository": "https://github.com/FelixRilling/lisa-bot",
     "license": "MIT",
     "dependencies": {
-        "di-ngy": "^4.0.9",
-        "lightdash": "^3.1.0",
+        "di-ngy": "^4.0.11",
+        "lightdash": "^3.2.1",
         "moment": "^2.19.2",
-        "node-fetch": "^1.7.3",
+        "make-fetch-happen": "^2.6.0",
         "promise-queue": "^2.2.3",
         "ynajs": "^5.4.3"
     },
     "devDependencies": {
-        "eslint": "^4.11.0",
+        "eslint": "^4.12.0",
         "eslint-plugin-node": "^5.2.1"
     },
     "engines": {

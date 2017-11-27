@@ -35,4 +35,4 @@ bower_components/
 npm-debug.*
 
 data/*.json
-cache/**/*
+.cache/**/*
