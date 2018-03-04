@@ -29,14 +29,22 @@ const config = {
             name: "Admin",
             power: 10,
             assignable: false,
-            check: member =>
+            check: msg =>
                 [
-                    "128985967875850240", // Nobo
-                    "178470784984023040", // Niklas
-                    "236226432970391556", // Lilla
-                    "80403171238748160", // Fraw
-                    "78541183818674176" // Squas
-                ].includes(member.user.id)
+                    "128985967875850240" //Nobo
+                ].includes(msg.author.id)
+        },
+        {
+            name: "Trusted",
+            power: 10,
+            assignable: false,
+            check: msg =>
+                [
+                    "178470784984023040", //Niklas
+                    "236226432970391556", //Lilla
+                    "80403171238748160", //Fraw
+                    "78541183818674176" //Squas
+                ].includes(msg.author.id)
         },
         {
             name: "User",
@@ -46,7 +54,7 @@ const config = {
         }
     ],
     options: {
-        logLevel: "debug" // Level of log messages recommended to be either "debug" or "info", but can be any supported log-level
+        logLevel: "debug"
     }
 };
 

@@ -13,11 +13,7 @@
         "fix:prettier": "prettier index.js ./lib/**/*.js --write",
         "update-pokemon": "node lib/commands/pokemon/lib/convertData.js"
     },
-    "keywords": [
-        "discord",
-        "bot",
-        "lisa"
-    ],
+    "keywords": ["discord", "bot", "lisa"],
     "homepage": "https://github.com/FelixRilling/lisa-bot",
     "author": {
         "name": "Felix Rilling",
