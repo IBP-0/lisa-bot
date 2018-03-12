@@ -54,7 +54,7 @@ const config = {
         }
     ],
     options: {
-        logLevel: "debug"
+        logLevel: "verbose"
     }
 };
 
