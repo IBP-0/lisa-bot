@@ -13,7 +13,11 @@
         "fix:prettier": "prettier index.js ./lib/* --write",
         "update-pokemon": "node lib/commands/pokemon/lib/convertData.js"
     },
-    "keywords": ["discord", "bot", "lisa"],
+    "keywords": [
+        "discord",
+        "bot",
+        "lisa"
+    ],
     "homepage": "https://github.com/FelixRilling/lisa-bot",
     "author": {
         "name": "Felix Rilling",
@@ -24,7 +28,7 @@
     "license": "MIT",
     "dependencies": {
         "di-ngy": "^6.2.3",
-        "lightdash": "^5.0.3",
+        "lightdash": "^5.0.5",
         "make-fetch-happen": "^3.0.0",
         "moment": "^2.22.1",
         "promise-queue": "^2.2.5"
