@@ -7,10 +7,10 @@
         "start": "node ./index.js",
         "mock": "node test.js",
         "lint": "npm-run-all --parallel lint:es",
-        "lint:es": "eslint index.js ./lib/*",
+        "lint:es": "eslint index.js ./lib/**/*.js",
         "fix": "npm-run-all fix:es fix:prettier",
-        "fix:es": "eslint index.js ./lib/*",
-        "fix:prettier": "prettier index.js ./lib/* --write",
+        "fix:es": "eslint index.js ./lib/**/*.js",
+        "fix:prettier": "prettier index.js ./lib/**/*.js --write",
         "update-pokemon": "node lib/commands/pokemon/lib/convertData.js"
     },
     "keywords": [
