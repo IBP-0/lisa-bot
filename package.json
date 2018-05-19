@@ -15,8 +15,7 @@
     },
     "keywords": [
         "discord",
-        "bot",
-        "lisa"
+        "bot"
     ],
     "homepage": "https://github.com/FelixRilling/lisa-bot",
     "author": {
@@ -27,12 +26,12 @@
     "repository": "https://github.com/FelixRilling/lisa-bot",
     "license": "MIT",
     "dependencies": {
-        "di-ngy": "^6.2.8",
+        "di-ngy": "^6.2.9",
         "lightdash": "^5.0.5",
         "make-fetch-happen": "^4.0.1",
         "moment": "^2.22.1",
         "promise-queue": "^2.2.5",
-        "ynajs": "^6.1.1"
+        "ynajs": "^6.1.2"
     },
     "devDependencies": {
         "eslint": "^4.19.1",
@@ -41,7 +40,7 @@
         "prettier": "^1.12.1"
     },
     "optionalDependencies": {
-        "uws": "^9.148.0",
+        "uws": "^10.148.0",
         "erlpack": "github:discordapp/erlpack"
     },
     "engines": {
