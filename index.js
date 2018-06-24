@@ -31,7 +31,7 @@ const config = {
             assignable: false,
             check: msg =>
                 [
-                    "128985967875850240" //Nobo
+                    "128985967875850240" // Nobo
                 ].includes(msg.author.id)
         },
         {
