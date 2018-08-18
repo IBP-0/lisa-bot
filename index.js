@@ -14,8 +14,6 @@ const config = {
         files: [
             "lisa",
 
-            "tag_storage",
-
             "pokemon_abilities",
             "pokemon_items",
             "pokemon_moves",
@@ -40,10 +38,7 @@ const config = {
             assignable: false,
             check: msg =>
                 [
-                    "178470784984023040", //Niklas
-                    "236226432970391556", //Lilla
-                    "80403171238748160", //Fraw
-                    "78541183818674176" //Squas
+                    "178470784984023040" //Niklas
                 ].includes(msg.author.id)
         },
         {
