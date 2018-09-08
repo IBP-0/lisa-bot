@@ -64,4 +64,5 @@ const bot = new Dingy(
     }
 );
 
-bot.connect();
+//bot.connect();
+throw new Error()
