@@ -10,7 +10,7 @@
         "lint:es": "eslint index.js ./lib/**/*.js",
         "fix": "npm-run-all fix:es fix:prettier",
         "fix:es": "eslint index.js ./lib/**/*.js",
-        "fix:prettier": "prettier index.js ./lib/**/*.js --write",
+        "fix:prettier": "prettier index.js ./lib/**/* --write",
         "update-pokemon": "node lib/commands/pokemon/lib/convertData.js"
     },
     "keywords": [
@@ -27,7 +27,7 @@
     "license": "MIT",
     "dependencies": {
         "di-ngy": "^8.0.0-4",
-        "lightdash": "^8.2.0",
+        "lightdash": "^9.0.1",
         "make-fetch-happen": "^4.0.1",
         "moment": "^2.22.2",
         "promise-queue": "^2.2.5"
