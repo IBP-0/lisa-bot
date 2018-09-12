@@ -27,7 +27,7 @@
     "license": "MIT",
     "dependencies": {
         "di-ngy": "^8.0.0-4",
-        "lightdash": "^9.0.1",
+        "lightdash": "^9.0.3",
         "make-fetch-happen": "^4.0.1",
         "moment": "^2.22.2",
         "promise-queue": "^2.2.5"
