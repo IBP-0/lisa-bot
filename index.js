@@ -1,5 +1,3 @@
-"use strict";
-
 const Dingy = require("di-ngy");
 const commands = require("./lib/commands");
 const onInit = require("./lib/events/onInit");

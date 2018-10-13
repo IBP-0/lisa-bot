@@ -9,7 +9,6 @@
 *.vi
 *.zip
 *~
-_key.*
 
 # OS or Editor folders
 ._*
@@ -36,6 +35,13 @@ npm-debug.*
 .cache/
 .tmp/
 spec/out/
+
+# Dev Files
+.git/
+tasks/
+demo/
+icon/
+spec/
 
 # Safe files
 _key*

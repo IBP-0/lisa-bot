@@ -1,10 +1,10 @@
 "use strict";
 
 const Dingy = require("di-ngy");
-const commands = require("./lib/commands");
-const onInit = require("./lib/events/onInit");
-const onConnect = require("./lib/events/onConnect");
-const onMessage = require("./lib/events/onMessage");
+const commands = require("../../lib/commands");
+const onInit = require("../../lib/events/onInit");
+const onConnect = require("../../lib/events/onConnect");
+const onMessage = require("../../lib/events/onMessage");
 
 const config = {
     token: process.env.DISCORD_TOKEN_TEST,
@@ -64,5 +64,4 @@ const bot = new Dingy(
     }
 );
 
-//bot.connect();
-throw new Error()
+bot.connect();
