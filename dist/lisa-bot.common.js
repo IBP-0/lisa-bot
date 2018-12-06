@@ -5,49 +5,56 @@ var lightdash = require('lightdash');
 var diNgy = require('di-ngy');
 var logby = require('logby');
 
-const COMMANDS = {
-    foo: {
-        fn: (args, argsAll, msg, dingy, clingy) => {
-            setInterval(() => {
-                let val = { val: Math.random() };
-                console.log("SAVE", val);
-                return dingy.jsonStorage.save("foo", val);
-            }, 100);
-            return "ok";
-        },
-        args: [],
-        alias: [],
-        data: {
-            hidden: false,
-            usableInDMs: true,
-            powerRequired: 0,
-            help: "ok"
-        }
+const TEXT = [
+    "Hello!",
+    "I am Lisa, an indoor plant, inspired by Lisa from 'Life is Strange'.",
+    "<http://dontnodentertainment.wikia.com/wiki/Lisa_the_Plant>",
+    "---------",
+    "For more information, use `$help` or go to <https://github.com/FelixRilling/lisa-bot>.",
+    "If you have questions or want to report a bug, message my creator: NobodyRocks#5051."
+].join("\n");
+const IMAGE_LINK = "http://static.tumblr.com/df323b732955715fe3fb5a506999afc7/" +
+    "rflrqqy/H9Cnsyji6/tumblr_static_88pgfgk82y4ok80ckowwwwow4.jpg";
+const about = {
+    fn: () => {
+        return {
+            val: TEXT,
+            files: [IMAGE_LINK]
+        };
     },
-    nest: {
-        fn: () => "nest",
-        args: [],
-        alias: [],
-        data: {
-            hidden: false,
-            usableInDMs: false,
-            powerRequired: 0,
-            help: "nest"
-        },
-        sub: {
-            ed: {
-                fn: () => "nested",
-                args: [],
-                alias: [],
-                data: {
-                    hidden: false,
-                    usableInDMs: false,
-                    powerRequired: 0,
-                    help: "nested"
-                }
-            }
-        }
+    args: [],
+    alias: ["info"],
+    data: {
+        hidden: false,
+        usableInDMs: true,
+        powerRequired: 0,
+        help: "Shows info about this bot"
     }
+};
+
+const TEXT$1 = [
+    "I'm always happy to join new servers!",
+    "If you want me to join your server, follow this link: ",
+    "<https://discordapp.com/oauth2/authorize?&client_id=263671526279086092&scope=bot>"
+].join("\n");
+const invite = {
+    fn: () => TEXT$1,
+    args: [],
+    alias: ["join"],
+    data: {
+        hidden: false,
+        usableInDMs: true,
+        powerRequired: 0,
+        help: "Add Lisa to your server"
+    }
+};
+
+const COMMANDS = {
+    /*
+     * Core
+     */
+    about,
+    invite
 };
 
 const ADMIN_ROLE = {
