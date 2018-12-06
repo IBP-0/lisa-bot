@@ -1,16 +1,39 @@
 {
     "name": "lisa-bot",
-    "version": "6.0.0",
+    "version": "7.0.0",
     "description": "A discord bot with miscellaneous features",
-    "main": "index.js",
+    "main": "./dist/myLib.common.js",
+    "module": "./dist/myLib.esm.js",
+    "types": "./types/main.d.ts",
+    "settings": {
+        "namespace": {
+            "module": "lisaBot",
+            "file": "lisa-bot"
+        },
+        "external": [
+            "path",
+            "fs-extra",
+            "discord.js",
+            "yamljs",
+            "logby",
+            "cli-ngy",
+            "di-ngy",
+            "lightdash"
+        ]
+    },
     "scripts": {
-        "start": "node ./index.js",
-        "test:manual": "node test.js",
-        "lint": "npm-run-all --parallel lint:es",
-        "lint:es": "eslint index.js ./lib/**/*.js",
-        "fix": "npm-run-all fix:es fix:prettier",
-        "fix:es": "eslint index.js ./lib/**/*.js",
-        "fix:prettier": "prettier index.js ./lib/**/* --write",
+        "start": "npm-run-all build run",
+        "start:test": "npm-run-all build run:test",
+        "run": "cross-env NODE_ENV=production node dist/lisa-bot.common",
+        "run:test": "cross-env NODE_ENV=development node dist/lisa-bot.common",
+        "build": "rollup -c ./tasks/rollup.config.js",
+        "dist": "npm run build",
+        "watch": "rollup -c ./tasks/rollup.config.js --watch",
+        "lint": "npm-run-all lint:ts",
+        "lint:ts": "tslint ./src/**/*.ts",
+        "fix": "npm-run-all fix:ts fix:prettier",
+        "fix:ts": "tslint ./src/**/*.ts --fix",
+        "fix:prettier": "prettier ./src/**/* --write",
         "data:pokemon": "node lib/commands/pokemon/lib/convertData.js"
     },
     "keywords": [
@@ -26,15 +49,20 @@
     "repository": "https://github.com/FelixRilling/lisa-bot",
     "license": "MIT",
     "dependencies": {
-        "di-ngy": "8.0.0-4",
-        "lightdash": "^9.0.5",
+        "di-ngy": "8.0.0-8",
+        "lightdash": "^10.1.0",
         "make-fetch-happen": "^4.0.1",
         "moment": "^2.22.2",
         "promise-queue": "^2.2.5"
     },
     "devDependencies": {
-        "eslint": "^5.7.0",
-        "npm-run-all": "^4.1.3",
-        "prettier": "^1.14.3"
+        "cross-env": "^5.2.0",
+        "npm-run-all": "^4.1.5",
+        "prettier": "^1.15.3",
+        "rollup": "^0.67.3",
+        "rollup-plugin-node-resolve": "^3.4.0",
+        "rollup-plugin-typescript2": "^0.18.0",
+        "tslint": "^5.11.0",
+        "typescript": "^3.2.1"
     }
 }
