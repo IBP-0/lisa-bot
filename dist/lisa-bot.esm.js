@@ -1,49 +1,186 @@
 import { clingyLogby } from 'cli-ngy';
 import { isNil } from 'lightdash';
-import { DEFAULT_ROLE, Dingy, dingyLogby } from 'di-ngy';
+import * as PromiseQueue from 'promise-queue';
 import { Logby, Levels } from 'logby';
+import { DEFAULT_ROLE, Dingy, dingyLogby } from 'di-ngy';
 
-const TEXT = [
-    "Hello!",
-    "I am Lisa, an indoor plant, inspired by Lisa from 'Life is Strange'.",
-    "<http://dontnodentertainment.wikia.com/wiki/Lisa_the_Plant>",
-    "---------",
-    "For more information, use `$help` or go to <https://github.com/FelixRilling/lisa-bot>.",
-    "If you have questions or want to report a bug, message my creator: NobodyRocks#5051."
-].join("\n");
 const IMAGE_LINK = "http://static.tumblr.com/df323b732955715fe3fb5a506999afc7/" +
     "rflrqqy/H9Cnsyji6/tumblr_static_88pgfgk82y4ok80ckowwwwow4.jpg";
+const aboutFn = (args, argsAll, msg, dingy) => {
+    return {
+        val: [
+            "Hello!",
+            "I am Lisa, an indoor plant, inspired by Lisa from 'Life is Strange'.",
+            "<http://dontnodentertainment.wikia.com/wiki/Lisa_the_Plant>",
+            dingy.config.strings.separator,
+            "For more information, use `$help` or go to <https://github.com/FelixRilling/lisa-bot>.",
+            "If you have questions or want to report a bug, message my creator: NobodyRocks#5051."
+        ].join("\n"),
+        files: [IMAGE_LINK]
+    };
+};
 const about = {
-    fn: () => {
-        return {
-            val: TEXT,
-            files: [IMAGE_LINK]
-        };
-    },
+    fn: aboutFn,
     args: [],
     alias: ["info"],
     data: {
         hidden: false,
         usableInDMs: true,
         powerRequired: 0,
-        help: "Shows info about this bot"
+        help: "Shows info about this bot."
     }
 };
 
-const TEXT$1 = [
+const inviteFn = () => [
     "I'm always happy to join new servers!",
     "If you want me to join your server, follow this link: ",
     "<https://discordapp.com/oauth2/authorize?&client_id=263671526279086092&scope=bot>"
 ].join("\n");
 const invite = {
-    fn: () => TEXT$1,
+    fn: inviteFn,
     args: [],
     alias: ["join"],
     data: {
         hidden: false,
         usableInDMs: true,
         powerRequired: 0,
-        help: "Add Lisa to your server"
+        help: "Add Lisa to your server."
+    }
+};
+
+/**
+ * Logby instance used by Di-ngy.
+ */
+const lisaBotLogby = new Logby();
+
+const eachOption = (options, letters, fn) => {
+    let i = 0;
+    while (i < options.length && i < letters.length) {
+        fn(options[i], letters[i], i);
+        i++;
+    }
+};
+
+const MAX_QUEUE_SIZE = 20;
+const logger = lisaBotLogby.getLogger("addReactions");
+const addReactions = (options, icons, msgSent) => {
+    const queue = new PromiseQueue(1, MAX_QUEUE_SIZE);
+    eachOption(options, icons, (option, icon) => {
+        queue
+            .add(() => msgSent.react(icon[1]))
+            .catch(e => logger.error("Could not react to message.", e));
+    });
+};
+
+const UNICODE_POS_A = 0x1F1E6;
+const LETTERS = "abcdefghijklmnopqrstuvwxyz".split("");
+const createLetterEmoji = (letter) => {
+    const index = LETTERS.indexOf(letter.toLowerCase());
+    if (index === -1) {
+        throw new Error("Letter is not in range.");
+    }
+    return String.fromCodePoint(UNICODE_POS_A + index);
+};
+
+const YES_OR_NO_ICONS = [
+    ["Y", createLetterEmoji("Y")],
+    ["N", createLetterEmoji("N")]
+];
+const yesOrNoFn = (args, argsAll, msg, dingy) => {
+    return {
+        val: [
+            `${args.get("question")}`,
+            dingy.config.strings.separator,
+            "Y/N?"
+        ].join("\n"),
+        code: "yaml",
+        onSend: msgSent => {
+            if (!Array.isArray(msgSent)) {
+                addReactions(new Array(2), YES_OR_NO_ICONS, msgSent);
+            }
+        }
+    };
+};
+const yesOrNo = {
+    fn: yesOrNoFn,
+    args: [
+        {
+            name: "question",
+            required: true
+        }
+    ],
+    alias: ["y/n"],
+    data: {
+        hidden: false,
+        usableInDMs: true,
+        powerRequired: 0,
+        help: "Creates a poll with \"yes\" and \"no\" as answers."
+    }
+};
+
+const ALPHABET_ICONS = [
+    ["A", createLetterEmoji("A")],
+    ["B", createLetterEmoji("B")],
+    ["C", createLetterEmoji("C")],
+    ["D", createLetterEmoji("D")],
+    ["E", createLetterEmoji("E")],
+    ["F", createLetterEmoji("F")],
+    ["G", createLetterEmoji("G")],
+    ["H", createLetterEmoji("H")],
+    ["I", createLetterEmoji("I")],
+    ["J", createLetterEmoji("J")],
+    ["K", createLetterEmoji("K")],
+    ["L", createLetterEmoji("L")],
+    ["M", createLetterEmoji("M")],
+    ["N", createLetterEmoji("N")],
+    ["O", createLetterEmoji("O")],
+    ["P", createLetterEmoji("P")],
+    ["Q", createLetterEmoji("Q")],
+    ["R", createLetterEmoji("R")],
+    ["S", createLetterEmoji("S")],
+    ["T", createLetterEmoji("T")]
+];
+const pollFn = (args, argsAll, msg, dingy) => {
+    const options = argsAll.slice(1);
+    const result = [`${args.get("question")}`, dingy.config.strings.separator];
+    eachOption(options, ALPHABET_ICONS, (option, icon) => {
+        result.push(`${icon[0]}: ${option}`);
+    });
+    return {
+        val: result.join("\n"),
+        code: "yaml",
+        onSend: msgSent => {
+            if (!Array.isArray(msgSent)) {
+                addReactions(options, ALPHABET_ICONS, msgSent);
+            }
+        }
+    };
+};
+const poll = {
+    fn: pollFn,
+    args: [
+        {
+            name: "question",
+            required: true
+        },
+        {
+            name: "option1",
+            required: true
+        },
+        {
+            name: "option2",
+            required: true
+        }
+    ],
+    alias: ["vote", "v"],
+    data: {
+        hidden: false,
+        usableInDMs: true,
+        powerRequired: 0,
+        help: "Creates a poll to vote on."
+    },
+    sub: {
+        yesOrNo
     }
 };
 
@@ -52,11 +189,16 @@ const COMMANDS = {
      * Core
      */
     about,
-    invite
+    invite,
+    /*
+     * Poll
+     */
+    poll
 };
 
+const ADMIN_ID = "128985967875850240";
 const ADMIN_ROLE = {
-    check: (msg) => msg.author.id === "128985967875850240",
+    check: (msg) => msg.author.id === ADMIN_ID,
     power: 999
 };
 const createConfig = (prefix) => {
@@ -69,17 +211,12 @@ const createConfig = (prefix) => {
     };
 };
 
-/**
- * Logby instance used by Di-ngy.
- */
-const lisaBotLogby = new Logby();
-
-const logger = lisaBotLogby.getLogger("LisaListeners");
+const logger$1 = lisaBotLogby.getLogger("LisaListeners");
 const onConnect = () => {
-    logger.trace("Running onConnect.");
+    logger$1.trace("Running onConnect.");
 };
 const onMessage = () => {
-    logger.trace("Running onMessage.");
+    logger$1.trace("Running onMessage.");
 };
 
 const PRODUCTION_ENABLED = process.env.NODE_ENV === "production";
@@ -94,15 +231,15 @@ if (isNil(DISCORD_TOKEN)) {
 dingyLogby.setLevel(LOG_LEVEL);
 clingyLogby.setLevel(LOG_LEVEL);
 lisaBotLogby.setLevel(LOG_LEVEL);
-const logger$1 = lisaBotLogby.getLogger("LisaBot");
-logger$1.info(`Starting in ${process.env.NODE_ENV} mode.`);
-logger$1.info(`Using prefix '${PREFIX}'.`);
+const logger$2 = lisaBotLogby.getLogger("LisaBot");
+logger$2.info(`Starting in ${process.env.NODE_ENV} mode.`);
+logger$2.info(`Using prefix '${PREFIX}'.`);
 const lisaBot = new Dingy(COMMANDS, createConfig(PREFIX));
 lisaBot.client.on("message", onMessage);
 lisaBot
     .connect(DISCORD_TOKEN)
     .then(() => {
-    logger$1.info("LisaBot started successfully.");
+    logger$2.info("LisaBot started successfully.");
     onConnect();
 })
-    .catch(e => logger$1.error("An unexpected error occurred.", e));
+    .catch(e => logger$2.error("An unexpected error occurred.", e));
