@@ -4,8 +4,8 @@ import { commandFn } from "di-ngy/types/command/commandFn";
 import { IDingyCommand } from "di-ngy/types/command/IDingyCommand";
 import { Message } from "discord.js";
 import { addReactions } from "./lib/addReactions";
-import { eachOption } from "./lib/eachOption";
 import { createLetterEmoji } from "./lib/createLetterEmoji";
+import { eachOption } from "./lib/eachOption";
 import { yesOrNo } from "./yesOrNo";
 
 const ALPHABET_ICONS = [

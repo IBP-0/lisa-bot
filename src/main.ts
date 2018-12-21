@@ -7,7 +7,7 @@ import { Levels } from "logby";
 import { COMMANDS } from "./commands";
 import { createConfig } from "./config";
 import { lisaChevron, LisaDiKeys } from "./di";
-import { onConnect, onMessage } from "./lisaListeners";
+import { onConnect, onMessage } from "./commands/lisa/lib/lisaListeners";
 import { lisaBotLogby } from "./logger";
 
 const PRODUCTION_ENABLED = process.env.NODE_ENV === "production";
@@ -30,7 +30,12 @@ logger.info(`Using prefix '${PREFIX}'.`);
 
 const lisaBot = new Dingy(COMMANDS, createConfig(PREFIX));
 lisaBot.client.on("message", onMessage);
-lisaChevron.set(InjectableType.PLAIN, [], lisaBot.jsonStorage, LisaDiKeys.STORAGE);
+lisaChevron.set(
+    InjectableType.PLAIN,
+    [],
+    lisaBot.jsonStorage,
+    LisaDiKeys.STORAGE
+);
 lisaBot
     .connect(DISCORD_TOKEN)
     .then(() => {

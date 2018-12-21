@@ -1,4 +1,4 @@
-const UNICODE_POS_A = 0x1F1E6;
+const UNICODE_POS_A = 0x1f1e6;
 const LETTERS = "abcdefghijklmnopqrstuvwxyz".split("");
 
 const createLetterEmoji = (letter: string): string => {

@@ -45,7 +45,7 @@ const yesOrNo: IDingyCommand = {
         hidden: false,
         usableInDMs: true,
         powerRequired: 0,
-        help: "Creates a poll with \"yes\" and \"no\" as answers."
+        help: 'Creates a poll with "yes" and "no" as answers.'
     }
 };
 

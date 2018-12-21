@@ -1,8 +1,10 @@
 import { clingyLogby } from 'cli-ngy';
-import { isNil } from 'lightdash';
-import * as PromiseQueue from 'promise-queue';
+import { DEFAULT_ROLE, dingyLogby, Dingy } from 'di-ngy';
+import { objFromDeep, isNil } from 'lightdash';
 import { Logby, Levels } from 'logby';
-import { DEFAULT_ROLE, Dingy, dingyLogby } from 'di-ngy';
+import { Chevron } from 'chevronjs';
+import { duration } from 'moment';
+import * as PromiseQueue from 'promise-queue';
 
 const IMAGE_LINK = "http://static.tumblr.com/df323b732955715fe3fb5a506999afc7/" +
     "rflrqqy/H9Cnsyji6/tumblr_static_88pgfgk82y4ok80ckowwwwow4.jpg";
@@ -48,6 +50,207 @@ const invite = {
     }
 };
 
+const lisaChevron = new Chevron();
+
+const MIN_WATER = 0.1;
+const MAX_WATER = 150;
+const MIN_HAPPINESS = 0.1;
+const MAX_HAPPINESS = 100;
+const FACTOR = (MAX_WATER + MAX_HAPPINESS) / 2;
+class LisaStatusService {
+    modify(lisaData, username, modifierWater, modifierHappiness) {
+        if (!lisaData.life.isAlive) {
+            return lisaData;
+        }
+        const result = objFromDeep(lisaData);
+        result.status.water += modifierWater;
+        if (result.status.water > MAX_WATER) {
+            return this.kill(result, username, "drowning" /* DROWNING */);
+        }
+        if (result.status.water < MIN_WATER) {
+            return this.kill(result, username, "dehydration" /* DEHYDRATION */);
+        }
+        result.status.happiness += modifierHappiness;
+        if (result.status.happiness > MAX_HAPPINESS) {
+            result.status.happiness = MAX_HAPPINESS;
+        }
+        if (result.status.happiness < MIN_HAPPINESS) {
+            return this.kill(result, username, "loneliness" /* LONELINESS */);
+        }
+        this.updateHighScoreIfRequired(lisaData);
+        return result;
+    }
+    getLifetime(lisaData) {
+        if (!lisaData.life.isAlive) {
+            return lisaData.life.death - lisaData.life.birth;
+        }
+        return Date.now() - lisaData.life.birth;
+    }
+    getTimeSinceDeath(lisaData) {
+        return Date.now() - lisaData.life.death;
+    }
+    getHighScore(lisaData) {
+        this.updateHighScoreIfRequired(lisaData);
+        return lisaData.score.highScore;
+    }
+    getRelativeState(lisaData) {
+        const relWater = lisaData.status.water / MAX_WATER;
+        const relHappiness = lisaData.status.happiness / MAX_HAPPINESS;
+        return relWater * relHappiness * FACTOR;
+    }
+    kill(lisaData, username, deathThrough) {
+        lisaData.life.isAlive = false;
+        lisaData.life.death = Date.now();
+        lisaData.life.deathThrough = deathThrough;
+        lisaData.life.killer = username;
+        this.updateHighScoreIfRequired(lisaData);
+        return lisaData;
+    }
+    updateHighScoreIfRequired(lisaData) {
+        const score = this.getLifetime(lisaData);
+        if (score > lisaData.score.highScore) {
+            lisaData.score.highScore = score;
+        }
+    }
+}
+lisaChevron.set("factory" /* FACTORY */, [], LisaStatusService);
+
+const DELIMITER = "\n";
+const RELATIVE_STATE_GOOD = 90;
+const RELATIVE_STATE_OK = 40;
+class LisaStringifyService {
+    constructor(lisaStatusService) {
+        this.lisaStatusService = lisaStatusService;
+    }
+    stringifyStatus(lisaData) {
+        const statusShort = `Lisa is ${this.stringifyStatusShort(lisaData)}`;
+        const score = this.stringifyScore(lisaData);
+        let text = [];
+        if (!lisaData.life.isAlive) {
+            const humanizedTimeSinceDeath = this.humanizeDuration(this.lisaStatusService.getTimeSinceDeath(lisaData));
+            const humanizedLifetime = this.humanizeDuration(this.lisaStatusService.getLifetime(lisaData));
+            text = [
+                `Lisa died ${humanizedTimeSinceDeath} ago, and was alive for ${humanizedLifetime}.`,
+                `She was killed by ${lisaData.life.killer} through ${lisaData.life.deathThrough}.`
+            ];
+        }
+        else {
+            const waterLevel = Math.floor(lisaData.status.water);
+            const happinessLevel = Math.floor(lisaData.status.happiness);
+            text = [`Water: ${waterLevel}% | Happiness: ${happinessLevel}%.`];
+        }
+        return [statusShort, ...text, score].join(DELIMITER);
+    }
+    stringifyStatusShort(lisaData) {
+        if (!lisaData.life.isAlive) {
+            return "is dead.";
+        }
+        const relativeState = this.lisaStatusService.getRelativeState(lisaData);
+        if (relativeState > RELATIVE_STATE_GOOD) {
+            return "doing great.";
+        }
+        if (relativeState > RELATIVE_STATE_OK) {
+            return "doing fine.";
+        }
+        return "close to dying.";
+    }
+    stringifyScore(lisaData) {
+        const humanizedCurrentScore = this.humanizeDuration(this.lisaStatusService.getLifetime(lisaData));
+        const humanizedHighScore = this.humanizeDuration(this.lisaStatusService.getHighScore(lisaData));
+        const currentScoreTense = lisaData.life.isAlive
+            ? "Current lifetime"
+            : "Lifetime";
+        return `${currentScoreTense}: ${humanizedCurrentScore} | Best lifetime: ${humanizedHighScore}.`;
+    }
+    humanizeDuration(duration$$1) {
+        return duration(duration$$1).humanize();
+    }
+}
+lisaChevron.set("factory" /* FACTORY */, [LisaStatusService], LisaStringifyService);
+
+class LisaController {
+    constructor(store, lisaStatusService, lisaStringifyService) {
+        this.store = store;
+        this.lisaStatusService = lisaStatusService;
+        this.lisaStringifyService = lisaStringifyService;
+        if (store.has(LisaController.STORE_KEY)) {
+            this.lisaData = store.get(LisaController.STORE_KEY);
+        }
+        else {
+            this.lisaData = LisaController.createNewLisa();
+        }
+    }
+    static createNewLisa() {
+        return {
+            status: {
+                water: 100,
+                happiness: 100
+            },
+            life: {
+                isAlive: true,
+                killer: "Anonymous",
+                deathThrough: "something unknown" /* UNKNOWN */,
+                birth: Date.now(),
+                death: 0
+            },
+            score: {
+                highScore: 0
+            }
+        };
+    }
+    modify(username, modifierWater, modifierHappiness) {
+        this.lisaData = this.lisaStatusService.modify(this.lisaData, username, modifierWater, modifierHappiness);
+        this.store.set(LisaController.STORE_KEY, this.lisaData);
+    }
+    stringifyStatus() {
+        return this.lisaStringifyService.stringifyStatus(this.lisaData);
+    }
+    stringifyStatusShort() {
+        return this.lisaStringifyService.stringifyStatusShort(this.lisaData);
+    }
+    isAlive() {
+        return this.lisaData.life.isAlive;
+    }
+    reset() {
+        this.lisaData = LisaController.createNewLisa();
+    }
+}
+LisaController.STORE_KEY = "lisa";
+lisaChevron.set("factory" /* FACTORY */, ["_LISA_STORAGE" /* STORAGE */, LisaStatusService, LisaStringifyService], LisaController);
+
+const statusFn = () => {
+    const lisaController = lisaChevron.get(LisaController);
+    return lisaController.stringifyStatus();
+};
+const status = {
+    fn: statusFn,
+    args: [],
+    alias: [],
+    data: {
+        hidden: false,
+        usableInDMs: true,
+        powerRequired: 0,
+        help: "Shows lisa's status."
+    }
+};
+
+const waterFn = (args, argsAll, msg) => {
+    const lisaController = lisaChevron.get(LisaController);
+    lisaController.modify(msg.author.username, 25, 0);
+    return "Watering...";
+};
+const water = {
+    fn: waterFn,
+    args: [],
+    alias: [],
+    data: {
+        hidden: false,
+        usableInDMs: false,
+        powerRequired: 0,
+        help: "Waters lisa."
+    }
+};
+
 /**
  * Logby instance used by Di-ngy.
  */
@@ -72,7 +275,7 @@ const addReactions = (options, icons, msgSent) => {
     });
 };
 
-const UNICODE_POS_A = 0x1F1E6;
+const UNICODE_POS_A = 0x1f1e6;
 const LETTERS = "abcdefghijklmnopqrstuvwxyz".split("");
 const createLetterEmoji = (letter) => {
     const index = LETTERS.indexOf(letter.toLowerCase());
@@ -114,7 +317,7 @@ const yesOrNo = {
         hidden: false,
         usableInDMs: true,
         powerRequired: 0,
-        help: "Creates a poll with \"yes\" and \"no\" as answers."
+        help: 'Creates a poll with "yes" and "no" as answers.'
     }
 };
 
@@ -191,6 +394,11 @@ const COMMANDS = {
     about,
     invite,
     /*
+     * Lisa
+     */
+    status,
+    water,
+    /*
      * Poll
      */
     poll
@@ -211,12 +419,25 @@ const createConfig = (prefix) => {
     };
 };
 
+const TICK_INTERVAL = 5000;
 const logger$1 = lisaBotLogby.getLogger("LisaListeners");
+const initTickInterval = () => {
+    const lisaController = lisaChevron.get(LisaController);
+    setInterval(() => {
+        lisaController.modify("Time", -1, -1);
+    }, TICK_INTERVAL);
+};
+const increaseHappiness = () => {
+    const lisaController = lisaChevron.get(LisaController);
+    lisaController.modify("Activity", 0, 0.1);
+};
 const onConnect = () => {
     logger$1.trace("Running onConnect.");
+    initTickInterval();
 };
 const onMessage = () => {
     logger$1.trace("Running onMessage.");
+    increaseHappiness();
 };
 
 const PRODUCTION_ENABLED = process.env.NODE_ENV === "production";
@@ -236,6 +457,7 @@ logger$2.info(`Starting in ${process.env.NODE_ENV} mode.`);
 logger$2.info(`Using prefix '${PREFIX}'.`);
 const lisaBot = new Dingy(COMMANDS, createConfig(PREFIX));
 lisaBot.client.on("message", onMessage);
+lisaChevron.set("plain" /* PLAIN */, [], lisaBot.jsonStorage, "_LISA_STORAGE" /* STORAGE */);
 lisaBot
     .connect(DISCORD_TOKEN)
     .then(() => {

@@ -11,9 +11,11 @@
             "file": "lisa-bot"
         },
         "external": [
+            "moment",
             "fs-extra",
             "promise-queue",
             "logby",
+            "chevronjs",
             "cli-ngy",
             "di-ngy",
             "lightdash"
