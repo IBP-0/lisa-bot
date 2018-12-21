@@ -5,9 +5,9 @@ import { Message } from "discord.js";
 import { isNil } from "lightdash";
 import { Levels } from "logby";
 import { COMMANDS } from "./commands";
+import { onConnect, onMessage } from "./commands/lisa/lib/lisaListeners";
 import { createConfig } from "./config";
 import { lisaChevron, LisaDiKeys } from "./di";
-import { onConnect, onMessage } from "./commands/lisa/lib/lisaListeners";
 import { lisaBotLogby } from "./logger";
 
 const PRODUCTION_ENABLED = process.env.NODE_ENV === "production";

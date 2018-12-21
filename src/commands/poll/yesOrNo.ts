@@ -45,6 +45,7 @@ const yesOrNo: IDingyCommand = {
         hidden: false,
         usableInDMs: true,
         powerRequired: 0,
+        // tslint:disable-next-line:quotemark
         help: 'Creates a poll with "yes" and "no" as answers.'
     }
 };

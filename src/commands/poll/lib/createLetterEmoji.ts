@@ -1,4 +1,6 @@
 const UNICODE_POS_A = 0x1f1e6;
+
+// noinspection SpellCheckingInspection
 const LETTERS = "abcdefghijklmnopqrstuvwxyz".split("");
 
 const createLetterEmoji = (letter: string): string => {
