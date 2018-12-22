@@ -1,5 +1,5 @@
 import { InjectableType } from "chevronjs";
-import { objFromDeep } from "lightdash";
+import { isNil, objFromDeep } from "lightdash";
 import { lisaChevron } from "../../../di";
 import { Deaths } from "./Deaths";
 import { ILisaData } from "./ILisaData";
@@ -30,7 +30,7 @@ class LisaStatusService {
             return this.kill(result, username, Deaths.DROWNING);
         }
         if (result.status.water < MIN_WATER) {
-            return this.kill(result, username, Deaths.DEHYDRATION);
+            return this.kill(result, username, Deaths.DROUGHT);
         }
 
         result.status.happiness += modifierHappiness;
@@ -38,11 +38,30 @@ class LisaStatusService {
             result.status.happiness = MAX_HAPPINESS;
         }
         if (result.status.happiness < MIN_HAPPINESS) {
-            return this.kill(result, username, Deaths.LONELINESS);
+            return this.kill(result, username, Deaths.SADNESS);
         }
 
         this.updateHighScoreIfRequired(lisaData);
         return result;
+    }
+
+    public createNewLisa(oldLisaData?: ILisaData): ILisaData {
+        return {
+            status: {
+                water: 100,
+                happiness: 100
+            },
+            life: {
+                isAlive: true,
+                killer: "Anonymous",
+                deathThrough: Deaths.UNKNOWN,
+                birth: Date.now(),
+                death: 0
+            },
+            score: {
+                highScore: isNil(oldLisaData) ? 0 : oldLisaData.score.highScore
+            }
+        };
     }
 
     public getLifetime(lisaData: ILisaData): number {
@@ -85,9 +104,9 @@ class LisaStatusService {
     }
 
     private updateHighScoreIfRequired(lisaData: ILisaData) {
-        const score = this.getLifetime(lisaData);
-        if (score > lisaData.score.highScore) {
-            lisaData.score.highScore = score;
+        const currentScore = this.getLifetime(lisaData);
+        if (currentScore > lisaData.score.highScore) {
+            lisaData.score.highScore = currentScore;
         }
     }
 }

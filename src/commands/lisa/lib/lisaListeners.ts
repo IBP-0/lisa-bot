@@ -1,28 +1,38 @@
+import { Dingy } from "di-ngy";
 import { lisaChevron } from "../../../di";
-import { lisaBotLogby } from "../../../logger";
+import { lisaLogby } from "../../../logger";
 import { LisaController } from "./LisaController";
 
-const TICK_INTERVAL = 5000;
+const TICK_INTERVAL = 60000; // 1min
 
-const logger = lisaBotLogby.getLogger("LisaListeners");
+const USERNAME_TICK = "Time";
+const USERNAME_ACTIVITY = "Activity";
 
-const initTickInterval = () => {
+const logger = lisaLogby.getLogger("LisaListeners");
+
+const initTickInterval = (lisaBot: Dingy) => {
     const lisaController: LisaController = lisaChevron.get(LisaController);
 
-    setInterval(() => {
-        lisaController.modify("Time", -1, -1);
+    lisaBot.client.setInterval(() => {
+        lisaController.modify(USERNAME_TICK, -0.5, -0.75);
+
+        lisaBot.client.user
+            .setGame(lisaController.stringifyStatusShort())
+            .catch(err =>
+                logger.warn("Could not update currently playing.", err)
+            );
     }, TICK_INTERVAL);
 };
 
 const increaseHappiness = () => {
     const lisaController: LisaController = lisaChevron.get(LisaController);
 
-    lisaController.modify("Activity", 0, 0.1);
+    lisaController.modify(USERNAME_ACTIVITY, 0, 0.25);
 };
 
-const onConnect = () => {
+const onConnect = (lisaBot: Dingy) => {
     logger.trace("Running onConnect.");
-    initTickInterval();
+    initTickInterval(lisaBot);
 };
 
 const onMessage = () => {

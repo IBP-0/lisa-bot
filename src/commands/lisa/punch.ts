@@ -6,7 +6,7 @@ import { lisaChevron } from "../../di";
 import { LisaController } from "./lib/LisaController";
 import { toFullName } from "di-ngy/src/util/toFullName";
 
-const waterFn: commandFn = (
+const punchFn: commandFn = (
     args: resolvedArgumentMap,
     argsAll: string[],
     msg: Message
@@ -15,28 +15,23 @@ const waterFn: commandFn = (
 
     return lisaController.performAction(
         toFullName(msg.author),
-        25,
         0,
-        [
-            "_Is being watered_",
-            "_Water splashes._",
-            "_Watering noises._",
-            "You hear lisa sucking up the water."
-        ],
-        ["It's too late to water poor Lisa..."]
+        -10,
+        ["_Is being punched in the leaves._", "oof.", "ouch ouw owie."],
+        ["The dead feel no pain..."]
     );
 };
 
-const water: IDingyCommand = {
-    fn: waterFn,
+const punch: IDingyCommand = {
+    fn: punchFn,
     args: [],
-    alias: [],
+    alias: ["hit"],
     data: {
         hidden: false,
         usableInDMs: false,
         powerRequired: 0,
-        help: "Waters lisa."
+        help: "Punches lisa."
     }
 };
 
-export { water };
+export { punch };

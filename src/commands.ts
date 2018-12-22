@@ -5,6 +5,8 @@ import { invite } from "./commands/core/invite";
 import { status } from "./commands/lisa/status";
 import { water } from "./commands/lisa/water";
 import { poll } from "./commands/poll/poll";
+import { replant } from "./commands/lisa/replant";
+import { punch } from "./commands/lisa/punch";
 
 const COMMANDS: IDingyCommandObject = {
     /*
@@ -16,7 +18,9 @@ const COMMANDS: IDingyCommandObject = {
      * Lisa
      */
     status,
+    replant,
     water,
+    punch,
     /*
      * Poll
      */

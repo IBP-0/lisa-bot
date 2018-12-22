@@ -8,7 +8,7 @@ import { COMMANDS } from "./commands";
 import { onConnect, onMessage } from "./commands/lisa/lib/lisaListeners";
 import { createConfig } from "./config";
 import { lisaChevron, LisaDiKeys } from "./di";
-import { lisaBotLogby } from "./logger";
+import { lisaLogby } from "./logger";
 
 const PRODUCTION_ENABLED = process.env.NODE_ENV === "production";
 const DISCORD_TOKEN = PRODUCTION_ENABLED
@@ -23,8 +23,8 @@ if (isNil(DISCORD_TOKEN)) {
 
 dingyLogby.setLevel(LOG_LEVEL);
 clingyLogby.setLevel(LOG_LEVEL);
-lisaBotLogby.setLevel(LOG_LEVEL);
-const logger = lisaBotLogby.getLogger("LisaBot");
+lisaLogby.setLevel(LOG_LEVEL);
+const logger = lisaLogby.getLogger("LisaBot");
 logger.info(`Starting in ${process.env.NODE_ENV} mode.`);
 logger.info(`Using prefix '${PREFIX}'.`);
 
@@ -40,6 +40,6 @@ lisaBot
     .connect(DISCORD_TOKEN)
     .then(() => {
         logger.info("LisaBot started successfully.");
-        onConnect();
+        onConnect(lisaBot);
     })
     .catch(e => logger.error("An unexpected error occurred.", e));

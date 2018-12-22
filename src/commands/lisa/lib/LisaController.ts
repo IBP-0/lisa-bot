@@ -2,13 +2,16 @@ import { InjectableType } from "chevronjs";
 import { IStorage } from "di-ngy/types/storage/IStorage";
 import { User } from "discord.js";
 import { lisaChevron, LisaDiKeys } from "../../../di";
-import { Deaths } from "./Deaths";
 import { ILisaData } from "./ILisaData";
 import { LisaStatusService } from "./LisaStatusService";
 import { LisaStringifyService } from "./LisaStringifyService";
+import { randItem } from "lightdash";
+import { lisaLogby } from "../../../logger";
 
 class LisaController {
+
     private static readonly STORE_KEY = "lisa";
+    private static readonly logger = lisaLogby.getLogger(LisaController);
 
     private readonly store: IStorage<any>;
     private readonly lisaStatusService: LisaStatusService;
@@ -25,29 +28,29 @@ class LisaController {
         this.lisaStringifyService = lisaStringifyService;
 
         if (store.has(LisaController.STORE_KEY)) {
+            LisaController.logger.info("Loading lisa data from store.");
             this.lisaData = store.get(LisaController.STORE_KEY);
         } else {
-            this.lisaData = LisaController.createNewLisa();
+            LisaController.logger.info("Creating new lisa data.");
+            this.lisaData = this.lisaStatusService.createNewLisa();
+            this.save();
         }
     }
 
-    private static createNewLisa(): ILisaData {
-        return {
-            status: {
-                water: 100,
-                happiness: 100
-            },
-            life: {
-                isAlive: true,
-                killer: "Anonymous",
-                deathThrough: Deaths.UNKNOWN,
-                birth: Date.now(),
-                death: 0
-            },
-            score: {
-                highScore: 0
-            }
-        };
+    public performAction(
+        username: string,
+        modifierWater: number,
+        modifierHappiness: number,
+        textSuccess: string[],
+        textDead: string[]
+    ): string {
+        if (!this.lisaData.life.isAlive) {
+            return randItem(textDead);
+        }
+
+        this.modify(username, modifierWater, modifierHappiness);
+
+        return [randItem(textSuccess), this.stringifyStatus()].join("\n");
     }
 
     public modify(
@@ -61,7 +64,7 @@ class LisaController {
             modifierWater,
             modifierHappiness
         );
-        this.store.set(LisaController.STORE_KEY, this.lisaData);
+        this.save();
     }
 
     public stringifyStatus(): string {
@@ -76,8 +79,13 @@ class LisaController {
         return this.lisaData.life.isAlive;
     }
 
-    public reset(): void {
-        this.lisaData = LisaController.createNewLisa();
+    public createNewLisa(): void {
+        this.lisaData = this.lisaStatusService.createNewLisa(this.lisaData);
+        this.save();
+    }
+
+    private save() {
+        this.store.set(LisaController.STORE_KEY, this.lisaData);
     }
 }
 

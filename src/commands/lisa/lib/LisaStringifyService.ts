@@ -5,8 +5,6 @@ import { lisaChevron } from "../../../di";
 import { ILisaData } from "./ILisaData";
 import { LisaStatusService } from "./LisaStatusService";
 
-const DELIMITER = "\n";
-
 const RELATIVE_STATE_GOOD = 90;
 const RELATIVE_STATE_OK = 40;
 
@@ -43,7 +41,7 @@ class LisaStringifyService {
             text = [`Water: ${waterLevel}% | Happiness: ${happinessLevel}%.`];
         }
 
-        return [statusShort, ...text, score].join(DELIMITER);
+        return [statusShort, ...text, score].join("\n");
     }
 
     public stringifyStatusShort(lisaData: ILisaData): string {

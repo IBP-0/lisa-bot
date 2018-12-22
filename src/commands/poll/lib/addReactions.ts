@@ -1,11 +1,11 @@
 import { Message } from "discord.js";
 import * as PromiseQueue from "promise-queue";
-import { lisaBotLogby } from "../../../logger";
+import { lisaLogby } from "../../../logger";
 import { eachOption } from "./eachOption";
 
 const MAX_QUEUE_SIZE = 20;
 
-const logger = lisaBotLogby.getLogger("addReactions");
+const logger = lisaLogby.getLogger("addReactions");
 
 const addReactions = (
     options: string[],

@@ -1,8 +1,7 @@
 const enum Deaths {
     DROWNING = "drowning",
-    DEHYDRATION = "dehydration",
-    FIRE = "fire",
-    LONELINESS = "loneliness",
+    DROUGHT = "drought",
+    SADNESS = "sadness",
     UNKNOWN = "something unknown"
 }
 
