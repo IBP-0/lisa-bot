@@ -1,4 +1,4 @@
-import { Deaths } from "./Deaths";
+import { Death } from "./Death";
 
 interface ILisaData {
     status: {
@@ -8,7 +8,7 @@ interface ILisaData {
     life: {
         isAlive: boolean;
         killer: string;
-        deathThrough: Deaths;
+        deathThrough: Death;
         birth: number;
         death: number;
     };

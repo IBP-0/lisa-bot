@@ -18,7 +18,7 @@ const status: IDingyCommand = {
         hidden: false,
         usableInDMs: true,
         powerRequired: 0,
-        help: "Shows lisa's status."
+        help: "Shows Lisa's status."
     }
 };
 

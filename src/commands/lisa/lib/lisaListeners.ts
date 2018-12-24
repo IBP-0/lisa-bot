@@ -12,22 +12,26 @@ const logger = lisaLogby.getLogger("LisaListeners");
 
 const initTickInterval = (lisaBot: Dingy) => {
     const lisaController: LisaController = lisaChevron.get(LisaController);
-
-    lisaBot.client.setInterval(() => {
-        lisaController.modify(USERNAME_TICK, -0.5, -0.75);
-
+    const lisaTickFn = () => {
         lisaBot.client.user
-            .setGame(lisaController.stringifyStatusShort())
+            .setActivity(lisaController.stringifyStatusShort())
             .catch(err =>
                 logger.warn("Could not update currently playing.", err)
             );
-    }, TICK_INTERVAL);
+        logger.trace("Ran tickInterval updateActivity.");
+        lisaController.modify(USERNAME_TICK, -0.5, -0.75);
+        logger.trace("Ran tickInterval statDecay.");
+    };
+
+    lisaBot.client.setInterval(lisaTickFn, TICK_INTERVAL);
+    logger.trace("Initialized tickInterval.");
 };
 
 const increaseHappiness = () => {
     const lisaController: LisaController = lisaChevron.get(LisaController);
 
     lisaController.modify(USERNAME_ACTIVITY, 0, 0.25);
+    logger.trace("Ran onMessage increaseHappiness.");
 };
 
 const onConnect = (lisaBot: Dingy) => {

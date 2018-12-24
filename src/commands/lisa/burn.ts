@@ -4,39 +4,40 @@ import { commandFn } from "di-ngy/types/command/commandFn";
 import { IDingyCommand } from "di-ngy/types/command/IDingyCommand";
 import { Message } from "discord.js";
 import { lisaChevron } from "../../di";
+import { Death } from "./lib/Death";
 import { LisaController } from "./lib/LisaController";
 
-const waterFn: commandFn = (
+const burnFn: commandFn = (
     args: resolvedArgumentMap,
     argsAll: string[],
     msg: Message
 ) => {
     const lisaController: LisaController = lisaChevron.get(LisaController);
 
-    return lisaController.performAction(
+    // noinspection SpellCheckingInspection
+    return lisaController.performKill(
         toFullName(msg.author),
-        25,
-        0,
+        Death.FIRE,
         [
-            "_Is being watered_",
-            "_Water splashes._",
-            "_Watering noises._",
-            "You hear Lisa sucking up the water."
+            "_You hear muffled plant-screams as you set Lisa on fire_",
+            "_Lisa looks at you, judging your actions._",
+            "AAAAAAAAAAAAAAAAAAAAAAAAAAAA"
         ],
-        ["It's too late to water poor Lisa..."]
+        ["Lisa is already dead!"]
     );
 };
 
-const water: IDingyCommand = {
-    fn: waterFn,
+// noinspection SpellCheckingInspection
+const burn: IDingyCommand = {
+    fn: burnFn,
     args: [],
-    alias: [],
+    alias: ["fire", "killitwithfire"],
     data: {
         hidden: false,
         usableInDMs: false,
         powerRequired: 0,
-        help: "Water Lisa."
+        help: "Burn Lisa (you monster)."
     }
 };
 
-export { water };
+export { burn };

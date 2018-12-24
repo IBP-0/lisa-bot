@@ -6,37 +6,39 @@ import { Message } from "discord.js";
 import { lisaChevron } from "../../di";
 import { LisaController } from "./lib/LisaController";
 
-const waterFn: commandFn = (
+const NIKLAS_ID = ["178470784984023040"];
+
+const niklasFn: commandFn = (
     args: resolvedArgumentMap,
     argsAll: string[],
     msg: Message
 ) => {
+    if (!NIKLAS_ID.includes(msg.author.id)) {
+        return "You're not a niklas uwu";
+    }
+
     const lisaController: LisaController = lisaChevron.get(LisaController);
 
+    // noinspection SpellCheckingInspection
     return lisaController.performAction(
         toFullName(msg.author),
-        25,
         0,
-        [
-            "_Is being watered_",
-            "_Water splashes._",
-            "_Watering noises._",
-            "You hear Lisa sucking up the water."
-        ],
-        ["It's too late to water poor Lisa..."]
+        40,
+        ["_tight huggu_"],
+        ["OwO whats this? a dead Lisa..."]
     );
 };
 
-const water: IDingyCommand = {
-    fn: waterFn,
+const niklas: IDingyCommand = {
+    fn: niklasFn,
     args: [],
     alias: [],
     data: {
-        hidden: false,
+        hidden: true,
         usableInDMs: false,
         powerRequired: 0,
-        help: "Water Lisa."
+        help: "^w^"
     }
 };
 
-export { water };
+export { niklas };

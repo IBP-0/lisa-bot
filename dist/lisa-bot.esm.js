@@ -50,7 +50,21 @@ const invite = {
     }
 };
 
+/**
+ * Creates a displayable string of an user.
+ *
+ * @private
+ * @param {User} user
+ * @returns {string}
+ */
+const toFullName = (user) => `${user.username}#${user.discriminator}`;
+
 const lisaChevron = new Chevron();
+
+/**
+ * Logby instance used by Di-ngy.
+ */
+const lisaLogby = new Logby();
 
 const MIN_WATER = 0.1;
 const MAX_WATER = 150;
@@ -65,20 +79,27 @@ class LisaStatusService {
         const result = objFromDeep(lisaData);
         result.status.water += modifierWater;
         if (result.status.water > MAX_WATER) {
-            return this.kill(result, username, "drowning" /* DROWNING */);
+            return this.setDeath(result, username, "drowning" /* DROWNING */);
         }
         if (result.status.water < MIN_WATER) {
-            return this.kill(result, username, "drought" /* DROUGHT */);
+            return this.setDeath(result, username, "dehydration" /* DEHYDRATION */);
         }
         result.status.happiness += modifierHappiness;
         if (result.status.happiness > MAX_HAPPINESS) {
             result.status.happiness = MAX_HAPPINESS;
         }
         if (result.status.happiness < MIN_HAPPINESS) {
-            return this.kill(result, username, "sadness" /* SADNESS */);
+            return this.setDeath(result, username, "sadness" /* SADNESS */);
         }
         this.updateHighScoreIfRequired(lisaData);
         return result;
+    }
+    kill(lisaData, username, deathThrough) {
+        if (!lisaData.life.isAlive) {
+            return lisaData;
+        }
+        const result = objFromDeep(lisaData);
+        return this.setDeath(result, username, deathThrough);
     }
     createNewLisa(oldLisaData) {
         return {
@@ -116,7 +137,7 @@ class LisaStatusService {
         const relHappiness = lisaData.status.happiness / MAX_HAPPINESS;
         return relWater * relHappiness * FACTOR;
     }
-    kill(lisaData, username, deathThrough) {
+    setDeath(lisaData, username, deathThrough) {
         lisaData.life.isAlive = false;
         lisaData.life.death = Date.now();
         lisaData.life.deathThrough = deathThrough;
@@ -185,31 +206,34 @@ class LisaStringifyService {
 }
 lisaChevron.set("factory" /* FACTORY */, [LisaStatusService], LisaStringifyService);
 
-/**
- * Logby instance used by Di-ngy.
- */
-const lisaLogby = new Logby();
-
 class LisaController {
     constructor(store, lisaStatusService, lisaStringifyService) {
         this.store = store;
         this.lisaStatusService = lisaStatusService;
         this.lisaStringifyService = lisaStringifyService;
         if (store.has(LisaController.STORE_KEY)) {
-            LisaController.logger.info("Loading lisa data from store.");
+            LisaController.logger.info("Loading Lisa data from store.");
             this.lisaData = store.get(LisaController.STORE_KEY);
         }
         else {
-            LisaController.logger.info("Creating new lisa data.");
+            LisaController.logger.info("Creating new Lisa data.");
             this.lisaData = this.lisaStatusService.createNewLisa();
             this.save();
         }
     }
-    performAction(username, modifierWater, modifierHappiness, textSuccess, textDead) {
+    performAction(username, modifierWater, modifierHappiness, textSuccess, textAlreadyDead) {
         if (!this.lisaData.life.isAlive) {
-            return randItem(textDead);
+            return randItem(textAlreadyDead);
         }
         this.modify(username, modifierWater, modifierHappiness);
+        return [randItem(textSuccess), this.stringifyStatus()].join("\n");
+    }
+    performKill(username, deathThrough, textSuccess, textAlreadyDead) {
+        if (!this.lisaData.life.isAlive) {
+            return randItem(textAlreadyDead);
+        }
+        this.lisaData = this.lisaStatusService.kill(this.lisaData, username, deathThrough);
+        this.save();
         return [randItem(textSuccess), this.stringifyStatus()].join("\n");
     }
     modify(username, modifierWater, modifierHappiness) {
@@ -226,6 +250,7 @@ class LisaController {
         return this.lisaData.life.isAlive;
     }
     createNewLisa() {
+        LisaController.logger.debug("Creating new Lisa.");
         this.lisaData = this.lisaStatusService.createNewLisa(this.lisaData);
         this.save();
     }
@@ -236,6 +261,195 @@ class LisaController {
 LisaController.STORE_KEY = "lisa";
 LisaController.logger = lisaLogby.getLogger(LisaController);
 lisaChevron.set("factory" /* FACTORY */, ["_LISA_STORAGE" /* STORAGE */, LisaStatusService, LisaStringifyService], LisaController);
+
+const GOAT_IDS = [
+    "169804264988868609",
+    "178470784984023040",
+    "143158243076734986",
+    "128985967875850240",
+    "273221196001181697"
+];
+const baaFn = (args, argsAll, msg) => {
+    if (!GOAT_IDS.includes(msg.author.id)) {
+        return "You're not a goat uwu";
+    }
+    const lisaController = lisaChevron.get(LisaController);
+    // noinspection SpellCheckingInspection
+    return lisaController.performAction(toFullName(msg.author), 0, 30, ["Baa", "Baa~", "Baaaaaaa ^w^", ":goat:"], ["Baa? a dead Lisa..."]);
+};
+const baa = {
+    fn: baaFn,
+    args: [],
+    alias: [],
+    data: {
+        hidden: true,
+        usableInDMs: false,
+        powerRequired: 0,
+        help: "Baa"
+    }
+};
+
+const burnFn = (args, argsAll, msg) => {
+    const lisaController = lisaChevron.get(LisaController);
+    // noinspection SpellCheckingInspection
+    return lisaController.performKill(toFullName(msg.author), "fire" /* FIRE */, [
+        "_You hear muffled plant-screams as you set Lisa on fire_",
+        "_Lisa looks at you, judging your actions._",
+        "AAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    ], ["Lisa is already dead!"]);
+};
+// noinspection SpellCheckingInspection
+const burn = {
+    fn: burnFn,
+    args: [],
+    alias: ["fire", "killitwithfire"],
+    data: {
+        hidden: false,
+        usableInDMs: false,
+        powerRequired: 0,
+        help: "Burn Lisa (you monster)."
+    }
+};
+
+const hugFn = (args, argsAll, msg) => {
+    const lisaController = lisaChevron.get(LisaController);
+    // noinspection SpellCheckingInspection
+    return lisaController.performAction(toFullName(msg.author), 0, 20, ["_Is hugged_.", "_hug_"], ["It's too late to hug poor Lisa..."]);
+};
+const hug = {
+    fn: hugFn,
+    args: [],
+    alias: ["huggu"],
+    data: {
+        hidden: true,
+        usableInDMs: false,
+        powerRequired: 0,
+        help: "Hug Lisa."
+    }
+};
+
+const HIGH_QUALITY_JOKES = [
+    "Why do trees have so many friends? They branch out.",
+    "A photographer was great at botany because he knew photo synthesis.",
+    "When the plums dry on your tree, it's time to prune.",
+    "The tree that was creating energy was turned into a power-plant.",
+    "My fear of roses is a thorny issue. I'm not sure what it stems from, but it seems likely I'll be stuck with it.",
+    "The raisin wined about how he couldn't achieve grapeness.",
+    "I can't find my rutabaga. I hope it will turnip.",
+    "When I bought some fruit trees the nursery owner gave me some insects to help with pollination. They were free bees.",
+    "The research assistant couldn't experiment with plants because he hadn't botany.",
+    "The farmer was surprised when his pumpkin won a blue ribbon at the State Fair. He shouted, 'Oh, my gourd.'",
+    "After winter, the trees are relieved.",
+    "Mr. Mushroom could never understand why he wasn't looked on as a real fun guy.",
+    "What do you call a sour orange that was late to school? Tarty!",
+    "When the Nomadic tree senses danger it packs up its trunk and leaves.",
+    "If we canteloup lettuce marry!",
+    "What kind of tree grows on your hand? A palm tree.",
+    "After a cold winter, will deciduous trees be releaved?",
+    "I saw something similar to moss the other day, but I didn't know what to lichen it to.",
+    "In some conifer forests, you can't cedar wood for the trees."
+];
+const jokeFn = (args, argsAll, msg) => {
+    const lisaController = lisaChevron.get(LisaController);
+    const goodJoke = Math.random() > 0.5;
+    // noinspection SpellCheckingInspection
+    return lisaController.performAction(toFullName(msg.author), 0, goodJoke ? 15 : -15, HIGH_QUALITY_JOKES, ["Dead plants can't listen to your jokes (probably)."]);
+};
+const joke = {
+    fn: jokeFn,
+    args: [],
+    alias: ["pun"],
+    data: {
+        hidden: false,
+        usableInDMs: false,
+        powerRequired: 0,
+        help: "Tell Lisa a joke."
+    }
+};
+
+const MISSY_ID = ["273221196001181697"];
+const missyFn = (args, argsAll, msg) => {
+    if (!MISSY_ID.includes(msg.author.id)) {
+        return "You're not a missy <w<";
+    }
+    const lisaController = lisaChevron.get(LisaController);
+    // noinspection SpellCheckingInspection
+    return lisaController.performAction(toFullName(msg.author), 0, 40, ["_Baaaaaaaaaaaaaa_"], ["OwO whats this? a dead Lisa..."]);
+};
+const missy = {
+    fn: missyFn,
+    args: [],
+    alias: [],
+    data: {
+        hidden: true,
+        usableInDMs: false,
+        powerRequired: 0,
+        help: "baaff"
+    }
+};
+
+const NIKLAS_ID = ["178470784984023040"];
+const niklasFn = (args, argsAll, msg) => {
+    if (!NIKLAS_ID.includes(msg.author.id)) {
+        return "You're not a niklas uwu";
+    }
+    const lisaController = lisaChevron.get(LisaController);
+    // noinspection SpellCheckingInspection
+    return lisaController.performAction(toFullName(msg.author), 0, 40, ["_tight huggu_"], ["OwO whats this? a dead Lisa..."]);
+};
+const niklas = {
+    fn: niklasFn,
+    args: [],
+    alias: [],
+    data: {
+        hidden: true,
+        usableInDMs: false,
+        powerRequired: 0,
+        help: "^w^"
+    }
+};
+
+const punchFn = (args, argsAll, msg) => {
+    const lisaController = lisaChevron.get(LisaController);
+    // noinspection SpellCheckingInspection
+    return lisaController.performAction(toFullName(msg.author), 0, -10, ["_Is being punched in the leaves._", "oof.", "ouch ouw owie."], ["The dead feel no pain..."]);
+};
+const punch = {
+    fn: punchFn,
+    args: [],
+    alias: ["hit"],
+    data: {
+        hidden: false,
+        usableInDMs: false,
+        powerRequired: 0,
+        help: "Punch Lisa."
+    }
+};
+
+const replantFn = () => {
+    const lisaController = lisaChevron.get(LisaController);
+    const wasAlive = lisaController.isAlive();
+    lisaController.createNewLisa();
+    return randItem(wasAlive
+        ? [
+            "_Is being ripped out and thrown away while still alive, watching you plant the next Lisa._"
+        ]
+        : [
+            "_Plants new Lisa on top of the remnants of her ancestors._",
+            "_Plants the next generation of Lisa._"
+        ]);
+};
+const replant = {
+    fn: replantFn,
+    args: [],
+    alias: ["reset", "plant"],
+    data: {
+        hidden: false,
+        usableInDMs: false,
+        powerRequired: 0,
+        help: "Replant Lisa."
+    }
+};
 
 const statusFn = () => {
     const lisaController = lisaChevron.get(LisaController);
@@ -249,18 +463,9 @@ const status = {
         hidden: false,
         usableInDMs: true,
         powerRequired: 0,
-        help: "Shows lisa's status."
+        help: "Shows Lisa's status."
     }
 };
-
-/**
- * Creates a displayable string of an user.
- *
- * @private
- * @param {User} user
- * @returns {string}
- */
-const toFullName = (user) => `${user.username}#${user.discriminator}`;
 
 const waterFn = (args, argsAll, msg) => {
     const lisaController = lisaChevron.get(LisaController);
@@ -268,7 +473,7 @@ const waterFn = (args, argsAll, msg) => {
         "_Is being watered_",
         "_Water splashes._",
         "_Watering noises._",
-        "You hear lisa sucking up the water."
+        "You hear Lisa sucking up the water."
     ], ["It's too late to water poor Lisa..."]);
 };
 const water = {
@@ -279,7 +484,7 @@ const water = {
         hidden: false,
         usableInDMs: false,
         powerRequired: 0,
-        help: "Waters lisa."
+        help: "Water Lisa."
     }
 };
 
@@ -416,47 +621,6 @@ const poll = {
     }
 };
 
-const replantFn = () => {
-    const lisaController = lisaChevron.get(LisaController);
-    const wasAlive = lisaController.isAlive();
-    lisaController.createNewLisa();
-    return randItem(wasAlive
-        ? [
-            "_Is being ripped out and thrown away while still alive, watching you plant the next lisa._"
-        ]
-        : [
-            "_Plants new lisa on top of the remnants of her ancestors._",
-            "_Plants the next generation of lisa._"
-        ]);
-};
-const replant = {
-    fn: replantFn,
-    args: [],
-    alias: ["reset", "plant"],
-    data: {
-        hidden: false,
-        usableInDMs: false,
-        powerRequired: 0,
-        help: "Replant lisa."
-    }
-};
-
-const punchFn = (args, argsAll, msg) => {
-    const lisaController = lisaChevron.get(LisaController);
-    return lisaController.performAction(toFullName(msg.author), 0, -10, ["_Is being punched in the leaves._", "oof.", "ouch ouw owie."], ["The dead feel no pain..."]);
-};
-const punch = {
-    fn: punchFn,
-    args: [],
-    alias: ["hit"],
-    data: {
-        hidden: false,
-        usableInDMs: false,
-        powerRequired: 0,
-        help: "Punches lisa."
-    }
-};
-
 const COMMANDS = {
     /*
      * Core
@@ -470,6 +634,12 @@ const COMMANDS = {
     replant,
     water,
     punch,
+    burn,
+    hug,
+    joke,
+    baa,
+    niklas,
+    missy,
     /*
      * Poll
      */
@@ -482,16 +652,21 @@ const USERNAME_ACTIVITY = "Activity";
 const logger$1 = lisaLogby.getLogger("LisaListeners");
 const initTickInterval = (lisaBot) => {
     const lisaController = lisaChevron.get(LisaController);
-    lisaBot.client.setInterval(() => {
-        lisaController.modify(USERNAME_TICK, -0.5, -0.75);
+    const lisaTickFn = () => {
         lisaBot.client.user
-            .setGame(lisaController.stringifyStatusShort())
+            .setActivity(lisaController.stringifyStatusShort())
             .catch(err => logger$1.warn("Could not update currently playing.", err));
-    }, TICK_INTERVAL);
+        logger$1.trace("Ran tickInterval updateActivity.");
+        lisaController.modify(USERNAME_TICK, -0.5, -0.75);
+        logger$1.trace("Ran tickInterval statDecay.");
+    };
+    lisaBot.client.setInterval(lisaTickFn, TICK_INTERVAL);
+    logger$1.trace("Initialized tickInterval.");
 };
 const increaseHappiness = () => {
     const lisaController = lisaChevron.get(LisaController);
     lisaController.modify(USERNAME_ACTIVITY, 0, 0.25);
+    logger$1.trace("Ran onMessage increaseHappiness.");
 };
 const onConnect = (lisaBot) => {
     logger$1.trace("Running onConnect.");

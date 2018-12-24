@@ -1,15 +1,15 @@
 import { InjectableType } from "chevronjs";
 import { IStorage } from "di-ngy/types/storage/IStorage";
 import { User } from "discord.js";
+import { randItem } from "lightdash";
 import { lisaChevron, LisaDiKeys } from "../../../di";
+import { lisaLogby } from "../../../logger";
+import { Death } from "./Death";
 import { ILisaData } from "./ILisaData";
 import { LisaStatusService } from "./LisaStatusService";
 import { LisaStringifyService } from "./LisaStringifyService";
-import { randItem } from "lightdash";
-import { lisaLogby } from "../../../logger";
 
 class LisaController {
-
     private static readonly STORE_KEY = "lisa";
     private static readonly logger = lisaLogby.getLogger(LisaController);
 
@@ -28,10 +28,10 @@ class LisaController {
         this.lisaStringifyService = lisaStringifyService;
 
         if (store.has(LisaController.STORE_KEY)) {
-            LisaController.logger.info("Loading lisa data from store.");
+            LisaController.logger.info("Loading Lisa data from store.");
             this.lisaData = store.get(LisaController.STORE_KEY);
         } else {
-            LisaController.logger.info("Creating new lisa data.");
+            LisaController.logger.info("Creating new Lisa data.");
             this.lisaData = this.lisaStatusService.createNewLisa();
             this.save();
         }
@@ -42,13 +42,33 @@ class LisaController {
         modifierWater: number,
         modifierHappiness: number,
         textSuccess: string[],
-        textDead: string[]
+        textAlreadyDead: string[]
     ): string {
         if (!this.lisaData.life.isAlive) {
-            return randItem(textDead);
+            return randItem(textAlreadyDead);
         }
 
         this.modify(username, modifierWater, modifierHappiness);
+
+        return [randItem(textSuccess), this.stringifyStatus()].join("\n");
+    }
+
+    public performKill(
+        username: string,
+        deathThrough: Death,
+        textSuccess: string[],
+        textAlreadyDead: string[]
+    ) {
+        if (!this.lisaData.life.isAlive) {
+            return randItem(textAlreadyDead);
+        }
+
+        this.lisaData = this.lisaStatusService.kill(
+            this.lisaData,
+            username,
+            deathThrough
+        );
+        this.save();
 
         return [randItem(textSuccess), this.stringifyStatus()].join("\n");
     }
@@ -80,6 +100,7 @@ class LisaController {
     }
 
     public createNewLisa(): void {
+        LisaController.logger.debug("Creating new Lisa.");
         this.lisaData = this.lisaStatusService.createNewLisa(this.lisaData);
         this.save();
     }

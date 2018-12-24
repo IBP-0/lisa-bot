@@ -6,37 +6,33 @@ import { Message } from "discord.js";
 import { lisaChevron } from "../../di";
 import { LisaController } from "./lib/LisaController";
 
-const waterFn: commandFn = (
+const hugFn: commandFn = (
     args: resolvedArgumentMap,
     argsAll: string[],
     msg: Message
 ) => {
     const lisaController: LisaController = lisaChevron.get(LisaController);
 
+    // noinspection SpellCheckingInspection
     return lisaController.performAction(
         toFullName(msg.author),
-        25,
         0,
-        [
-            "_Is being watered_",
-            "_Water splashes._",
-            "_Watering noises._",
-            "You hear Lisa sucking up the water."
-        ],
-        ["It's too late to water poor Lisa..."]
+        20,
+        ["_Is hugged_.", "_hug_"],
+        ["It's too late to hug poor Lisa..."]
     );
 };
 
-const water: IDingyCommand = {
-    fn: waterFn,
+const hug: IDingyCommand = {
+    fn: hugFn,
     args: [],
-    alias: [],
+    alias: ["huggu"],
     data: {
-        hidden: false,
+        hidden: true,
         usableInDMs: false,
         powerRequired: 0,
-        help: "Water Lisa."
+        help: "Hug Lisa."
     }
 };
 
-export { water };
+export { hug };

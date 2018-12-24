@@ -1,10 +1,10 @@
 import { resolvedArgumentMap } from "cli-ngy/types/argument/resolvedArgumentMap";
+import { toFullName } from "di-ngy/src/util/toFullName";
 import { commandFn } from "di-ngy/types/command/commandFn";
 import { IDingyCommand } from "di-ngy/types/command/IDingyCommand";
 import { Message } from "discord.js";
 import { lisaChevron } from "../../di";
 import { LisaController } from "./lib/LisaController";
-import { toFullName } from "di-ngy/src/util/toFullName";
 
 const punchFn: commandFn = (
     args: resolvedArgumentMap,
@@ -13,6 +13,7 @@ const punchFn: commandFn = (
 ) => {
     const lisaController: LisaController = lisaChevron.get(LisaController);
 
+    // noinspection SpellCheckingInspection
     return lisaController.performAction(
         toFullName(msg.author),
         0,
@@ -30,7 +31,7 @@ const punch: IDingyCommand = {
         hidden: false,
         usableInDMs: false,
         powerRequired: 0,
-        help: "Punches lisa."
+        help: "Punch Lisa."
     }
 };
 

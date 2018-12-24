@@ -1,7 +1,7 @@
 import { InjectableType } from "chevronjs";
 import { isNil, objFromDeep } from "lightdash";
 import { lisaChevron } from "../../../di";
-import { Deaths } from "./Deaths";
+import { Death } from "./Death";
 import { ILisaData } from "./ILisaData";
 
 const MIN_WATER = 0.1;
@@ -27,10 +27,10 @@ class LisaStatusService {
 
         result.status.water += modifierWater;
         if (result.status.water > MAX_WATER) {
-            return this.kill(result, username, Deaths.DROWNING);
+            return this.setDeath(result, username, Death.DROWNING);
         }
         if (result.status.water < MIN_WATER) {
-            return this.kill(result, username, Deaths.DROUGHT);
+            return this.setDeath(result, username, Death.DEHYDRATION);
         }
 
         result.status.happiness += modifierHappiness;
@@ -38,11 +38,25 @@ class LisaStatusService {
             result.status.happiness = MAX_HAPPINESS;
         }
         if (result.status.happiness < MIN_HAPPINESS) {
-            return this.kill(result, username, Deaths.SADNESS);
+            return this.setDeath(result, username, Death.SADNESS);
         }
 
         this.updateHighScoreIfRequired(lisaData);
         return result;
+    }
+
+    public kill(
+        lisaData: ILisaData,
+        username: string,
+        deathThrough: Death
+    ): ILisaData {
+        if (!lisaData.life.isAlive) {
+            return lisaData;
+        }
+
+        const result = <ILisaData>objFromDeep(lisaData);
+
+        return this.setDeath(result, username, deathThrough);
     }
 
     public createNewLisa(oldLisaData?: ILisaData): ILisaData {
@@ -54,7 +68,7 @@ class LisaStatusService {
             life: {
                 isAlive: true,
                 killer: "Anonymous",
-                deathThrough: Deaths.UNKNOWN,
+                deathThrough: Death.UNKNOWN,
                 birth: Date.now(),
                 death: 0
             },
@@ -89,10 +103,10 @@ class LisaStatusService {
         return relWater * relHappiness * FACTOR;
     }
 
-    private kill(
+    private setDeath(
         lisaData: ILisaData,
         username: string,
-        deathThrough: Deaths
+        deathThrough: Death
     ): ILisaData {
         lisaData.life.isAlive = false;
         lisaData.life.death = Date.now();

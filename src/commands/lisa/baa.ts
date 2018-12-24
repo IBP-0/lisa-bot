@@ -6,37 +6,45 @@ import { Message } from "discord.js";
 import { lisaChevron } from "../../di";
 import { LisaController } from "./lib/LisaController";
 
-const waterFn: commandFn = (
+const GOAT_IDS = [
+    "169804264988868609",
+    "178470784984023040",
+    "143158243076734986",
+    "128985967875850240",
+    "273221196001181697"
+];
+
+const baaFn: commandFn = (
     args: resolvedArgumentMap,
     argsAll: string[],
     msg: Message
 ) => {
+    if (!GOAT_IDS.includes(msg.author.id)) {
+        return "You're not a goat uwu";
+    }
+
     const lisaController: LisaController = lisaChevron.get(LisaController);
 
+    // noinspection SpellCheckingInspection
     return lisaController.performAction(
         toFullName(msg.author),
-        25,
         0,
-        [
-            "_Is being watered_",
-            "_Water splashes._",
-            "_Watering noises._",
-            "You hear Lisa sucking up the water."
-        ],
-        ["It's too late to water poor Lisa..."]
+        30,
+        ["Baa", "Baa~", "Baaaaaaa ^w^", ":goat:"],
+        ["Baa? a dead Lisa..."]
     );
 };
 
-const water: IDingyCommand = {
-    fn: waterFn,
+const baa: IDingyCommand = {
+    fn: baaFn,
     args: [],
     alias: [],
     data: {
-        hidden: false,
+        hidden: true,
         usableInDMs: false,
         powerRequired: 0,
-        help: "Water Lisa."
+        help: "Baa"
     }
 };
 
-export { water };
+export { baa };
