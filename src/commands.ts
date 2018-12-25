@@ -13,6 +13,7 @@ import { replant } from "./commands/lisa/replant";
 import { status } from "./commands/lisa/status";
 import { water } from "./commands/lisa/water";
 import { poll } from "./commands/poll/poll";
+import { fun } from "./commands/fun/fun";
 
 const COMMANDS: IDingyCommandObject = {
     /*
@@ -33,6 +34,10 @@ const COMMANDS: IDingyCommandObject = {
     baa,
     niklas,
     missy,
+    /*
+     * Fun
+     */
+    fun,
     /*
      * Poll
      */

@@ -7,6 +7,7 @@ var logby = require('logby');
 var chevronjs = require('chevronjs');
 var moment = require('moment');
 var PromiseQueue = require('promise-queue');
+var yamljs = require('yamljs');
 
 const IMAGE_LINK = "http://static.tumblr.com/df323b732955715fe3fb5a506999afc7/" +
     "rflrqqy/H9Cnsyji6/tumblr_static_88pgfgk82y4ok80ckowwwwow4.jpg";
@@ -623,6 +624,249 @@ const poll = {
     }
 };
 
+const clapFn = () => {
+    return "Respects have been paid.";
+};
+const clap = {
+    fn: clapFn,
+    args: [
+        {
+            name: "text",
+            required: true
+        }
+    ],
+    alias: ["clapifier"],
+    data: {
+        hidden: false,
+        usableInDMs: true,
+        powerRequired: 0,
+        help: "Clap a text."
+    }
+};
+
+const INTERESTING_IMAGE_LINK = "https://media.giphy.com/media/KKtAZiNVEeU8/giphy.gif";
+const interestingFn = () => {
+    return {
+        val: "Interesting.", files: [INTERESTING_IMAGE_LINK]
+    };
+};
+const interesting = {
+    fn: interestingFn,
+    args: [],
+    alias: [],
+    data: {
+        hidden: false,
+        usableInDMs: true,
+        powerRequired: 0,
+        help: "Declare something as interesting."
+    }
+};
+
+const logger$1 = lisaLogby.getLogger("calcUserUniqueValue");
+const ID_LIMIT = 6;
+const SIZE_LIMIT = 10;
+/**
+ * Returns the decimal values of a number as a string.
+ *
+ * @param val Value to use
+ * @return Decimal values as a string.
+ */
+const getDecimalsAsString = (val) => {
+    const str = val.toString();
+    return str.slice(str.indexOf(".") + 1);
+};
+/**
+ * Fits a string to the given size. if it is smaller than the limit, its repeated. if its longer, its cut of.
+ *
+ * @param str String to fit.
+ * @param limit Limit to use for fitting.
+ * @return Fitted string.
+ */
+const fitStringToSize = (str, limit) => {
+    let result = str;
+    if (result.length < limit) {
+        result = result.repeat(Math.ceil(limit / result.length));
+    }
+    if (result.length > limit) {
+        result = result.slice(0, limit);
+    }
+    return result;
+};
+/**
+ * Create an unique value for a user, which is a string with the length 10, containing numbers.
+ * We _could_ use actual hashing or something here but that seems overkill.
+ *
+ * @param user User to create the value for.
+ * @return The unique value.
+ */
+const calcUserUniqueValue = (user) => {
+    const idPart = Number(user.id.slice(ID_LIMIT));
+    let discriminator = Number(user.discriminator);
+    let result;
+    // Fall back if something goes wrong, rather than getting a runtime exception later.
+    if (Number.isNaN(idPart) || Number.isNaN(discriminator)) {
+        logger$1.warn("Could not properly calculate unique value:", idPart, discriminator);
+        result = user.id;
+    }
+    else {
+        const seed = Math.abs(Math.sin(discriminator) * Math.cos(idPart) / 2);
+        result = getDecimalsAsString(seed);
+    }
+    return fitStringToSize(result, SIZE_LIMIT);
+};
+
+const rateFn = (args, argsAll, msg) => {
+    const userUniqueNumber = Number(calcUserUniqueValue(msg.author)[0]);
+    const rating = Math.floor((userUniqueNumber / 10) * 11);
+    return `I rate ${msg.author.username} a ${rating}/10`;
+};
+const rate = {
+    fn: rateFn,
+    args: [
+        {
+            name: "thing",
+            required: true
+        }
+    ],
+    alias: [],
+    data: {
+        hidden: false,
+        usableInDMs: true,
+        powerRequired: 0,
+        help: "Rates something from 1 to 10."
+    }
+};
+
+const roastFn = () => {
+    return "Respects have been paid.";
+};
+const roast = {
+    fn: roastFn,
+    args: [
+        {
+            name: "target",
+            required: true
+        }
+    ],
+    alias: ["roasted"],
+    data: {
+        hidden: false,
+        usableInDMs: true,
+        powerRequired: 0,
+        help: "Roast someone."
+    }
+};
+
+const SEPARATOR = "---";
+const SPACE_BEFORE = 14;
+const SPACE_AFTER = 32;
+const BARS_PER_VAL = 3;
+const BAR_CHARACTER = "|";
+const formatEntry = (name, val) => {
+    const valInt = Number(val);
+    const barSize = valInt * BARS_PER_VAL;
+    const spaceBeforeSize = SPACE_BEFORE - name.length;
+    const spaceAfterSize = SPACE_AFTER - barSize;
+    const paddedBars = " ".repeat(spaceBeforeSize) +
+        BAR_CHARACTER.repeat(barSize) +
+        " ".repeat(spaceAfterSize);
+    return `${name}:${paddedBars}${valInt}`;
+};
+const createRpgStats = (user) => {
+    const [valVit, valStr, valDex, valInt, valCreativity, valLearning, valCharisma, valHumor, valAttractivity] = calcUserUniqueValue(user).split("");
+    return [
+        yamljs.stringify(user.username),
+        SEPARATOR,
+        formatEntry("Vitality", valVit),
+        formatEntry("Strength", valStr),
+        formatEntry("Dexterity", valDex),
+        SEPARATOR,
+        formatEntry("Intelligence", valInt),
+        formatEntry("Creativity", valCreativity),
+        formatEntry("Learning", valLearning),
+        SEPARATOR,
+        formatEntry("Charisma", valCharisma),
+        formatEntry("Humor", valHumor),
+        formatEntry("Attractivity", valAttractivity),
+        SEPARATOR
+    ].join("\n");
+};
+const rpgFn = (args, argsAll, msg) => {
+    return {
+        val: createRpgStats(msg.author),
+        code: "yaml"
+    };
+};
+const rpg = {
+    fn: rpgFn,
+    args: [],
+    alias: [],
+    data: {
+        hidden: false,
+        usableInDMs: true,
+        powerRequired: 0,
+        help: "Creates a RPG-like stat list for you."
+    }
+};
+
+const shipFn = () => {
+    return "Respects have been paid.";
+};
+const ship = {
+    fn: shipFn,
+    args: [
+        {
+            name: "person1",
+            required: true
+        },
+        {
+            name: "person2",
+            required: false
+        }
+    ],
+    alias: ["fuse"],
+    data: {
+        hidden: false,
+        usableInDMs: true,
+        powerRequired: 0,
+        help: "Ships two people."
+    }
+};
+
+const squareFn = () => {
+    return "Respects have been paid.";
+};
+const square = {
+    fn: squareFn,
+    args: [
+        {
+            name: "text",
+            required: true
+        }
+    ],
+    alias: ["squares"],
+    data: {
+        hidden: false,
+        usableInDMs: true,
+        powerRequired: 0,
+        help: "Output a text as a square."
+    }
+};
+
+const funFn = () => "Respects have been paid.";
+const fun = {
+    fn: funFn,
+    args: [],
+    alias: ["f"],
+    data: {
+        hidden: false,
+        usableInDMs: true,
+        powerRequired: 0,
+        help: "Misc. fun commands."
+    },
+    sub: { clap, interesting, rate, roast, rpg, ship, square }
+};
+
 const COMMANDS = {
     /*
      * Core
@@ -643,6 +887,10 @@ const COMMANDS = {
     niklas,
     missy,
     /*
+     * Fun
+     */
+    fun,
+    /*
      * Poll
      */
     poll
@@ -651,31 +899,31 @@ const COMMANDS = {
 const TICK_INTERVAL = 60000; // 1min
 const USERNAME_TICK = "Time";
 const USERNAME_ACTIVITY = "Activity";
-const logger$1 = lisaLogby.getLogger("LisaListeners");
+const logger$2 = lisaLogby.getLogger("LisaListeners");
 const initTickInterval = (lisaBot) => {
     const lisaController = lisaChevron.get(LisaController);
     const lisaTickFn = () => {
         lisaBot.client.user
             .setActivity(lisaController.stringifyStatusShort())
-            .catch(err => logger$1.warn("Could not update currently playing.", err));
-        logger$1.trace("Ran tickInterval updateActivity.");
+            .catch(err => logger$2.warn("Could not update currently playing.", err));
+        logger$2.trace("Ran tickInterval updateActivity.");
         lisaController.modify(USERNAME_TICK, -0.5, -0.75);
-        logger$1.trace("Ran tickInterval statDecay.");
+        logger$2.trace("Ran tickInterval statDecay.");
     };
     lisaBot.client.setInterval(lisaTickFn, TICK_INTERVAL);
-    logger$1.trace("Initialized tickInterval.");
+    logger$2.trace("Initialized tickInterval.");
 };
 const increaseHappiness = () => {
     const lisaController = lisaChevron.get(LisaController);
     lisaController.modify(USERNAME_ACTIVITY, 0, 0.25);
-    logger$1.trace("Ran onMessage increaseHappiness.");
+    logger$2.trace("Ran onMessage increaseHappiness.");
 };
 const onConnect = (lisaBot) => {
-    logger$1.trace("Running onConnect.");
+    logger$2.trace("Running onConnect.");
     initTickInterval(lisaBot);
 };
 const onMessage = () => {
-    logger$1.trace("Running onMessage.");
+    logger$2.trace("Running onMessage.");
     increaseHappiness();
 };
 
@@ -706,16 +954,16 @@ if (lightdash.isNil(DISCORD_TOKEN)) {
 diNgy.dingyLogby.setLevel(LOG_LEVEL);
 cliNgy.clingyLogby.setLevel(LOG_LEVEL);
 lisaLogby.setLevel(LOG_LEVEL);
-const logger$2 = lisaLogby.getLogger("LisaBot");
-logger$2.info(`Starting in ${process.env.NODE_ENV} mode.`);
-logger$2.info(`Using prefix '${PREFIX}'.`);
+const logger$3 = lisaLogby.getLogger("LisaBot");
+logger$3.info(`Starting in ${process.env.NODE_ENV} mode.`);
+logger$3.info(`Using prefix '${PREFIX}'.`);
 const lisaBot = new diNgy.Dingy(COMMANDS, createConfig(PREFIX));
 lisaBot.client.on("message", onMessage);
 lisaChevron.set("plain" /* PLAIN */, [], lisaBot.jsonStorage, "_LISA_STORAGE" /* STORAGE */);
 lisaBot
     .connect(DISCORD_TOKEN)
     .then(() => {
-    logger$2.info("LisaBot started successfully.");
+    logger$3.info("LisaBot started successfully.");
     onConnect(lisaBot);
 })
-    .catch(e => logger$2.error("An unexpected error occurred.", e));
+    .catch(e => logger$3.error("An unexpected error occurred.", e));
