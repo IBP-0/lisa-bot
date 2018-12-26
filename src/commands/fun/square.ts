@@ -3,7 +3,11 @@ import { IDingyCommand } from "di-ngy/types/command/IDingyCommand";
 import { Message } from "discord.js";
 
 const squareText = (str: string): string => {
-    const word = str.split("");
+    /*
+     * Use spread rather than .split() to support wide characters
+     * https://github.com/mmmpld/lisa-bot/commit/c701cec417d6c53a700b8c038da99bc8e6617e0c
+     */
+    const word = [...str];
     const wordReversed = Array.from(word).reverse();
     const result = [];
 
