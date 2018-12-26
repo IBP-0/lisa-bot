@@ -52,7 +52,7 @@
     "dependencies": {
         "@types/yamljs": "^0.2.30",
         "chevronjs": "^11.0.0-2",
-        "di-ngy": "^8.0.0-13",
+        "di-ngy": "^8.0.0-14",
         "fs-extra": "^7.0.1",
         "lightdash": "^10.2.0",
         "make-fetch-happen": "^4.0.1",

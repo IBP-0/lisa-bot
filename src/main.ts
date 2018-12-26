@@ -33,7 +33,7 @@ lisaBot.client.on("message", onMessage);
 lisaChevron.set(
     InjectableType.PLAIN,
     [],
-    lisaBot.jsonStorage,
+    lisaBot.persistentStorage,
     LisaDiKeys.STORAGE
 );
 lisaBot

@@ -647,7 +647,8 @@ const clap = {
 const INTERESTING_IMAGE_LINK = "https://media.giphy.com/media/KKtAZiNVEeU8/giphy.gif";
 const interestingFn = () => {
     return {
-        val: "Interesting.", files: [INTERESTING_IMAGE_LINK]
+        val: "Interesting.",
+        files: [INTERESTING_IMAGE_LINK]
     };
 };
 const interesting = {
@@ -709,7 +710,7 @@ const calcUserUniqueValue = (user) => {
         result = user.id;
     }
     else {
-        const seed = Math.abs(Math.sin(discriminator) * Math.cos(idPart) / 2);
+        const seed = Math.abs((Math.sin(discriminator) * Math.cos(idPart)) / 2);
         result = getDecimalsAsString(seed);
     }
     return fitStringToSize(result, SIZE_LIMIT);
@@ -722,12 +723,7 @@ const rateFn = (args, argsAll, msg) => {
 };
 const rate = {
     fn: rateFn,
-    args: [
-        {
-            name: "thing",
-            required: true
-        }
-    ],
+    args: [],
     alias: [],
     data: {
         hidden: false,
@@ -959,7 +955,7 @@ logger$3.info(`Starting in ${process.env.NODE_ENV} mode.`);
 logger$3.info(`Using prefix '${PREFIX}'.`);
 const lisaBot = new diNgy.Dingy(COMMANDS, createConfig(PREFIX));
 lisaBot.client.on("message", onMessage);
-lisaChevron.set("plain" /* PLAIN */, [], lisaBot.jsonStorage, "_LISA_STORAGE" /* STORAGE */);
+lisaChevron.set("plain" /* PLAIN */, [], lisaBot.persistentStorage, "_LISA_STORAGE" /* STORAGE */);
 lisaBot
     .connect(DISCORD_TOKEN)
     .then(() => {
