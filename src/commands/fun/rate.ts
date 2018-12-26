@@ -1,22 +1,45 @@
 import { resolvedArgumentMap } from "cli-ngy/types/argument/resolvedArgumentMap";
+import { toFullName } from "di-ngy/src/util/toFullName";
 import { commandFn } from "di-ngy/types/command/commandFn";
 import { IDingyCommand } from "di-ngy/types/command/IDingyCommand";
 import { Message } from "discord.js";
-import { calcUserUniqueValue } from "./lib/calcUserUniqueValue";
+import {
+    calcNumberFromUniqueString,
+    calcUniqueString,
+    calcUserUniqueString
+} from "./lib/calcUnique";
 
 const rateFn: commandFn = (
     args: resolvedArgumentMap,
     argsAll: string[],
     msg: Message
 ) => {
-    const userUniqueNumber = Number(calcUserUniqueValue(msg.author)[0]);
-    const rating = Math.floor((userUniqueNumber / 10) * 11);
-    return `I rate ${msg.author.username} a ${rating}/10`;
+    let targetName: string;
+    let rating: number;
+
+    const target = args.get("target")!;
+    if (target.length > 0) {
+        targetName = target;
+        rating = calcNumberFromUniqueString(calcUniqueString(targetName), 10);
+    } else {
+        targetName = toFullName(msg.author);
+        rating = calcNumberFromUniqueString(
+            calcUserUniqueString(msg.author),
+            10
+        );
+    }
+
+    return `I rate ${targetName} a ${rating}/10`;
 };
 
 const rate: IDingyCommand = {
     fn: rateFn,
-    args: [],
+    args: [
+        {
+            name: "target",
+            required: false
+        }
+    ],
     alias: [],
     data: {
         hidden: false,

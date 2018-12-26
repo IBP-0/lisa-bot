@@ -3,7 +3,7 @@ import { commandFn } from "di-ngy/types/command/commandFn";
 import { IDingyCommand } from "di-ngy/types/command/IDingyCommand";
 import { Message, User } from "discord.js";
 import { stringify } from "yamljs";
-import { calcUserUniqueValue } from "./lib/calcUserUniqueValue";
+import { calcUserUniqueString } from "./lib/calcUnique";
 
 const SEPARATOR = "---";
 
@@ -39,7 +39,7 @@ const createRpgStats = (user: User) => {
         valCharisma,
         valHumor,
         valAttractivity
-    ] = calcUserUniqueValue(user).split("");
+    ] = calcUserUniqueString(user).split("");
 
     return [
         stringify(user.username),

@@ -661,8 +661,6 @@ const interesting = {
     }
 };
 
-const logger$1 = lisaLogby.getLogger("calcUserUniqueValue");
-const ID_LIMIT = 6;
 const SIZE_LIMIT = 10;
 /**
  * Returns the decimal values of a number as a string.
@@ -675,53 +673,78 @@ const getDecimalsAsString = (val) => {
     return str.slice(str.indexOf(".") + 1);
 };
 /**
- * Fits a string to the given size. if it is smaller than the limit, its repeated. if its longer, its cut of.
+ * Fits a string to the given size. if it is smaller than the size, its repeated. if its longer, its cut of.
  *
  * @param str String to fit.
- * @param limit Limit to use for fitting.
+ * @param size Size to use for fitting.
  * @return Fitted string.
  */
-const fitStringToSize = (str, limit) => {
+const fitStringToSize = (str, size) => {
     let result = str;
-    if (result.length < limit) {
-        result = result.repeat(Math.ceil(limit / result.length));
+    if (result.length < size) {
+        result = result.repeat(Math.ceil(size / result.length));
     }
-    if (result.length > limit) {
-        result = result.slice(0, limit);
+    if (result.length > size) {
+        result = result.slice(0, size);
     }
     return result;
 };
 /**
- * Create an unique value for a user, which is a string with the length 10, containing numbers.
+ * Create an unique value for a string, which is a string with the length 10, containing numbers.
  * We _could_ use actual hashing or something here but that seems overkill.
+ *
+ * @param str String to create the value for.
+ * @return The unique value.
+ */
+const calcUniqueString = (str) => {
+    const seed = str
+        .toLowerCase()
+        .split("")
+        .map(letter => letter.charCodeAt(0))
+        .reduce((a, b) => Math.sin(a) + Math.cos(b));
+    return fitStringToSize(getDecimalsAsString(seed), SIZE_LIMIT);
+};
+/**
+ * Create an unique value for a user, which is a string with the length 10, containing numbers.
  *
  * @param user User to create the value for.
  * @return The unique value.
  */
-const calcUserUniqueValue = (user) => {
-    const idPart = Number(user.id.slice(ID_LIMIT));
-    let discriminator = Number(user.discriminator);
-    let result;
-    // Fall back if something goes wrong, rather than getting a runtime exception later.
-    if (Number.isNaN(idPart) || Number.isNaN(discriminator)) {
-        logger$1.warn("Could not properly calculate unique value:", idPart, discriminator);
-        result = user.id;
-    }
-    else {
-        const seed = Math.abs((Math.sin(discriminator) * Math.cos(idPart)) / 2);
-        result = getDecimalsAsString(seed);
-    }
-    return fitStringToSize(result, SIZE_LIMIT);
+const calcUserUniqueString = (user) => calcUniqueString(toFullName(user));
+/**
+ * Calculates a number from the given unique string.
+ *
+ * @param str String to use.
+ * @param max Inclusive max value.
+ * @return Unique number from 0 to max.
+ */
+const calcNumberFromUniqueString = (str, max = 10) => {
+    const val = Number(str[0]);
+    return Math.floor(((val + 1) / 10) * max);
 };
 
 const rateFn = (args, argsAll, msg) => {
-    const userUniqueNumber = Number(calcUserUniqueValue(msg.author)[0]);
-    const rating = Math.floor((userUniqueNumber / 10) * 11);
-    return `I rate ${msg.author.username} a ${rating}/10`;
+    let targetName;
+    let rating;
+    const target = args.get("target");
+    if (target.length > 0) {
+        targetName = target;
+        rating = calcNumberFromUniqueString(calcUniqueString(targetName), 10);
+    }
+    else {
+        targetName = toFullName(msg.author);
+        rating = calcNumberFromUniqueString(calcUserUniqueString(msg.author), 10);
+    }
+    return `I rate ${targetName} a ${rating}/10`;
 };
 const rate = {
     fn: rateFn,
-    args: [],
+    args: [
+        {
+            name: "target",
+            required: false
+        }
+    ],
     alias: [],
     data: {
         hidden: false,
@@ -767,7 +790,7 @@ const formatEntry = (name, val) => {
     return `${name}:${paddedBars}${valInt}`;
 };
 const createRpgStats = (user) => {
-    const [valVit, valStr, valDex, valInt, valCreativity, valLearning, valCharisma, valHumor, valAttractivity] = calcUserUniqueValue(user).split("");
+    const [valVit, valStr, valDex, valInt, valCreativity, valLearning, valCharisma, valHumor, valAttractivity] = calcUserUniqueString(user).split("");
     return [
         stringify(user.username),
         SEPARATOR,
@@ -803,8 +826,24 @@ const rpg = {
     }
 };
 
-const shipFn = () => {
-    return "Respects have been paid.";
+const getMiddleIndex = (str) => Math.round(str.length / 2);
+const shipFn = (args) => {
+    const person1 = args.get("person1");
+    const person2 = args.get("person2");
+    const shipName = person1.substr(0, getMiddleIndex(person1)) +
+        person2.substr(getMiddleIndex(person2));
+    const person1Score = calcNumberFromUniqueString(calcUniqueString(person1), 10);
+    const person2Score = calcNumberFromUniqueString(calcUniqueString(person2), 10);
+    const scoreTotal = person1Score * person2Score;
+    return {
+        val: [
+            "Shipping Complete:",
+            "---",
+            `${person1} + ${person2} (Ship name: ${shipName})`,
+            `Score: ${scoreTotal}%`
+        ].join("\n"),
+        code: true
+    };
 };
 const ship = {
     fn: shipFn,
@@ -893,31 +932,31 @@ const COMMANDS = {
 const TICK_INTERVAL = 60000; // 1min
 const USERNAME_TICK = "Time";
 const USERNAME_ACTIVITY = "Activity";
-const logger$2 = lisaLogby.getLogger("LisaListeners");
+const logger$1 = lisaLogby.getLogger("LisaListeners");
 const initTickInterval = (lisaBot) => {
     const lisaController = lisaChevron.get(LisaController);
     const lisaTickFn = () => {
         lisaBot.client.user
             .setActivity(lisaController.stringifyStatusShort())
-            .catch(err => logger$2.warn("Could not update currently playing.", err));
-        logger$2.trace("Ran tickInterval updateActivity.");
+            .catch(err => logger$1.warn("Could not update currently playing.", err));
+        logger$1.trace("Ran tickInterval updateActivity.");
         lisaController.modify(USERNAME_TICK, -0.5, -0.75);
-        logger$2.trace("Ran tickInterval statDecay.");
+        logger$1.trace("Ran tickInterval statDecay.");
     };
     lisaBot.client.setInterval(lisaTickFn, TICK_INTERVAL);
-    logger$2.trace("Initialized tickInterval.");
+    logger$1.trace("Initialized tickInterval.");
 };
 const increaseHappiness = () => {
     const lisaController = lisaChevron.get(LisaController);
     lisaController.modify(USERNAME_ACTIVITY, 0, 0.25);
-    logger$2.trace("Ran onMessage increaseHappiness.");
+    logger$1.trace("Ran onMessage increaseHappiness.");
 };
 const onConnect = (lisaBot) => {
-    logger$2.trace("Running onConnect.");
+    logger$1.trace("Running onConnect.");
     initTickInterval(lisaBot);
 };
 const onMessage = () => {
-    logger$2.trace("Running onMessage.");
+    logger$1.trace("Running onMessage.");
     increaseHappiness();
 };
 
@@ -948,16 +987,16 @@ if (isNil(DISCORD_TOKEN)) {
 dingyLogby.setLevel(LOG_LEVEL);
 clingyLogby.setLevel(LOG_LEVEL);
 lisaLogby.setLevel(LOG_LEVEL);
-const logger$3 = lisaLogby.getLogger("LisaBot");
-logger$3.info(`Starting in ${process.env.NODE_ENV} mode.`);
-logger$3.info(`Using prefix '${PREFIX}'.`);
+const logger$2 = lisaLogby.getLogger("LisaBot");
+logger$2.info(`Starting in ${process.env.NODE_ENV} mode.`);
+logger$2.info(`Using prefix '${PREFIX}'.`);
 const lisaBot = new Dingy(COMMANDS, createConfig(PREFIX));
 lisaBot.client.on("message", onMessage);
 lisaChevron.set("plain" /* PLAIN */, [], lisaBot.persistentStorage, "_LISA_STORAGE" /* STORAGE */);
 lisaBot
     .connect(DISCORD_TOKEN)
     .then(() => {
-    logger$3.info("LisaBot started successfully.");
+    logger$2.info("LisaBot started successfully.");
     onConnect(lisaBot);
 })
-    .catch(e => logger$3.error("An unexpected error occurred.", e));
+    .catch(e => logger$2.error("An unexpected error occurred.", e));
