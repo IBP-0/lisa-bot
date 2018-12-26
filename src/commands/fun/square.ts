@@ -1,9 +1,44 @@
-import { commandFn } from "di-ngy/types/command/commandFn";
+import { resolvedArgumentMap } from "cli-ngy/types/argument/resolvedArgumentMap";
 import { IDingyCommand } from "di-ngy/types/command/IDingyCommand";
 import { Message } from "discord.js";
 
-const squareFn: commandFn = () => {
-    return "Respects have been paid.";
+const squareText = (str: string): string => {
+    const word = str.split("");
+    const wordReversed = Array.from(word).reverse();
+    const result = [];
+
+    for (let rowIndex = 0; rowIndex < word.length; rowIndex++) {
+        const line = [];
+
+        for (let lineIndex = 0; lineIndex < word.length; lineIndex++) {
+            let val;
+
+            if (rowIndex === 0) {
+                val = word[lineIndex];
+            } else if (rowIndex === word.length - 1) {
+                val = wordReversed[lineIndex];
+            } else if (lineIndex === 0) {
+                val = word[rowIndex];
+            } else if (lineIndex === word.length - 1) {
+                val = wordReversed[rowIndex];
+            } else {
+                val = " ";
+            }
+
+            line.push(val);
+        }
+
+        result.push(line.join(" "));
+    }
+
+    return result.join("\n");
+};
+
+const squareFn = (args: resolvedArgumentMap) => {
+    return {
+        val: squareText(args.get("text")!),
+        code: true
+    };
 };
 
 const square: IDingyCommand = {

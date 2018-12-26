@@ -624,9 +624,11 @@ const poll = {
     }
 };
 
-const clapFn = () => {
-    return "Respects have been paid.";
-};
+const clapFn = (args) => args
+    .get("text")
+    .split(" ")
+    .map(word => "**" + word.toUpperCase() + "**")
+    .join(":clap:");
 const clap = {
     fn: clapFn,
     args: [
@@ -868,8 +870,40 @@ const ship = {
     }
 };
 
-const squareFn = () => {
-    return "Respects have been paid.";
+const squareText = (str) => {
+    const word = str.split("");
+    const wordReversed = Array.from(word).reverse();
+    const result = [];
+    for (let rowIndex = 0; rowIndex < word.length; rowIndex++) {
+        const line = [];
+        for (let lineIndex = 0; lineIndex < word.length; lineIndex++) {
+            let val;
+            if (rowIndex === 0) {
+                val = word[lineIndex];
+            }
+            else if (rowIndex === word.length - 1) {
+                val = wordReversed[lineIndex];
+            }
+            else if (lineIndex === 0) {
+                val = word[rowIndex];
+            }
+            else if (lineIndex === word.length - 1) {
+                val = wordReversed[rowIndex];
+            }
+            else {
+                val = " ";
+            }
+            line.push(val);
+        }
+        result.push(line.join(" "));
+    }
+    return result.join("\n");
+};
+const squareFn = (args) => {
+    return {
+        val: squareText(args.get("text")),
+        code: true
+    };
 };
 const square = {
     fn: squareFn,
