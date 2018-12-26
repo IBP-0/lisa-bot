@@ -871,7 +871,11 @@ const ship = {
 };
 
 const squareText = (str) => {
-    const word = str.split("");
+    /*
+     * Use spread rather than .split() to support wide characters
+     * https://github.com/mmmpld/lisa-bot/commit/c701cec417d6c53a700b8c038da99bc8e6617e0c
+     */
+    const word = [...str];
     const wordReversed = Array.from(word).reverse();
     const result = [];
     for (let rowIndex = 0; rowIndex < word.length; rowIndex++) {
@@ -936,12 +940,34 @@ const fun = {
     sub: { clap, interesting, rate, roast, rpg, ship, square }
 };
 
+const serversFn = (args, argsAll, msg, dingy) => {
+    return {
+        val: dingy.client.guilds
+            .array()
+            .map(guild => `${guild.id}: ${guild.name}`)
+            .join("\n"),
+        code: true
+    };
+};
+const servers = {
+    fn: serversFn,
+    args: [],
+    alias: [],
+    data: {
+        hidden: true,
+        usableInDMs: true,
+        powerRequired: 10,
+        help: "Shows the servers the bot is on."
+    }
+};
+
 const COMMANDS = {
     /*
      * Core
      */
     about,
     invite,
+    servers,
     /*
      * Lisa
      */
