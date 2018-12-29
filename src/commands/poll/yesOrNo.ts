@@ -32,6 +32,7 @@ const yesOrNoFn: commandFn = (
     };
 };
 
+// noinspection SpellCheckingInspection
 const yesOrNo: IDingyCommand = {
     fn: yesOrNoFn,
     args: [

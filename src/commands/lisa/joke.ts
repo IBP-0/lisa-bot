@@ -6,6 +6,7 @@ import { Message } from "discord.js";
 import { lisaChevron } from "../../di";
 import { LisaController } from "./lib/LisaController";
 
+// noinspection SpellCheckingInspection
 const HIGH_QUALITY_JOKES = [
     "Why do trees have so many friends? They branch out.",
     "A photographer was great at botany because he knew photo synthesis.",
@@ -14,7 +15,8 @@ const HIGH_QUALITY_JOKES = [
     "My fear of roses is a thorny issue. I'm not sure what it stems from, but it seems likely I'll be stuck with it.",
     "The raisin wined about how he couldn't achieve grapeness.",
     "I can't find my rutabaga. I hope it will turnip.",
-    "When I bought some fruit trees the nursery owner gave me some insects to help with pollination. They were free bees.",
+    "When I bought some fruit trees the nursery owner gave me some insects to help with pollination." +
+        " They were free bees.",
     "The research assistant couldn't experiment with plants because he hadn't botany.",
     "The farmer was surprised when his pumpkin won a blue ribbon at the State Fair. He shouted, 'Oh, my gourd.'",
     "After winter, the trees are relieved.",

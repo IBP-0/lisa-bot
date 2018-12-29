@@ -4,7 +4,7 @@ import { Dingy, dingyLogby } from "di-ngy";
 import { Message } from "discord.js";
 import { isNil } from "lightdash";
 import { Levels } from "logby";
-import { COMMANDS } from "./commands";
+import { commands } from "./commands";
 import { onConnect, onMessage } from "./commands/lisa/lib/lisaListeners";
 import { createConfig } from "./config";
 import { lisaChevron, LisaDiKeys } from "./di";
@@ -28,7 +28,7 @@ const logger = lisaLogby.getLogger("LisaBot");
 logger.info(`Starting in ${process.env.NODE_ENV} mode.`);
 logger.info(`Using prefix '${PREFIX}'.`);
 
-const lisaBot = new Dingy(COMMANDS, createConfig(PREFIX));
+const lisaBot = new Dingy(commands, createConfig(PREFIX));
 lisaBot.client.on("message", onMessage);
 lisaChevron.set(
     InjectableType.PLAIN,

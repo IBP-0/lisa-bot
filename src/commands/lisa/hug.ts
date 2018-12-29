@@ -23,6 +23,7 @@ const hugFn: commandFn = (
     );
 };
 
+// noinspection SpellCheckingInspection
 const hug: IDingyCommand = {
     fn: hugFn,
     args: [],

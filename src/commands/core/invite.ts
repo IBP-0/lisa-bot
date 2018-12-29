@@ -1,6 +1,7 @@
 import { commandFn } from "di-ngy/types/command/commandFn";
 import { IDingyCommand } from "di-ngy/types/command/IDingyCommand";
 
+// noinspection SpellCheckingInspection
 const inviteFn: commandFn = () =>
     [
         "I'm always happy to join new servers!",

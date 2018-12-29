@@ -59,6 +59,7 @@ class LisaStatusService {
         return this.setDeath(result, username, deathThrough);
     }
 
+    // noinspection JSMethodCanBeStatic
     public createNewLisa(oldLisaData?: ILisaData): ILisaData {
         return {
             status: {
@@ -78,6 +79,7 @@ class LisaStatusService {
         };
     }
 
+    // noinspection JSMethodCanBeStatic
     public getLifetime(lisaData: ILisaData): number {
         if (!lisaData.life.isAlive) {
             return lisaData.life.death - lisaData.life.birth;
@@ -86,6 +88,7 @@ class LisaStatusService {
         return Date.now() - lisaData.life.birth;
     }
 
+    // noinspection JSMethodCanBeStatic
     public getTimeSinceDeath(lisaData: ILisaData): number {
         return Date.now() - lisaData.life.death;
     }
@@ -96,6 +99,7 @@ class LisaStatusService {
         return lisaData.score.highScore;
     }
 
+    // noinspection JSMethodCanBeStatic
     public getRelativeState(lisaData: ILisaData): number {
         const relWater = lisaData.status.water / MAX_WATER;
         const relHappiness = lisaData.status.happiness / MAX_HAPPINESS;

@@ -4,6 +4,7 @@ import { commandFn } from "di-ngy/types/command/commandFn";
 import { IDingyCommand } from "di-ngy/types/command/IDingyCommand";
 import { Message } from "discord.js";
 
+// noinspection SpellCheckingInspection
 const IMAGE_LINK =
     "http://static.tumblr.com/df323b732955715fe3fb5a506999afc7/" +
     "rflrqqy/H9Cnsyji6/tumblr_static_88pgfgk82y4ok80ckowwwwow4.jpg";
@@ -14,6 +15,7 @@ const aboutFn: commandFn = (
     msg: Message,
     dingy: Dingy
 ) => {
+    // noinspection SpellCheckingInspection
     return {
         val: [
             "Hello!",

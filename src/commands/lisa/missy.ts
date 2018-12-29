@@ -29,6 +29,7 @@ const missyFn: commandFn = (
     );
 };
 
+// noinspection SpellCheckingInspection
 const missy: IDingyCommand = {
     fn: missyFn,
     args: [],

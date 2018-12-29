@@ -10,6 +10,7 @@ const clapFn: commandFn = (args: resolvedArgumentMap) =>
         .map(word => "**" + word.toUpperCase() + "**")
         .join(":clap:");
 
+// noinspection SpellCheckingInspection
 const clap: IDingyCommand = {
     fn: clapFn,
     args: [

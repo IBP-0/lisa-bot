@@ -2,6 +2,8 @@ import { IDingyCommandObject } from "di-ngy/types/command/IDingyCommandObject";
 import { Message } from "discord.js";
 import { about } from "./commands/core/about";
 import { invite } from "./commands/core/invite";
+import { servers } from "./commands/core/servers";
+import { fun } from "./commands/fun/fun";
 import { baa } from "./commands/lisa/baa";
 import { burn } from "./commands/lisa/burn";
 import { hug } from "./commands/lisa/hug";
@@ -13,10 +15,8 @@ import { replant } from "./commands/lisa/replant";
 import { status } from "./commands/lisa/status";
 import { water } from "./commands/lisa/water";
 import { poll } from "./commands/poll/poll";
-import { fun } from "./commands/fun/fun";
-import { servers } from "./commands/core/servers";
 
-const COMMANDS: IDingyCommandObject = {
+const commands: IDingyCommandObject = {
     /*
      * Core
      */
@@ -46,4 +46,4 @@ const COMMANDS: IDingyCommandObject = {
     poll
 };
 
-export { COMMANDS };
+export { commands };
