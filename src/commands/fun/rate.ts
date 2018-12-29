@@ -3,6 +3,7 @@ import { toFullName } from "di-ngy/src/util/toFullName";
 import { commandFn } from "di-ngy/types/command/commandFn";
 import { IDingyCommand } from "di-ngy/types/command/IDingyCommand";
 import { Message } from "discord.js";
+import { isNil } from "lightdash";
 import {
     calcNumberFromUniqueString,
     calcUniqueString,
@@ -17,9 +18,9 @@ const rateFn: commandFn = (
     let targetName: string;
     let rating: number;
 
-    const target = args.get("target")!;
-    if (target.length > 0) {
-        targetName = target;
+    const target = args.get("target");
+    if (isNil(target)) {
+        targetName = target!;
         rating = calcNumberFromUniqueString(calcUniqueString(targetName), 10);
     } else {
         targetName = toFullName(msg.author);
