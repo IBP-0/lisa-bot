@@ -192,7 +192,7 @@ const rateFn = (args, argsAll, msg) => {
     let targetName;
     let rating;
     const target = args.get("target");
-    if (isNil(target)) {
+    if (!isNil(target)) {
         targetName = target;
         rating = calcNumberFromUniqueString(calcUniqueString(targetName), 10);
     }
