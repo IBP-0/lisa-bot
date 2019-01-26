@@ -12,12 +12,10 @@
         },
         "external": [
             "moment",
-            "fs-extra",
             "promise-queue",
             "yamljs",
             "logby",
             "chevronjs",
-            "cli-ngy",
             "di-ngy",
             "lightdash"
         ]
@@ -50,24 +48,25 @@
     "repository": "https://github.com/FelixRilling/lisa-bot",
     "license": "MIT",
     "dependencies": {
+        "@types/promise-queue": "^2.2.0",
+        "@types/node": "^10.12.18",
+        "@types/yamljs": "^0.2.30",
+        "chevronjs": "^11.0.1",
         "cross-env": "^5.2.0",
-        "chevronjs": "^11.0.0",
-        "di-ngy": "^8.0.0",
-        "lightdash": "^10.2.0",
-        "moment": "^2.23.0",
+        "di-ngy": "^8.0.1",
+        "lightdash": "^10.2.1",
+        "logby": "^2.0.4",
+        "moment": "^2.24.0",
         "promise-queue": "^2.2.5",
         "yamljs": "^0.3.0"
     },
     "devDependencies": {
-        "@types/yamljs": "^0.2.30",
-        "@types/node": "^10.12.18",
-        "@types/promise-queue": "^2.2.0",
         "npm-run-all": "^4.1.5",
-        "prettier": "^1.15.3",
-        "rollup": "^0.68.2",
+        "prettier": "^1.16.1",
+        "rollup": "^1.1.2",
         "rollup-plugin-node-resolve": "^4.0.0",
-        "rollup-plugin-typescript2": "^0.18.1",
-        "tslint": "^5.12.0",
-        "typescript": "^3.2.2"
+        "rollup-plugin-typescript2": "^0.19.2",
+        "tslint": "^5.12.1",
+        "typescript": "^3.2.4"
     }
 }
