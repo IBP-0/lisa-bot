@@ -27,13 +27,11 @@
         "serve:test": "cross-env NODE_ENV=development node dist/lisa-bot.common",
         "build": "rollup -c ./tasks/rollup.config.js",
         "dist": "npm run build",
-        "watch": "rollup -c ./tasks/rollup.config.js --watch",
         "lint": "npm-run-all lint:ts",
         "lint:ts": "tslint ./src/**/*.ts",
         "fix": "npm-run-all fix:ts fix:prettier",
         "fix:ts": "tslint ./src/**/*.ts --fix",
-        "fix:prettier": "prettier ./src/**/* --write",
-        "data:pokemon": "node lib/commands/pokemon/lib/convertData.js"
+        "fix:prettier": "prettier ./src/**/* --write"
     },
     "keywords": [
         "discord",
@@ -48,8 +46,8 @@
     "repository": "https://github.com/FelixRilling/lisa-bot",
     "license": "MIT",
     "dependencies": {
+        "@types/node": "^10.12.21",
         "@types/promise-queue": "^2.2.0",
-        "@types/node": "^10.12.18",
         "@types/yamljs": "^0.2.30",
         "chevronjs": "^11.0.1",
         "cross-env": "^5.2.0",
@@ -62,11 +60,11 @@
     },
     "devDependencies": {
         "npm-run-all": "^4.1.5",
-        "prettier": "^1.16.1",
+        "prettier": "^1.16.3",
         "rollup": "^1.1.2",
         "rollup-plugin-node-resolve": "^4.0.0",
         "rollup-plugin-typescript2": "^0.19.2",
         "tslint": "^5.12.1",
-        "typescript": "^3.2.4"
+        "typescript": "^3.3.1"
     }
 }
