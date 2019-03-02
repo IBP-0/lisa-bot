@@ -951,8 +951,8 @@ class LisaStringifyService {
         return `${currentScoreTense}: ${humanizedCurrentScore} | Best lifetime: ${humanizedHighScore}.`;
     }
     // noinspection JSMethodCanBeStatic
-    humanizeDuration(duration$$1) {
-        return duration(duration$$1).humanize();
+    humanizeDuration(duration$1) {
+        return duration(duration$1).humanize();
     }
 }
 lisaChevron.set("factory" /* FACTORY */, [LisaStatusService], LisaStringifyService);
