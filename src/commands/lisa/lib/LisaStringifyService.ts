@@ -1,5 +1,4 @@
 import { InjectableType } from "chevronjs";
-import { User } from "discord.js";
 import * as moment from "moment";
 import { lisaChevron } from "../../../di";
 import { ILisaData } from "./ILisaData";

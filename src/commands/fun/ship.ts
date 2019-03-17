@@ -1,7 +1,6 @@
 import { resolvedArgumentMap } from "cli-ngy/types/argument/resolvedArgumentMap";
 import { commandFn } from "di-ngy/types/command/commandFn";
 import { IDingyCommand } from "di-ngy/types/command/IDingyCommand";
-import { Message } from "discord.js";
 import { calcNumberFromUniqueString, calcUniqueString } from "./lib/calcUnique";
 
 const getMiddleIndex = (str: string): number => Math.round(str.length / 2);

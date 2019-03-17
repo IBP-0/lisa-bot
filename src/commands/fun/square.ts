@@ -1,6 +1,5 @@
 import { resolvedArgumentMap } from "cli-ngy/types/argument/resolvedArgumentMap";
 import { IDingyCommand } from "di-ngy/types/command/IDingyCommand";
-import { Message } from "discord.js";
 
 const squareText = (str: string): string => {
     /*

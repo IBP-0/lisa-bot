@@ -1,7 +1,6 @@
 import { InjectableType } from "chevronjs";
 import { clingyLogby } from "cli-ngy";
 import { Dingy, dingyLogby } from "di-ngy";
-import { Message } from "discord.js";
 import { isNil } from "lightdash";
 import { Levels } from "logby";
 import { commands } from "./commands";

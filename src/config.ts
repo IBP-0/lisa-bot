@@ -10,6 +10,7 @@ const ADMIN_ROLE: IRole = {
 };
 
 const createConfig = (prefix: string) => {
+    // noinspection JSUnusedGlobalSymbols
     return {
         prefix,
 

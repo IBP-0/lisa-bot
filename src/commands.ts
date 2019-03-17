@@ -1,5 +1,4 @@
 import { IDingyCommandObject } from "di-ngy/types/command/IDingyCommandObject";
-import { Message } from "discord.js";
 import { about } from "./commands/core/about";
 import { invite } from "./commands/core/invite";
 import { servers } from "./commands/core/servers";
@@ -15,6 +14,7 @@ import { replant } from "./commands/lisa/replant";
 import { status } from "./commands/lisa/status";
 import { water } from "./commands/lisa/water";
 
+// noinspection JSUnusedGlobalSymbols,
 const commands: IDingyCommandObject = {
     /*
      * Core

@@ -1,6 +1,5 @@
 import { commandFn } from "di-ngy/types/command/commandFn";
 import { IDingyCommand } from "di-ngy/types/command/IDingyCommand";
-import { Message } from "discord.js";
 import { clap } from "./clap";
 import { interesting } from "./interesting";
 import { rate } from "./rate";
@@ -11,6 +10,7 @@ import { square } from "./square";
 
 const funFn: commandFn = () => "Respects have been paid.";
 
+// noinspection JSUnusedGlobalSymbols
 const fun: IDingyCommand = {
     fn: funFn,
     args: [],

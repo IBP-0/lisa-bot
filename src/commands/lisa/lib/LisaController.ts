@@ -1,6 +1,5 @@
 import { InjectableType } from "chevronjs";
 import { IStorage } from "di-ngy/types/storage/IStorage";
-import { User } from "discord.js";
 import { randItem } from "lightdash";
 import { lisaChevron, LisaDiKeys } from "../../../di";
 import { lisaLogby } from "../../../logger";

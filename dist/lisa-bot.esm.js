@@ -791,6 +791,7 @@ const square = {
 };
 
 const funFn = () => "Respects have been paid.";
+// noinspection JSUnusedGlobalSymbols
 const fun = {
     fn: funFn,
     args: [],
@@ -1242,6 +1243,7 @@ const water = {
     }
 };
 
+// noinspection JSUnusedGlobalSymbols,
 const commands = {
     /*
      * Core
@@ -1305,6 +1307,7 @@ const ADMIN_ROLE = {
     power: 999
 };
 const createConfig = (prefix) => {
+    // noinspection JSUnusedGlobalSymbols
     return {
         prefix,
         roles: [DEFAULT_ROLE, ADMIN_ROLE],
