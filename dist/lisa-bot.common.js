@@ -6,7 +6,6 @@ var diNgy = require('di-ngy');
 var yamljs = require('yamljs');
 var chevronjs = require('chevronjs');
 var moment = require('moment');
-var PromiseQueue = require('promise-queue');
 
 /**
  * Map containing {@link ICommand}s.
@@ -1245,140 +1244,6 @@ const water = {
     }
 };
 
-const eachOption = (options, letters, fn) => {
-    let i = 0;
-    while (i < options.length && i < letters.length) {
-        fn(options[i], letters[i], i);
-        i++;
-    }
-};
-
-const MAX_QUEUE_SIZE = 20;
-const logger = lisaLogby.getLogger("addReactions");
-const addReactions = (options, icons, msgSent) => {
-    const queue = new PromiseQueue(1, MAX_QUEUE_SIZE);
-    eachOption(options, icons, (option, icon) => {
-        queue
-            .add(() => msgSent.react(icon[1]))
-            .catch(e => logger.error("Could not react to message.", e));
-    });
-};
-
-const UNICODE_POS_A = 0x1f1e6;
-// noinspection SpellCheckingInspection
-const LETTERS = "abcdefghijklmnopqrstuvwxyz".split("");
-const createLetterEmoji = (letter) => {
-    const index = LETTERS.indexOf(letter.toLowerCase());
-    if (index === -1) {
-        throw new Error("Letter is not in range.");
-    }
-    return String.fromCodePoint(UNICODE_POS_A + index);
-};
-
-const YES_OR_NO_ICONS = [
-    ["Y", createLetterEmoji("Y")],
-    ["N", createLetterEmoji("N")]
-];
-const yesOrNoFn = (args, argsAll, msg, dingy) => {
-    return {
-        val: [
-            `${args.get("question")}`,
-            dingy.config.strings.separator,
-            "Y/N?"
-        ].join("\n"),
-        code: "yaml",
-        onSend: msgSent => {
-            if (!Array.isArray(msgSent)) {
-                addReactions(new Array(2), YES_OR_NO_ICONS, msgSent);
-            }
-        }
-    };
-};
-// noinspection SpellCheckingInspection
-const yesOrNo = {
-    fn: yesOrNoFn,
-    args: [
-        {
-            name: "question",
-            required: true
-        }
-    ],
-    alias: ["y/n"],
-    data: {
-        hidden: false,
-        usableInDMs: true,
-        powerRequired: 0,
-        // tslint:disable-next-line:quotemark
-        help: 'Creates a poll with "yes" and "no" as answers.'
-    }
-};
-
-const ALPHABET_ICONS = [
-    ["A", createLetterEmoji("A")],
-    ["B", createLetterEmoji("B")],
-    ["C", createLetterEmoji("C")],
-    ["D", createLetterEmoji("D")],
-    ["E", createLetterEmoji("E")],
-    ["F", createLetterEmoji("F")],
-    ["G", createLetterEmoji("G")],
-    ["H", createLetterEmoji("H")],
-    ["I", createLetterEmoji("I")],
-    ["J", createLetterEmoji("J")],
-    ["K", createLetterEmoji("K")],
-    ["L", createLetterEmoji("L")],
-    ["M", createLetterEmoji("M")],
-    ["N", createLetterEmoji("N")],
-    ["O", createLetterEmoji("O")],
-    ["P", createLetterEmoji("P")],
-    ["Q", createLetterEmoji("Q")],
-    ["R", createLetterEmoji("R")],
-    ["S", createLetterEmoji("S")],
-    ["T", createLetterEmoji("T")]
-];
-const pollFn = (args, argsAll, msg, dingy) => {
-    const options = argsAll.slice(1);
-    const result = [`${args.get("question")}`, dingy.config.strings.separator];
-    eachOption(options, ALPHABET_ICONS, (option, icon) => {
-        result.push(`${icon[0]}: ${option}`);
-    });
-    return {
-        val: result.join("\n"),
-        code: "yaml",
-        onSend: msgSent => {
-            if (!Array.isArray(msgSent)) {
-                addReactions(options, ALPHABET_ICONS, msgSent);
-            }
-        }
-    };
-};
-const poll = {
-    fn: pollFn,
-    args: [
-        {
-            name: "question",
-            required: true
-        },
-        {
-            name: "option1",
-            required: true
-        },
-        {
-            name: "option2",
-            required: true
-        }
-    ],
-    alias: ["vote", "v"],
-    data: {
-        hidden: false,
-        usableInDMs: true,
-        powerRequired: 0,
-        help: "Creates a poll to vote on."
-    },
-    sub: {
-        yesOrNo
-    }
-};
-
 const commands = {
     /*
      * Core
@@ -1402,41 +1267,37 @@ const commands = {
     /*
      * Fun
      */
-    fun,
-    /*
-     * Poll
-     */
-    poll
+    fun
 };
 
 const TICK_INTERVAL = 60000; // 1min
 const USERNAME_TICK = "Time";
 const USERNAME_ACTIVITY = "Activity";
-const logger$1 = lisaLogby.getLogger("LisaListeners");
+const logger = lisaLogby.getLogger("LisaListeners");
 const initTickInterval = (lisaBot) => {
     const lisaController = lisaChevron.get(LisaController);
     const lisaTickFn = () => {
         lisaBot.client.user
             .setActivity(lisaController.stringifyStatusShort())
-            .catch(err => logger$1.warn("Could not update currently playing.", err));
-        logger$1.trace("Ran tickInterval updateActivity.");
+            .catch(err => logger.warn("Could not update currently playing.", err));
+        logger.trace("Ran tickInterval updateActivity.");
         lisaController.modify(USERNAME_TICK, -0.5, -0.75);
-        logger$1.trace("Ran tickInterval statDecay.");
+        logger.trace("Ran tickInterval statDecay.");
     };
     lisaBot.client.setInterval(lisaTickFn, TICK_INTERVAL);
-    logger$1.trace("Initialized tickInterval.");
+    logger.trace("Initialized tickInterval.");
 };
 const increaseHappiness = () => {
     const lisaController = lisaChevron.get(LisaController);
     lisaController.modify(USERNAME_ACTIVITY, 0, 0.25);
-    logger$1.trace("Ran onMessage increaseHappiness.");
+    logger.trace("Ran onMessage increaseHappiness.");
 };
 const onConnect = (lisaBot) => {
-    logger$1.trace("Running onConnect.");
+    logger.trace("Running onConnect.");
     initTickInterval(lisaBot);
 };
 const onMessage = () => {
-    logger$1.trace("Running onMessage.");
+    logger.trace("Running onMessage.");
     increaseHappiness();
 };
 
@@ -1467,16 +1328,16 @@ if (lightdash.isNil(DISCORD_TOKEN)) {
 diNgy.dingyLogby.setLevel(LOG_LEVEL);
 clingyLogby.setLevel(LOG_LEVEL);
 lisaLogby.setLevel(LOG_LEVEL);
-const logger$2 = lisaLogby.getLogger("LisaBot");
-logger$2.info(`Starting in ${process.env.NODE_ENV} mode.`);
-logger$2.info(`Using prefix '${PREFIX}'.`);
+const logger$1 = lisaLogby.getLogger("LisaBot");
+logger$1.info(`Starting in ${process.env.NODE_ENV} mode.`);
+logger$1.info(`Using prefix '${PREFIX}'.`);
 const lisaBot = new diNgy.Dingy(commands, createConfig(PREFIX));
 lisaBot.client.on("message", onMessage);
 lisaChevron.set("plain" /* PLAIN */, [], lisaBot.persistentStorage, "_LISA_STORAGE" /* STORAGE */);
 lisaBot
     .connect(DISCORD_TOKEN)
     .then(() => {
-    logger$2.info("LisaBot started successfully.");
+    logger$1.info("LisaBot started successfully.");
     onConnect(lisaBot);
 })
-    .catch(e => logger$2.error("An unexpected error occurred.", e));
+    .catch(e => logger$1.error("An unexpected error occurred.", e));

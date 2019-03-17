@@ -14,7 +14,6 @@ import { punch } from "./commands/lisa/punch";
 import { replant } from "./commands/lisa/replant";
 import { status } from "./commands/lisa/status";
 import { water } from "./commands/lisa/water";
-import { poll } from "./commands/poll/poll";
 
 const commands: IDingyCommandObject = {
     /*
@@ -39,11 +38,7 @@ const commands: IDingyCommandObject = {
     /*
      * Fun
      */
-    fun,
-    /*
-     * Poll
-     */
-    poll
+    fun
 };
 
 export { commands };
