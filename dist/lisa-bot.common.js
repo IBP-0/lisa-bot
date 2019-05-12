@@ -813,6 +813,8 @@ const lisaChevron = new chevronjs.Chevron();
  * Logby instance used by Di-ngy.
  */
 const lisaLogby = new logby.Logby();
+lisaLogby.appenders.delete(logby.defaultLoggingAppender);
+lisaLogby.appenders.add(logby.createDelegatingAppender(diNgy.dingyLogby));
 
 const MIN_WATER = 0.1;
 const MAX_WATER = 150;
@@ -1328,9 +1330,9 @@ const LOG_LEVEL = PRODUCTION_ENABLED ? logby.Levels.INFO : logby.Levels.TRACE;
 if (lightdash.isNil(DISCORD_TOKEN)) {
     throw new Error("No token set.");
 }
-diNgy.dingyLogby.setLevel(LOG_LEVEL);
-clingyLogby.setLevel(LOG_LEVEL);
-lisaLogby.setLevel(LOG_LEVEL);
+clingyLogby.level = LOG_LEVEL;
+diNgy.dingyLogby.level = LOG_LEVEL;
+lisaLogby.level = LOG_LEVEL;
 const logger$1 = lisaLogby.getLogger("LisaBot");
 logger$1.info(`Starting in ${process.env.NODE_ENV} mode.`);
 logger$1.info(`Using prefix '${PREFIX}'.`);

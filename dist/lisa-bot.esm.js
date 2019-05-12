@@ -1,6 +1,6 @@
 import { isNil, strSimilar, isInstanceOf, arrCompact, isMap, isObjectPlain, forEachEntry, isObject, objFromDeep, randItem } from 'lightdash';
-import { Logby, Levels } from 'logby';
-import { DEFAULT_ROLE, dingyLogby, Dingy } from 'di-ngy';
+import { Logby, defaultLoggingAppender, createDelegatingAppender, Levels } from 'logby';
+import { dingyLogby, DEFAULT_ROLE, Dingy } from 'di-ngy';
 import { stringify } from 'yamljs';
 import { Chevron } from 'chevronjs';
 import { duration } from 'moment';
@@ -811,6 +811,8 @@ const lisaChevron = new Chevron();
  * Logby instance used by Di-ngy.
  */
 const lisaLogby = new Logby();
+lisaLogby.appenders.delete(defaultLoggingAppender);
+lisaLogby.appenders.add(createDelegatingAppender(dingyLogby));
 
 const MIN_WATER = 0.1;
 const MAX_WATER = 150;
@@ -1326,9 +1328,9 @@ const LOG_LEVEL = PRODUCTION_ENABLED ? Levels.INFO : Levels.TRACE;
 if (isNil(DISCORD_TOKEN)) {
     throw new Error("No token set.");
 }
-dingyLogby.setLevel(LOG_LEVEL);
-clingyLogby.setLevel(LOG_LEVEL);
-lisaLogby.setLevel(LOG_LEVEL);
+clingyLogby.level = LOG_LEVEL;
+dingyLogby.level = LOG_LEVEL;
+lisaLogby.level = LOG_LEVEL;
 const logger$1 = lisaLogby.getLogger("LisaBot");
 logger$1.info(`Starting in ${process.env.NODE_ENV} mode.`);
 logger$1.info(`Using prefix '${PREFIX}'.`);

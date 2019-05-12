@@ -20,9 +20,10 @@ if (isNil(DISCORD_TOKEN)) {
     throw new Error("No token set.");
 }
 
-dingyLogby.setLevel(LOG_LEVEL);
-clingyLogby.setLevel(LOG_LEVEL);
-lisaLogby.setLevel(LOG_LEVEL);
+clingyLogby.level = LOG_LEVEL;
+dingyLogby.level = LOG_LEVEL;
+lisaLogby.level = LOG_LEVEL;
+
 const logger = lisaLogby.getLogger("LisaBot");
 logger.info(`Starting in ${process.env.NODE_ENV} mode.`);
 logger.info(`Using prefix '${PREFIX}'.`);
