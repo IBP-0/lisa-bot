@@ -1,6 +1,6 @@
 {
     "name": "lisa-bot",
-    "version": "7.0.0",
+    "version": "7.1.0",
     "description": "A discord bot with miscellaneous features",
     "main": "./dist/lisa-bot.common.js",
     "module": "./dist/lisa-bot.esm.js",
