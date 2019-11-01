@@ -1,8 +1,6 @@
-import { resolvedArgumentMap } from "cli-ngy/types/argument/resolvedArgumentMap";
-import { commandFn } from "di-ngy/types/command/commandFn";
-import { IDingyCommand } from "di-ngy/types/command/IDingyCommand";
-
-const clapFn: commandFn = (args: resolvedArgumentMap) =>
+import { ResolvedArgumentMap } from "cli-ngy/dist/esm/src/argument/ResolvedArgumentMap";import { CommandFn } from "di-ngy/dist/esm/src/command/CommandFn";
+import { DingyCommand } from "di-ngy/dist/esm/src/command/DingyCommand";
+const clapFn: CommandFn = (args: ResolvedArgumentMap) =>
     args
         .get("text")!
         .split(" ")
@@ -10,7 +8,7 @@ const clapFn: commandFn = (args: resolvedArgumentMap) =>
         .join(":clap:");
 
 // noinspection SpellCheckingInspection
-const clap: IDingyCommand = {
+const clap: DingyCommand = {
     fn: clapFn,
     args: [
         {

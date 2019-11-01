@@ -1,5 +1,5 @@
-import { commandFn } from "di-ngy/types/command/commandFn";
-import { IDingyCommand } from "di-ngy/types/command/IDingyCommand";
+import { CommandFn } from "di-ngy/dist/esm/src/command/CommandFn";
+import { DingyCommand } from "di-ngy/dist/esm/src/command/DingyCommand";
 import { clap } from "./clap";
 import { interesting } from "./interesting";
 import { rate } from "./rate";
@@ -8,10 +8,10 @@ import { rpg } from "./rpg";
 import { ship } from "./ship";
 import { square } from "./square";
 
-const funFn: commandFn = () => "Respects have been paid.";
+const funFn: CommandFn = () => "Respects have been paid.";
 
 // noinspection JSUnusedGlobalSymbols
-const fun: IDingyCommand = {
+const fun: DingyCommand = {
     fn: funFn,
     args: [],
     alias: ["f"],

@@ -1,10 +1,10 @@
-import { commandFn } from "di-ngy/types/command/commandFn";
-import { IDingyCommand } from "di-ngy/types/command/IDingyCommand";
+import { CommandFn } from "di-ngy/dist/esm/src/command/CommandFn";
+import { DingyCommand } from "di-ngy/dist/esm/src/command/DingyCommand";
 import { randItem } from "lightdash";
 import { lisaChevron } from "../../di";
 import { LisaController } from "./lib/LisaController";
 
-const replantFn: commandFn = () => {
+const replantFn: CommandFn = () => {
     const lisaController: LisaController = lisaChevron.get(LisaController);
     const wasAlive = lisaController.isAlive();
 
@@ -22,7 +22,7 @@ const replantFn: commandFn = () => {
     );
 };
 
-const replant: IDingyCommand = {
+const replant: DingyCommand = {
     fn: replantFn,
     args: [],
     alias: ["reset", "plant"],

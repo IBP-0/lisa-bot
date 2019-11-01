@@ -1,11 +1,11 @@
-import { resolvedArgumentMap } from "cli-ngy/types/argument/resolvedArgumentMap";
 import { Dingy } from "di-ngy";
-import { commandFn } from "di-ngy/types/command/commandFn";
-import { IDingyCommand } from "di-ngy/types/command/IDingyCommand";
+import { CommandFn } from "di-ngy/dist/esm/src/command/CommandFn";
+import { DingyCommand } from "di-ngy/dist/esm/src/command/DingyCommand";
 import { Message } from "discord.js";
+import { ResolvedArgumentMap } from "cli-ngy/dist/esm/src/argument/ResolvedArgumentMap";
 
-const serversFn: commandFn = (
-    args: resolvedArgumentMap,
+const serversFn: CommandFn = (
+    args: ResolvedArgumentMap,
     argsAll: string[],
     msg: Message,
     dingy: Dingy
@@ -19,7 +19,7 @@ const serversFn: commandFn = (
     };
 };
 
-const servers: IDingyCommand = {
+const servers: DingyCommand = {
     fn: serversFn,
     args: [],
     alias: [],

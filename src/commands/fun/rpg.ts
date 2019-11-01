@@ -1,6 +1,5 @@
-import { resolvedArgumentMap } from "cli-ngy/types/argument/resolvedArgumentMap";
-import { commandFn } from "di-ngy/types/command/commandFn";
-import { IDingyCommand } from "di-ngy/types/command/IDingyCommand";
+import { ResolvedArgumentMap } from "cli-ngy/dist/esm/src/argument/ResolvedArgumentMap";import { CommandFn } from "di-ngy/dist/esm/src/command/CommandFn";
+import { DingyCommand } from "di-ngy/dist/esm/src/command/DingyCommand";
 import { Message, User } from "discord.js";
 import { stringify } from "yamljs";
 import { calcUserUniqueString } from "./lib/calcUnique";
@@ -59,8 +58,8 @@ const createRpgStats = (user: User) => {
     ].join("\n");
 };
 
-const rpgFn: commandFn = (
-    args: resolvedArgumentMap,
+const rpgFn: CommandFn = (
+    args: ResolvedArgumentMap,
     argsAll: string[],
     msg: Message
 ) => {
@@ -70,7 +69,7 @@ const rpgFn: commandFn = (
     };
 };
 
-const rpg: IDingyCommand = {
+const rpg: DingyCommand = {
     fn: rpgFn,
     args: [],
     alias: [],

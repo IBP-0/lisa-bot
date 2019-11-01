@@ -1,13 +1,13 @@
-import { resolvedArgumentMap } from "cli-ngy/types/argument/resolvedArgumentMap";
-import { toFullName } from "di-ngy/src/util/toFullName";
-import { commandFn } from "di-ngy/types/command/commandFn";
-import { IDingyCommand } from "di-ngy/types/command/IDingyCommand";
+import { CommandFn } from "di-ngy/dist/esm/src/command/CommandFn";
+import { DingyCommand } from "di-ngy/dist/esm/src/command/DingyCommand";
+import { toFullName } from "di-ngy";
 import { Message } from "discord.js";
 import { lisaChevron } from "../../di";
 import { LisaController } from "./lib/LisaController";
+import { ResolvedArgumentMap } from "cli-ngy/dist/esm/src/argument/ResolvedArgumentMap";
 
-const waterFn: commandFn = (
-    args: resolvedArgumentMap,
+const waterFn: CommandFn = (
+    args: ResolvedArgumentMap,
     argsAll: string[],
     msg: Message
 ) => {
@@ -27,7 +27,7 @@ const waterFn: commandFn = (
     );
 };
 
-const water: IDingyCommand = {
+const water: DingyCommand = {
     fn: waterFn,
     args: [],
     alias: [],

@@ -1,7 +1,6 @@
-import { resolvedArgumentMap } from "cli-ngy/types/argument/resolvedArgumentMap";
-import { toFullName } from "di-ngy/src/util/toFullName";
-import { commandFn } from "di-ngy/types/command/commandFn";
-import { IDingyCommand } from "di-ngy/types/command/IDingyCommand";
+import { ResolvedArgumentMap } from "cli-ngy/dist/esm/src/argument/ResolvedArgumentMap";import { toFullName } from "di-ngy";
+import { CommandFn } from "di-ngy/dist/esm/src/command/CommandFn";
+import { DingyCommand } from "di-ngy/dist/esm/src/command/DingyCommand";
 import { Message } from "discord.js";
 import { isNil } from "lightdash";
 import {
@@ -10,8 +9,8 @@ import {
     calcUserUniqueString
 } from "./lib/calcUnique";
 
-const rateFn: commandFn = (
-    args: resolvedArgumentMap,
+const rateFn: CommandFn = (
+    args: ResolvedArgumentMap,
     argsAll: string[],
     msg: Message
 ) => {
@@ -33,7 +32,7 @@ const rateFn: commandFn = (
     return `I rate ${targetName} a ${rating}/10`;
 };
 
-const rate: IDingyCommand = {
+const rate: DingyCommand = {
     fn: rateFn,
     args: [
         {

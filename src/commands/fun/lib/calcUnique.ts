@@ -1,4 +1,4 @@
-import { toFullName } from "di-ngy/src/util/toFullName";
+import { toFullName } from "di-ngy";
 import { User } from "discord.js";
 
 const SIZE_LIMIT = 10;

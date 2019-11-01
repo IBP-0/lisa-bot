@@ -1,14 +1,14 @@
-import { resolvedArgumentMap } from "cli-ngy/types/argument/resolvedArgumentMap";
-import { toFullName } from "di-ngy/src/util/toFullName";
-import { commandFn } from "di-ngy/types/command/commandFn";
-import { IDingyCommand } from "di-ngy/types/command/IDingyCommand";
+import { ResolvedArgumentMap } from "cli-ngy/dist/esm/src/argument/ResolvedArgumentMap";
+import { CommandFn } from "di-ngy/dist/esm/src/command/CommandFn";
+import { DingyCommand } from "di-ngy/dist/esm/src/command/DingyCommand";
+import { toFullName } from "di-ngy";
 import { Message } from "discord.js";
 import { lisaChevron } from "../../di";
 import { Death } from "./lib/Death";
 import { LisaController } from "./lib/LisaController";
 
-const burnFn: commandFn = (
-    args: resolvedArgumentMap,
+const burnFn: CommandFn = (
+    args: ResolvedArgumentMap,
     argsAll: string[],
     msg: Message
 ) => {
@@ -28,7 +28,7 @@ const burnFn: commandFn = (
 };
 
 // noinspection SpellCheckingInspection
-const burn: IDingyCommand = {
+const burn: DingyCommand = {
     fn: burnFn,
     args: [],
     alias: ["fire", "killitwithfire"],

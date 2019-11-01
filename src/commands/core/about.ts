@@ -1,16 +1,16 @@
-import { resolvedArgumentMap } from "cli-ngy/types/argument/resolvedArgumentMap";
 import { Dingy } from "di-ngy";
-import { commandFn } from "di-ngy/types/command/commandFn";
-import { IDingyCommand } from "di-ngy/types/command/IDingyCommand";
+import { CommandFn } from "di-ngy/dist/esm/src/command/CommandFn";
+import { DingyCommand } from "di-ngy/dist/esm/src/command/DingyCommand";
 import { Message } from "discord.js";
+import { ResolvedArgumentMap } from "cli-ngy/dist/esm/src/argument/ResolvedArgumentMap";
 
 // noinspection SpellCheckingInspection
 const IMAGE_LINK =
     "http://static.tumblr.com/df323b732955715fe3fb5a506999afc7/" +
     "rflrqqy/H9Cnsyji6/tumblr_static_88pgfgk82y4ok80ckowwwwow4.jpg";
 
-const aboutFn: commandFn = (
-    args: resolvedArgumentMap,
+const aboutFn: CommandFn = (
+    args: ResolvedArgumentMap,
     argsAll: string[],
     msg: Message,
     dingy: Dingy
@@ -29,7 +29,7 @@ const aboutFn: commandFn = (
     };
 };
 
-const about: IDingyCommand = {
+const about: DingyCommand = {
     fn: aboutFn,
     args: [],
     alias: ["info"],

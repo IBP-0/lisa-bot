@@ -1,11 +1,10 @@
-import { commandFn } from "di-ngy/types/command/commandFn";
-import { IDingyCommand } from "di-ngy/types/command/IDingyCommand";
-
-const roastFn: commandFn = () => {
+import { CommandFn } from "di-ngy/dist/esm/src/command/CommandFn";
+import { DingyCommand } from "di-ngy/dist/esm/src/command/DingyCommand";
+const roastFn: CommandFn = () => {
     return "Respects have been paid.";
 };
 
-const roast: IDingyCommand = {
+const roast: DingyCommand = {
     fn: roastFn,
     args: [
         {

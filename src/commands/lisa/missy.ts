@@ -1,15 +1,14 @@
-import { resolvedArgumentMap } from "cli-ngy/types/argument/resolvedArgumentMap";
-import { toFullName } from "di-ngy/src/util/toFullName";
-import { commandFn } from "di-ngy/types/command/commandFn";
-import { IDingyCommand } from "di-ngy/types/command/IDingyCommand";
+import { ResolvedArgumentMap } from "cli-ngy/dist/esm/src/argument/ResolvedArgumentMap";import { toFullName } from "di-ngy";
+import { CommandFn } from "di-ngy/dist/esm/src/command/CommandFn";
+import { DingyCommand } from "di-ngy/dist/esm/src/command/DingyCommand";
 import { Message } from "discord.js";
 import { lisaChevron } from "../../di";
 import { LisaController } from "./lib/LisaController";
 
 const MISSY_ID = ["273221196001181697"];
 
-const missyFn: commandFn = (
-    args: resolvedArgumentMap,
+const missyFn: CommandFn = (
+    args: ResolvedArgumentMap,
     argsAll: string[],
     msg: Message
 ) => {
@@ -30,7 +29,7 @@ const missyFn: commandFn = (
 };
 
 // noinspection SpellCheckingInspection
-const missy: IDingyCommand = {
+const missy: DingyCommand = {
     fn: missyFn,
     args: [],
     alias: [],

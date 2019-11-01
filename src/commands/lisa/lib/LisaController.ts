@@ -1,5 +1,5 @@
 import { InjectableType } from "chevronjs";
-import { IStorage } from "di-ngy/types/storage/IStorage";
+import { Storage } from "di-ngy/dist/esm/src/storage/Storage";
 import { randItem } from "lightdash";
 import { lisaChevron, LisaDiKeys } from "../../../di";
 import { lisaLogby } from "../../../logger";
@@ -12,13 +12,13 @@ class LisaController {
     private static readonly STORE_KEY = "lisa";
     private static readonly logger = lisaLogby.getLogger(LisaController);
 
-    private readonly store: IStorage<any>;
+    private readonly store: Storage<any>;
     private readonly lisaStatusService: LisaStatusService;
     private readonly lisaStringifyService: LisaStringifyService;
     private lisaData: ILisaData;
 
     constructor(
-        store: IStorage<any>,
+        store: Storage<any>,
         lisaStatusService: LisaStatusService,
         lisaStringifyService: LisaStringifyService
     ) {

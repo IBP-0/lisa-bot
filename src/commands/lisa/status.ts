@@ -1,15 +1,15 @@
-import { commandFn } from "di-ngy/types/command/commandFn";
-import { IDingyCommand } from "di-ngy/types/command/IDingyCommand";
+import { CommandFn } from "di-ngy/dist/esm/src/command/CommandFn";
+import { DingyCommand } from "di-ngy/dist/esm/src/command/DingyCommand";
 import { lisaChevron } from "../../di";
 import { LisaController } from "./lib/LisaController";
 
-const statusFn: commandFn = () => {
+const statusFn: CommandFn = () => {
     const lisaController: LisaController = lisaChevron.get(LisaController);
 
     return lisaController.stringifyStatus();
 };
 
-const status: IDingyCommand = {
+const status: DingyCommand = {
     fn: statusFn,
     args: [],
     alias: [],

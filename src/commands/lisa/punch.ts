@@ -1,13 +1,12 @@
-import { resolvedArgumentMap } from "cli-ngy/types/argument/resolvedArgumentMap";
-import { toFullName } from "di-ngy/src/util/toFullName";
-import { commandFn } from "di-ngy/types/command/commandFn";
-import { IDingyCommand } from "di-ngy/types/command/IDingyCommand";
+import { ResolvedArgumentMap } from "cli-ngy/dist/esm/src/argument/ResolvedArgumentMap";import { toFullName } from "di-ngy";
+import { CommandFn } from "di-ngy/dist/esm/src/command/CommandFn";
+import { DingyCommand } from "di-ngy/dist/esm/src/command/DingyCommand";
 import { Message } from "discord.js";
 import { lisaChevron } from "../../di";
 import { LisaController } from "./lib/LisaController";
 
-const punchFn: commandFn = (
-    args: resolvedArgumentMap,
+const punchFn: CommandFn = (
+    args: ResolvedArgumentMap,
     argsAll: string[],
     msg: Message
 ) => {
@@ -23,7 +22,7 @@ const punchFn: commandFn = (
     );
 };
 
-const punch: IDingyCommand = {
+const punch: DingyCommand = {
     fn: punchFn,
     args: [],
     alias: ["hit"],

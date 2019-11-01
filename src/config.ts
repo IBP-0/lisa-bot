@@ -1,10 +1,10 @@
 import { DEFAULT_ROLE } from "di-ngy";
-import { IRole } from "di-ngy/types/role/IRole";
+import { Role } from "di-ngy/dist/esm/src/role/Role";
 import { Message } from "discord.js";
 
 const ADMIN_ID = "128985967875850240";
 
-const ADMIN_ROLE: IRole = {
+const ADMIN_ROLE: Role = {
     check: (msg: Message) => msg.author.id === ADMIN_ID,
     power: 999
 };

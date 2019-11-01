@@ -1,7 +1,6 @@
-import { resolvedArgumentMap } from "cli-ngy/types/argument/resolvedArgumentMap";
-import { toFullName } from "di-ngy/src/util/toFullName";
-import { commandFn } from "di-ngy/types/command/commandFn";
-import { IDingyCommand } from "di-ngy/types/command/IDingyCommand";
+import { ResolvedArgumentMap } from "cli-ngy/dist/esm/src/argument/ResolvedArgumentMap";import { toFullName } from "di-ngy";
+import { CommandFn } from "di-ngy/dist/esm/src/command/CommandFn";
+import { DingyCommand } from "di-ngy/dist/esm/src/command/DingyCommand";
 import { Message } from "discord.js";
 import { lisaChevron } from "../../di";
 import { LisaController } from "./lib/LisaController";
@@ -30,8 +29,8 @@ const HIGH_QUALITY_JOKES = [
     "In some conifer forests, you can't cedar wood for the trees."
 ];
 
-const jokeFn: commandFn = (
-    args: resolvedArgumentMap,
+const jokeFn: CommandFn = (
+    args: ResolvedArgumentMap,
     argsAll: string[],
     msg: Message
 ) => {
@@ -47,7 +46,7 @@ const jokeFn: commandFn = (
     );
 };
 
-const joke: IDingyCommand = {
+const joke: DingyCommand = {
     fn: jokeFn,
     args: [],
     alias: ["pun"],

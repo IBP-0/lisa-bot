@@ -3,22 +3,30 @@
     "version": "7.1.0",
     "description": "A discord bot with miscellaneous features",
     "main": "./dist/lisa-bot.common.js",
-    "module": "./dist/lisa-bot.esm.js",
-    "types": "./types/main.d.ts",
-    "settings": {
-        "namespace": {
-            "module": "lisaBot",
-            "file": "lisa-bot"
-        },
+    "module": "./dist/esm/src/main.js",
+    "types": "./dist/esm/src/main.d.ts",
+    "rollupOptions": {
+        "moduleName": "lisaBot",
+        "outputName": "lisa-bot",
         "external": [
             "moment",
             "promise-queue",
             "yamljs",
             "logby",
             "chevronjs",
+            "cli-ngy",
             "di-ngy",
             "lightdash"
-        ]
+        ],
+        "globals": {
+            "lightdash": "l_",
+            "logby": "logby",
+            "chevronjs": "Chevron",
+            "cli-ngy": "clingy",
+            "di-ngy": "dingy",
+            "yamljs": "YAML",
+            "moment": "moment"
+        }
     },
     "scripts": {
         "start": "npm-run-all build serve",
@@ -27,13 +35,16 @@
         "serve": "node dist/lisa-bot.common",
         "serve:production": "cross-env NODE_ENV=production node dist/lisa-bot.common",
         "serve:development": "cross-env NODE_ENV=development node dist/lisa-bot.common",
-        "build": "rollup -c ./tasks/rollup.config.js",
-        "dist": "npm run build",
-        "lint": "npm-run-all lint:ts",
-        "lint:ts": "tslint ./src/**/*.ts",
-        "fix": "npm-run-all fix:ts fix:prettier",
-        "fix:ts": "tslint ./src/**/*.ts --fix",
-        "fix:prettier": "prettier ./src/**/* --write"
+        "dist": "npm-run-all clean lint build test docs",
+        "clean": "rimraf ./dist ./spec/dist ./docs",
+        "build": "npm-run-all build:tsc build:bundle",
+        "build:tsc": "tsc --build ./tsconfig.json",
+        "build:bundle": "rollup -c rollup.config.js",
+        "watch": "tsc --build ./tsconfig.json -w",
+        "lint": "eslint ./src/ ./spec/src/ --ext .ts",
+        "fix": "eslint ./src/ ./spec/src/ --ext .ts --fix",
+        "test": "jasmine",
+        "docs": "jsdoc -c jsdoc.json"
     },
     "keywords": [
         "discord",
@@ -51,22 +62,30 @@
         "@types/node": "^12.12.3",
         "@types/promise-queue": "^2.2.0",
         "@types/yamljs": "^0.2.30",
-        "chevronjs": "^11.0.1",
+        "chevronjs": "^11.1.0",
         "cross-env": "^6.0.3",
-        "di-ngy": "^8.1.1",
+        "di-ngy": "^8.2.0-1",
         "lightdash": "^10.3.0",
-        "logby": "^3.1.0",
+        "logby": "^3.1.1",
         "moment": "^2.24.0",
         "promise-queue": "^2.2.5",
         "yamljs": "^0.3.0"
     },
     "devDependencies": {
+        "@types/jasmine": "^3.4.4",
+        "@typescript-eslint/eslint-plugin": "^2.6.0",
+        "@typescript-eslint/parser": "^2.6.0",
+        "docdash": "^1.1.1",
+        "eslint": "^6.6.0",
+        "eslint-config-prettier": "^6.5.0",
+        "eslint-plugin-prettier": "^3.1.1",
+        "jasmine": "^3.5.0",
+        "jsdoc": "^3.6.3",
         "npm-run-all": "^4.1.5",
         "prettier": "^1.18.2",
-        "rollup": "^1.26.2",
+        "rimraf": "^3.0.0",
+        "rollup": "^1.26.0",
         "rollup-plugin-node-resolve": "^5.2.0",
-        "rollup-plugin-typescript2": "^0.24.3",
-        "tslint": "^5.20.0",
         "typescript": "^3.6.4"
     }
 }

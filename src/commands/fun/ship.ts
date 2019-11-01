@@ -1,11 +1,10 @@
-import { resolvedArgumentMap } from "cli-ngy/types/argument/resolvedArgumentMap";
-import { commandFn } from "di-ngy/types/command/commandFn";
-import { IDingyCommand } from "di-ngy/types/command/IDingyCommand";
+import { ResolvedArgumentMap } from "cli-ngy/dist/esm/src/argument/ResolvedArgumentMap";import { CommandFn } from "di-ngy/dist/esm/src/command/CommandFn";
+import { DingyCommand } from "di-ngy/dist/esm/src/command/DingyCommand";
 import { calcNumberFromUniqueString, calcUniqueString } from "./lib/calcUnique";
 
 const getMiddleIndex = (str: string): number => Math.round(str.length / 2);
 
-const shipFn: commandFn = (args: resolvedArgumentMap) => {
+const shipFn: CommandFn = (args: ResolvedArgumentMap) => {
     const person1 = args.get("person1")!;
     const person2 = args.get("person2")!;
 
@@ -34,7 +33,7 @@ const shipFn: commandFn = (args: resolvedArgumentMap) => {
     };
 };
 
-const ship: IDingyCommand = {
+const ship: DingyCommand = {
     fn: shipFn,
     args: [
         {
