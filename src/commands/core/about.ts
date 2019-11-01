@@ -4,7 +4,7 @@ import { DingyCommand } from "di-ngy/dist/esm/src/command/DingyCommand";
 import { Message } from "discord.js";
 import { ResolvedArgumentMap } from "cli-ngy/dist/esm/src/argument/ResolvedArgumentMap";
 
-// noinspection SpellCheckingInspection
+// Noinspection SpellCheckingInspection
 const IMAGE_LINK =
     "http://static.tumblr.com/df323b732955715fe3fb5a506999afc7/" +
     "rflrqqy/H9Cnsyji6/tumblr_static_88pgfgk82y4ok80ckowwwwow4.jpg";
@@ -15,7 +15,7 @@ const aboutFn: CommandFn = (
     msg: Message,
     dingy: Dingy
 ) => {
-    // noinspection SpellCheckingInspection
+    // Noinspection SpellCheckingInspection
     return {
         val: [
             "Hello!",

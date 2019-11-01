@@ -10,7 +10,6 @@ import { square } from "./square";
 
 const funFn: CommandFn = () => "Respects have been paid.";
 
-// noinspection JSUnusedGlobalSymbols
 const fun: DingyCommand = {
     fn: funFn,
     args: [],

@@ -64,7 +64,7 @@
         "@types/yamljs": "^0.2.30",
         "chevronjs": "^11.1.0",
         "cross-env": "^6.0.3",
-        "di-ngy": "^8.2.0-1",
+        "di-ngy": "^8.2.0",
         "lightdash": "^10.3.0",
         "logby": "^3.1.1",
         "moment": "^2.24.0",

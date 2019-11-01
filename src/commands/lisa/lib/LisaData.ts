@@ -1,6 +1,6 @@
 import { Death } from "./Death";
 
-interface ILisaData {
+interface LisaData {
     status: {
         water: number;
         happiness: number;
@@ -17,4 +17,4 @@ interface ILisaData {
     };
 }
 
-export { ILisaData };
+export { LisaData };

@@ -9,8 +9,7 @@ const ADMIN_ROLE: Role = {
     power: 999
 };
 
-const createConfig = (prefix: string) => {
-    // noinspection JSUnusedGlobalSymbols
+const createConfig = (prefix: string): object => {
     return {
         prefix,
 

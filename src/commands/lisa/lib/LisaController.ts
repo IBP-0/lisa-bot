@@ -4,7 +4,7 @@ import { randItem } from "lightdash";
 import { lisaChevron, LisaDiKeys } from "../../../di";
 import { lisaLogby } from "../../../logger";
 import { Death } from "./Death";
-import { ILisaData } from "./ILisaData";
+import { LisaData } from "./LisaData";
 import { LisaStatusService } from "./LisaStatusService";
 import { LisaStringifyService } from "./LisaStringifyService";
 
@@ -15,9 +15,9 @@ class LisaController {
     private readonly store: Storage<any>;
     private readonly lisaStatusService: LisaStatusService;
     private readonly lisaStringifyService: LisaStringifyService;
-    private lisaData: ILisaData;
+    private lisaData: LisaData;
 
-    constructor(
+    public constructor(
         store: Storage<any>,
         lisaStatusService: LisaStatusService,
         lisaStringifyService: LisaStringifyService
@@ -57,7 +57,7 @@ class LisaController {
         deathThrough: Death,
         textSuccess: string[],
         textAlreadyDead: string[]
-    ) {
+    ): string {
         if (!this.lisaData.life.isAlive) {
             return randItem(textAlreadyDead);
         }
@@ -104,7 +104,7 @@ class LisaController {
         this.save();
     }
 
-    private save() {
+    private save(): void {
         this.store.set(LisaController.STORE_KEY, this.lisaData);
     }
 }

@@ -1,4 +1,5 @@
-import { ResolvedArgumentMap } from "cli-ngy/dist/esm/src/argument/ResolvedArgumentMap";import { toFullName } from "di-ngy";
+import { ResolvedArgumentMap } from "cli-ngy/dist/esm/src/argument/ResolvedArgumentMap";
+import { toFullName } from "di-ngy";
 import { CommandFn } from "di-ngy/dist/esm/src/command/CommandFn";
 import { DingyCommand } from "di-ngy/dist/esm/src/command/DingyCommand";
 import { Message } from "discord.js";
@@ -19,7 +20,7 @@ const rateFn: CommandFn = (
 
     const target = args.get("target");
     if (!isNil(target)) {
-        targetName = target!;
+        targetName = target;
         rating = calcNumberFromUniqueString(calcUniqueString(targetName), 10);
     } else {
         targetName = toFullName(msg.author);

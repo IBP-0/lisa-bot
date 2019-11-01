@@ -1,4 +1,5 @@
-import { ResolvedArgumentMap } from "cli-ngy/dist/esm/src/argument/ResolvedArgumentMap";import { CommandFn } from "di-ngy/dist/esm/src/command/CommandFn";
+import { ResolvedArgumentMap } from "cli-ngy/dist/esm/src/argument/ResolvedArgumentMap";
+import { CommandFn } from "di-ngy/dist/esm/src/command/CommandFn";
 import { DingyCommand } from "di-ngy/dist/esm/src/command/DingyCommand";
 import { calcNumberFromUniqueString, calcUniqueString } from "./lib/calcUnique";
 

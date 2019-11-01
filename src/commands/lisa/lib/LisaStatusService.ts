@@ -2,7 +2,7 @@ import { InjectableType } from "chevronjs";
 import { isNil, objFromDeep } from "lightdash";
 import { lisaChevron } from "../../../di";
 import { Death } from "./Death";
-import { ILisaData } from "./ILisaData";
+import { LisaData } from "./LisaData";
 
 const MIN_WATER = 0.1;
 const MAX_WATER = 150;
@@ -14,16 +14,16 @@ const FACTOR = (MAX_WATER + MAX_HAPPINESS) / 2;
 
 class LisaStatusService {
     public modify(
-        lisaData: ILisaData,
+        lisaData: LisaData,
         username: string,
         modifierWater: number,
         modifierHappiness: number
-    ): ILisaData {
+    ): LisaData {
         if (!lisaData.life.isAlive) {
             return lisaData;
         }
 
-        const result = <ILisaData>objFromDeep(lisaData);
+        const result = <LisaData>objFromDeep(lisaData);
 
         result.status.water += modifierWater;
         if (result.status.water > MAX_WATER) {
@@ -46,21 +46,20 @@ class LisaStatusService {
     }
 
     public kill(
-        lisaData: ILisaData,
+        lisaData: LisaData,
         username: string,
         deathThrough: Death
-    ): ILisaData {
+    ): LisaData {
         if (!lisaData.life.isAlive) {
             return lisaData;
         }
 
-        const result = <ILisaData>objFromDeep(lisaData);
+        const result = <LisaData>objFromDeep(lisaData);
 
         return this.setDeath(result, username, deathThrough);
     }
 
-    // noinspection JSMethodCanBeStatic
-    public createNewLisa(oldLisaData?: ILisaData): ILisaData {
+    public createNewLisa(oldLisaData?: LisaData): LisaData {
         return {
             status: {
                 water: 100,
@@ -79,8 +78,7 @@ class LisaStatusService {
         };
     }
 
-    // noinspection JSMethodCanBeStatic
-    public getLifetime(lisaData: ILisaData): number {
+    public getLifetime(lisaData: LisaData): number {
         if (!lisaData.life.isAlive) {
             return lisaData.life.death - lisaData.life.birth;
         }
@@ -88,19 +86,17 @@ class LisaStatusService {
         return Date.now() - lisaData.life.birth;
     }
 
-    // noinspection JSMethodCanBeStatic
-    public getTimeSinceDeath(lisaData: ILisaData): number {
+    public getTimeSinceDeath(lisaData: LisaData): number {
         return Date.now() - lisaData.life.death;
     }
 
-    public getHighScore(lisaData: ILisaData): number {
+    public getHighScore(lisaData: LisaData): number {
         this.updateHighScoreIfRequired(lisaData);
 
         return lisaData.score.highScore;
     }
 
-    // noinspection JSMethodCanBeStatic
-    public getRelativeState(lisaData: ILisaData): number {
+    public getRelativeState(lisaData: LisaData): number {
         const relWater = lisaData.status.water / MAX_WATER;
         const relHappiness = lisaData.status.happiness / MAX_HAPPINESS;
 
@@ -108,10 +104,10 @@ class LisaStatusService {
     }
 
     private setDeath(
-        lisaData: ILisaData,
+        lisaData: LisaData,
         username: string,
         deathThrough: Death
-    ): ILisaData {
+    ): LisaData {
         lisaData.life.isAlive = false;
         lisaData.life.death = Date.now();
         lisaData.life.deathThrough = deathThrough;
@@ -121,7 +117,7 @@ class LisaStatusService {
         return lisaData;
     }
 
-    private updateHighScoreIfRequired(lisaData: ILisaData) {
+    private updateHighScoreIfRequired(lisaData: LisaData): void {
         const currentScore = this.getLifetime(lisaData);
         if (currentScore > lisaData.score.highScore) {
             lisaData.score.highScore = currentScore;

@@ -10,9 +10,9 @@ const USERNAME_ACTIVITY = "Activity";
 
 const logger = lisaLogby.getLogger("LisaListeners");
 
-const initTickInterval = (lisaBot: Dingy) => {
+const initTickInterval = (lisaBot: Dingy): void => {
     const lisaController: LisaController = lisaChevron.get(LisaController);
-    const lisaTickFn = () => {
+    const lisaTickFn = (): void => {
         lisaBot.client.user
             .setActivity(lisaController.stringifyStatusShort())
             .catch(err =>
@@ -27,19 +27,19 @@ const initTickInterval = (lisaBot: Dingy) => {
     logger.trace("Initialized tickInterval.");
 };
 
-const increaseHappiness = () => {
+const increaseHappiness = (): void => {
     const lisaController: LisaController = lisaChevron.get(LisaController);
 
     lisaController.modify(USERNAME_ACTIVITY, 0, 0.25);
     logger.trace("Ran onMessage increaseHappiness.");
 };
 
-const onConnect = (lisaBot: Dingy) => {
+const onConnect = (lisaBot: Dingy): void => {
     logger.trace("Running onConnect.");
     initTickInterval(lisaBot);
 };
 
-const onMessage = () => {
+const onMessage = (): void => {
     logger.trace("Running onMessage.");
     increaseHappiness();
 };

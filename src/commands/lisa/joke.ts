@@ -1,11 +1,12 @@
-import { ResolvedArgumentMap } from "cli-ngy/dist/esm/src/argument/ResolvedArgumentMap";import { toFullName } from "di-ngy";
+import { ResolvedArgumentMap } from "cli-ngy/dist/esm/src/argument/ResolvedArgumentMap";
+import { toFullName } from "di-ngy";
 import { CommandFn } from "di-ngy/dist/esm/src/command/CommandFn";
 import { DingyCommand } from "di-ngy/dist/esm/src/command/DingyCommand";
 import { Message } from "discord.js";
 import { lisaChevron } from "../../di";
 import { LisaController } from "./lib/LisaController";
 
-// noinspection SpellCheckingInspection
+// Noinspection SpellCheckingInspection
 const HIGH_QUALITY_JOKES = [
     "Why do trees have so many friends? They branch out.",
     "A photographer was great at botany because he knew photo synthesis.",
@@ -36,7 +37,7 @@ const jokeFn: CommandFn = (
 ) => {
     const lisaController: LisaController = lisaChevron.get(LisaController);
     const goodJoke = Math.random() > 0.5;
-    // noinspection SpellCheckingInspection
+    // Noinspection SpellCheckingInspection
     return lisaController.performAction(
         toFullName(msg.author),
         0,

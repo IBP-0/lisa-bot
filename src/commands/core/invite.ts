@@ -1,9 +1,7 @@
-
-
 import { CommandFn } from "di-ngy/dist/esm/src/command/CommandFn";
 import { DingyCommand } from "di-ngy/dist/esm/src/command/DingyCommand";
 
-// noinspection SpellCheckingInspection
+// Noinspection SpellCheckingInspection
 const inviteFn: CommandFn = () =>
     [
         "I'm always happy to join new servers!",

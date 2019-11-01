@@ -1,4 +1,5 @@
-import { ResolvedArgumentMap } from "cli-ngy/dist/esm/src/argument/ResolvedArgumentMap";import { toFullName } from "di-ngy";
+import { ResolvedArgumentMap } from "cli-ngy/dist/esm/src/argument/ResolvedArgumentMap";
+import { toFullName } from "di-ngy";
 import { CommandFn } from "di-ngy/dist/esm/src/command/CommandFn";
 import { DingyCommand } from "di-ngy/dist/esm/src/command/DingyCommand";
 import { Message } from "discord.js";
@@ -12,7 +13,7 @@ const hugFn: CommandFn = (
 ) => {
     const lisaController: LisaController = lisaChevron.get(LisaController);
 
-    // noinspection SpellCheckingInspection
+    // Noinspection SpellCheckingInspection
     return lisaController.performAction(
         toFullName(msg.author),
         0,
@@ -22,7 +23,7 @@ const hugFn: CommandFn = (
     );
 };
 
-// noinspection SpellCheckingInspection
+// Noinspection SpellCheckingInspection
 const hug: DingyCommand = {
     fn: hugFn,
     args: [],

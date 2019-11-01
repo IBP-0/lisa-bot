@@ -14,7 +14,7 @@ const burnFn: CommandFn = (
 ) => {
     const lisaController: LisaController = lisaChevron.get(LisaController);
 
-    // noinspection SpellCheckingInspection
+    // Noinspection SpellCheckingInspection
     return lisaController.performKill(
         toFullName(msg.author),
         Death.FIRE,
@@ -27,7 +27,7 @@ const burnFn: CommandFn = (
     );
 };
 
-// noinspection SpellCheckingInspection
+// Noinspection SpellCheckingInspection
 const burn: DingyCommand = {
     fn: burnFn,
     args: [],

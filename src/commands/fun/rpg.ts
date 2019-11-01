@@ -1,4 +1,5 @@
-import { ResolvedArgumentMap } from "cli-ngy/dist/esm/src/argument/ResolvedArgumentMap";import { CommandFn } from "di-ngy/dist/esm/src/command/CommandFn";
+import { ResolvedArgumentMap } from "cli-ngy/dist/esm/src/argument/ResolvedArgumentMap";
+import { CommandFn } from "di-ngy/dist/esm/src/command/CommandFn";
 import { DingyCommand } from "di-ngy/dist/esm/src/command/DingyCommand";
 import { Message, User } from "discord.js";
 import { stringify } from "yamljs";
@@ -12,7 +13,7 @@ const SPACE_AFTER = 32;
 const BARS_PER_VAL = 3;
 const BAR_CHARACTER = "|";
 
-const formatEntry = (name: string, val: string) => {
+const formatEntry = (name: string, val: string): string => {
     const valInt = Number(val);
 
     const barSize = valInt * BARS_PER_VAL;
@@ -27,7 +28,7 @@ const formatEntry = (name: string, val: string) => {
     return `${name}:${paddedBars}${valInt}`;
 };
 
-const createRpgStats = (user: User) => {
+const createRpgStats = (user: User): string => {
     const [
         valVit,
         valStr,

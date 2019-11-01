@@ -67,7 +67,7 @@ const calcUserUniqueString = (user: User): string =>
  * @param max Inclusive max value.
  * @return Unique number from 0 to max.
  */
-const calcNumberFromUniqueString = (str: string, max: number = 10): number => {
+const calcNumberFromUniqueString = (str: string, max = 10): number => {
     const val = Number(str[0]);
     return Math.floor(((val + 1) / 10) * max);
 };

@@ -1,4 +1,7 @@
-import { ResolvedArgumentMap } from "cli-ngy/dist/esm/src/argument/ResolvedArgumentMap";import { DingyCommand } from "di-ngy/dist/esm/src/command/DingyCommand";
+import { ResolvedArgumentMap } from "cli-ngy/dist/esm/src/argument/ResolvedArgumentMap";
+import { DingyCommand } from "di-ngy/dist/esm/src/command/DingyCommand";
+import { CommandResponse } from "di-ngy/dist/esm/src/message/response/CommandResponse";
+
 const squareText = (str: string): string => {
     /*
      * Use spread rather than .split() to support wide characters
@@ -35,7 +38,7 @@ const squareText = (str: string): string => {
     return result.join("\n");
 };
 
-const squareFn = (args: ResolvedArgumentMap) => {
+const squareFn = (args: ResolvedArgumentMap): CommandResponse => {
     return {
         val: squareText(args.get("text")!),
         code: true

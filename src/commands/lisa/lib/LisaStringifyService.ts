@@ -1,7 +1,7 @@
 import { InjectableType } from "chevronjs";
 import * as moment from "moment";
 import { lisaChevron } from "../../../di";
-import { ILisaData } from "./ILisaData";
+import { LisaData } from "./LisaData";
 import { LisaStatusService } from "./LisaStatusService";
 
 const RELATIVE_STATE_GOOD = 90;
@@ -10,11 +10,11 @@ const RELATIVE_STATE_OK = 40;
 class LisaStringifyService {
     private readonly lisaStatusService: LisaStatusService;
 
-    constructor(lisaStatusService: LisaStatusService) {
+    public constructor(lisaStatusService: LisaStatusService) {
         this.lisaStatusService = lisaStatusService;
     }
 
-    public stringifyStatus(lisaData: ILisaData): string {
+    public stringifyStatus(lisaData: LisaData): string {
         const statusShort = `Lisa is ${this.stringifyStatusShort(lisaData)}`;
         const score = this.stringifyScore(lisaData);
         let text: string[] = [];
@@ -29,9 +29,7 @@ class LisaStringifyService {
 
             text = [
                 `Lisa died ${humanizedTimeSinceDeath} ago, and was alive for ${humanizedLifetime}.`,
-                `She was killed by ${lisaData.life.killer} through ${
-                    lisaData.life.deathThrough
-                }.`
+                `She was killed by ${lisaData.life.killer} through ${lisaData.life.deathThrough}.`
             ];
         } else {
             const waterLevel = Math.floor(lisaData.status.water);
@@ -43,7 +41,7 @@ class LisaStringifyService {
         return [statusShort, ...text, score].join("\n");
     }
 
-    public stringifyStatusShort(lisaData: ILisaData): string {
+    public stringifyStatusShort(lisaData: LisaData): string {
         if (!lisaData.life.isAlive) {
             return "is dead.";
         }
@@ -58,7 +56,7 @@ class LisaStringifyService {
         return "close to dying.";
     }
 
-    private stringifyScore(lisaData: ILisaData): string {
+    private stringifyScore(lisaData: LisaData): string {
         const humanizedCurrentScore = this.humanizeDuration(
             this.lisaStatusService.getLifetime(lisaData)
         );
@@ -72,7 +70,6 @@ class LisaStringifyService {
         return `${currentScoreTense}: ${humanizedCurrentScore} | Best lifetime: ${humanizedHighScore}.`;
     }
 
-    // noinspection JSMethodCanBeStatic
     private humanizeDuration(duration: number): string {
         return moment.duration(duration).humanize();
     }
