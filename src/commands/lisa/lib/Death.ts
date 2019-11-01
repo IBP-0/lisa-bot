@@ -1,4 +1,4 @@
-const enum Death {
+enum Death {
     UNKNOWN = "something unknown",
     DROWNING = "drowning",
     DEHYDRATION = "dehydration",

@@ -2,7 +2,7 @@ import { Chevron } from "chevronjs";
 
 const lisaChevron = new Chevron();
 
-const enum LisaDiKeys {
+enum LisaDiKeys {
     STORAGE = "_LISA_STORAGE"
 }
 

@@ -806,6 +806,10 @@ const fun = {
 };
 
 const lisaChevron = new Chevron();
+var LisaDiKeys;
+(function (LisaDiKeys) {
+    LisaDiKeys["STORAGE"] = "_LISA_STORAGE";
+})(LisaDiKeys || (LisaDiKeys = {}));
 
 /**
  * Logby instance used by Di-ngy.
@@ -813,6 +817,15 @@ const lisaChevron = new Chevron();
 const lisaLogby = new Logby();
 lisaLogby.appenders.delete(defaultLoggingAppender);
 lisaLogby.appenders.add(createDelegatingAppender(dingyLogby));
+
+var Death;
+(function (Death) {
+    Death["UNKNOWN"] = "something unknown";
+    Death["DROWNING"] = "drowning";
+    Death["DEHYDRATION"] = "dehydration";
+    Death["SADNESS"] = "sadness";
+    Death["FIRE"] = "fire";
+})(Death || (Death = {}));
 
 const MIN_WATER = 0.1;
 const MAX_WATER = 150;
@@ -827,17 +840,17 @@ class LisaStatusService {
         const result = objFromDeep(lisaData);
         result.status.water += modifierWater;
         if (result.status.water > MAX_WATER) {
-            return this.setDeath(result, username, "drowning" /* DROWNING */);
+            return this.setDeath(result, username, Death.DROWNING);
         }
         if (result.status.water < MIN_WATER) {
-            return this.setDeath(result, username, "dehydration" /* DEHYDRATION */);
+            return this.setDeath(result, username, Death.DEHYDRATION);
         }
         result.status.happiness += modifierHappiness;
         if (result.status.happiness > MAX_HAPPINESS) {
             result.status.happiness = MAX_HAPPINESS;
         }
         if (result.status.happiness < MIN_HAPPINESS) {
-            return this.setDeath(result, username, "sadness" /* SADNESS */);
+            return this.setDeath(result, username, Death.SADNESS);
         }
         this.updateHighScoreIfRequired(lisaData);
         return result;
@@ -859,7 +872,7 @@ class LisaStatusService {
             life: {
                 isAlive: true,
                 killer: "Anonymous",
-                deathThrough: "something unknown" /* UNKNOWN */,
+                deathThrough: Death.UNKNOWN,
                 birth: Date.now(),
                 death: 0
             },
@@ -1013,7 +1026,7 @@ class LisaController {
 }
 LisaController.STORE_KEY = "lisa";
 LisaController.logger = lisaLogby.getLogger(LisaController);
-lisaChevron.set("factory" /* FACTORY */, ["_LISA_STORAGE" /* STORAGE */, LisaStatusService, LisaStringifyService], LisaController);
+lisaChevron.set("factory" /* FACTORY */, [LisaDiKeys.STORAGE, LisaStatusService, LisaStringifyService], LisaController);
 
 const GOAT_IDS = [
     "169804264988868609",
@@ -1045,7 +1058,7 @@ const baa = {
 const burnFn = (args, argsAll, msg) => {
     const lisaController = lisaChevron.get(LisaController);
     // noinspection SpellCheckingInspection
-    return lisaController.performKill(toFullName(msg.author), "fire" /* FIRE */, [
+    return lisaController.performKill(toFullName(msg.author), Death.FIRE, [
         "_You hear muffled plant-screams as you set Lisa on fire_",
         "_Lisa looks at you, judging your actions._",
         "AAAAAAAAAAAAAAAAAAAAAAAAAAAA"
@@ -1336,7 +1349,7 @@ logger$1.info(`Starting in ${process.env.NODE_ENV} mode.`);
 logger$1.info(`Using prefix '${PREFIX}'.`);
 const lisaBot = new Dingy(commands, createConfig(PREFIX));
 lisaBot.client.on("message", onMessage);
-lisaChevron.set("plain" /* PLAIN */, [], lisaBot.persistentStorage, "_LISA_STORAGE" /* STORAGE */);
+lisaChevron.set("plain" /* PLAIN */, [], lisaBot.persistentStorage, LisaDiKeys.STORAGE);
 lisaBot
     .connect(DISCORD_TOKEN)
     .then(() => {
