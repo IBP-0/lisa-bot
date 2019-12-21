@@ -27,6 +27,46 @@ class AboutCommand extends discord_jsCommando.Command {
     }
 }
 
+const INVITE_MESSAGE = `I'm always happy to join new servers!
+If you want me to join your server, follow this link:
+<https://discordapp.com/oauth2/authorize?&client_id=263671526279086092&scope=bot>`;
+class InviteCommand extends discord_jsCommando.Command {
+    constructor(client) {
+        super(client, {
+            name: "invite",
+            aliases: ["join"],
+            group: "util",
+            memberName: "invite",
+            description: "Add Lisa to your server."
+        });
+    }
+    run(message) {
+        return message.say(INVITE_MESSAGE);
+    }
+}
+
+class ServersCommand extends discord_jsCommando.Command {
+    constructor(client) {
+        super(client, {
+            name: "servers",
+            aliases: [],
+            group: "util",
+            memberName: "servers",
+            description: "Shows the servers the bot is on.",
+            ownerOnly: true
+        });
+    }
+    run(message) {
+        return message.say(this.getServers());
+    }
+    getServers() {
+        return this.client.guilds
+            .array()
+            .map(guild => `${guild.id}: ${guild.name}`)
+            .join("\n");
+    }
+}
+
 class LisaDiscordClient {
     constructor(options) {
         this.commandoClient = new discord_jsCommando.CommandoClient(options);
@@ -40,7 +80,11 @@ class LisaDiscordClient {
             prefix: false,
             commandState: false
         });
-        this.commandoClient.registry.registerCommand(AboutCommand);
+        this.commandoClient.registry.registerCommands([
+            AboutCommand,
+            InviteCommand,
+            ServersCommand
+        ]);
     }
     async login(token) {
         await this.commandoClient.login(token);
