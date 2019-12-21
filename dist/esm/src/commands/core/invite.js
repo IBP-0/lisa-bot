@@ -1,4 +1,4 @@
-// noinspection SpellCheckingInspection
+// Noinspection SpellCheckingInspection
 const inviteFn = () => [
     "I'm always happy to join new servers!",
     "If you want me to join your server, follow this link: ",

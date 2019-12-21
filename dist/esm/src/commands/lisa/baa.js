@@ -13,7 +13,7 @@ const baaFn = (args, argsAll, msg) => {
         return "You're not a goat uwu";
     }
     const lisaController = lisaChevron.get(LisaController);
-    // noinspection SpellCheckingInspection
+    // Noinspection SpellCheckingInspection
     return lisaController.performAction(toFullName(msg.author), 0, 30, ["Baa", "Baa~", "Baaaaaaa ^w^", ":goat:"], ["Baa? a dead Lisa..."]);
 };
 const baa = {

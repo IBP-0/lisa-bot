@@ -1,8 +1,8 @@
-// noinspection SpellCheckingInspection
+// Noinspection SpellCheckingInspection
 const IMAGE_LINK = "http://static.tumblr.com/df323b732955715fe3fb5a506999afc7/" +
     "rflrqqy/H9Cnsyji6/tumblr_static_88pgfgk82y4ok80ckowwwwow4.jpg";
 const aboutFn = (args, argsAll, msg, dingy) => {
-    // noinspection SpellCheckingInspection
+    // Noinspection SpellCheckingInspection
     return {
         val: [
             "Hello!",

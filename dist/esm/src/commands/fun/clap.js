@@ -3,7 +3,7 @@ const clapFn = (args) => args
     .split(" ")
     .map(word => "**" + word.toUpperCase() + "**")
     .join(":clap:");
-// noinspection SpellCheckingInspection
+// Noinspection SpellCheckingInspection
 const clap = {
     fn: clapFn,
     args: [

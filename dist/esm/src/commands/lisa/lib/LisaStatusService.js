@@ -37,7 +37,6 @@ class LisaStatusService {
         const result = objFromDeep(lisaData);
         return this.setDeath(result, username, deathThrough);
     }
-    // noinspection JSMethodCanBeStatic
     createNewLisa(oldLisaData) {
         return {
             status: {
@@ -56,14 +55,12 @@ class LisaStatusService {
             }
         };
     }
-    // noinspection JSMethodCanBeStatic
     getLifetime(lisaData) {
         if (!lisaData.life.isAlive) {
             return lisaData.life.death - lisaData.life.birth;
         }
         return Date.now() - lisaData.life.birth;
     }
-    // noinspection JSMethodCanBeStatic
     getTimeSinceDeath(lisaData) {
         return Date.now() - lisaData.life.death;
     }
@@ -71,7 +68,6 @@ class LisaStatusService {
         this.updateHighScoreIfRequired(lisaData);
         return lisaData.score.highScore;
     }
-    // noinspection JSMethodCanBeStatic
     getRelativeState(lisaData) {
         const relWater = lisaData.status.water / MAX_WATER;
         const relHappiness = lisaData.status.happiness / MAX_HAPPINESS;

@@ -7,7 +7,7 @@ const niklasFn = (args, argsAll, msg) => {
         return "You're not a niklas uwu";
     }
     const lisaController = lisaChevron.get(LisaController);
-    // noinspection SpellCheckingInspection
+    // Noinspection SpellCheckingInspection
     return lisaController.performAction(toFullName(msg.author), 0, 40, ["_tight huggu_"], ["OwO whats this? a dead Lisa..."]);
 };
 const niklas = {

@@ -48,7 +48,6 @@ class LisaStringifyService {
             : "Lifetime";
         return `${currentScoreTense}: ${humanizedCurrentScore} | Best lifetime: ${humanizedHighScore}.`;
     }
-    // noinspection JSMethodCanBeStatic
     humanizeDuration(duration) {
         return moment.duration(duration).humanize();
     }
