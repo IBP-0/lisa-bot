@@ -1,5 +1,5 @@
 import { Death } from "./Death";
-interface ILisaData {
+interface LisaData {
     status: {
         water: number;
         happiness: number;
@@ -15,5 +15,5 @@ interface ILisaData {
         highScore: number;
     };
 }
-export { ILisaData };
-//# sourceMappingURL=ILisaData.d.ts.map
+export { LisaData };
+//# sourceMappingURL=LisaData.d.ts.map

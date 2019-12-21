@@ -5,7 +5,6 @@ const ADMIN_ROLE = {
     power: 999
 };
 const createConfig = (prefix) => {
-    // noinspection JSUnusedGlobalSymbols
     return {
         prefix,
         roles: [DEFAULT_ROLE, ADMIN_ROLE],

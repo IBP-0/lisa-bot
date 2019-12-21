@@ -6,7 +6,6 @@ import { rpg } from "./rpg";
 import { ship } from "./ship";
 import { square } from "./square";
 const funFn = () => "Respects have been paid.";
-// noinspection JSUnusedGlobalSymbols
 const fun = {
     fn: funFn,
     args: [],

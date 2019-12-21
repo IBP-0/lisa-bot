@@ -1,13 +1,13 @@
 import { Death } from "./Death";
-import { ILisaData } from "./ILisaData";
+import { LisaData } from "./LisaData";
 declare class LisaStatusService {
-    modify(lisaData: ILisaData, username: string, modifierWater: number, modifierHappiness: number): ILisaData;
-    kill(lisaData: ILisaData, username: string, deathThrough: Death): ILisaData;
-    createNewLisa(oldLisaData?: ILisaData): ILisaData;
-    getLifetime(lisaData: ILisaData): number;
-    getTimeSinceDeath(lisaData: ILisaData): number;
-    getHighScore(lisaData: ILisaData): number;
-    getRelativeState(lisaData: ILisaData): number;
+    modify(lisaData: LisaData, username: string, modifierWater: number, modifierHappiness: number): LisaData;
+    kill(lisaData: LisaData, username: string, deathThrough: Death): LisaData;
+    createNewLisa(oldLisaData?: LisaData): LisaData;
+    getLifetime(lisaData: LisaData): number;
+    getTimeSinceDeath(lisaData: LisaData): number;
+    getHighScore(lisaData: LisaData): number;
+    getRelativeState(lisaData: LisaData): number;
     private setDeath;
     private updateHighScoreIfRequired;
 }

@@ -1,7 +1,7 @@
 import { toFullName } from "di-ngy";
 import { lisaChevron } from "../../di";
 import { LisaController } from "./lib/LisaController";
-// noinspection SpellCheckingInspection
+// Noinspection SpellCheckingInspection
 const HIGH_QUALITY_JOKES = [
     "Why do trees have so many friends? They branch out.",
     "A photographer was great at botany because he knew photo synthesis.",
@@ -27,7 +27,7 @@ const HIGH_QUALITY_JOKES = [
 const jokeFn = (args, argsAll, msg) => {
     const lisaController = lisaChevron.get(LisaController);
     const goodJoke = Math.random() > 0.5;
-    // noinspection SpellCheckingInspection
+    // Noinspection SpellCheckingInspection
     return lisaController.performAction(toFullName(msg.author), 0, goodJoke ? 15 : -15, HIGH_QUALITY_JOKES, ["Dead plants can't listen to your jokes (probably)."]);
 };
 const joke = {

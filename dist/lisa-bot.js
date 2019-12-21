@@ -1,11 +1,11 @@
 (function (chevronjs, cliNgy, diNgy, lightdash, logby, yamljs, moment) {
     'use strict';
 
-    // noinspection SpellCheckingInspection
+    // Noinspection SpellCheckingInspection
     const IMAGE_LINK = "http://static.tumblr.com/df323b732955715fe3fb5a506999afc7/" +
         "rflrqqy/H9Cnsyji6/tumblr_static_88pgfgk82y4ok80ckowwwwow4.jpg";
     const aboutFn = (args, argsAll, msg, dingy) => {
-        // noinspection SpellCheckingInspection
+        // Noinspection SpellCheckingInspection
         return {
             val: [
                 "Hello!",
@@ -30,7 +30,7 @@
         }
     };
 
-    // noinspection SpellCheckingInspection
+    // Noinspection SpellCheckingInspection
     const inviteFn = () => [
         "I'm always happy to join new servers!",
         "If you want me to join your server, follow this link: ",
@@ -74,7 +74,7 @@
         .split(" ")
         .map(word => "**" + word.toUpperCase() + "**")
         .join(":clap:");
-    // noinspection SpellCheckingInspection
+    // Noinspection SpellCheckingInspection
     const clap = {
         fn: clapFn,
         args: [
@@ -373,7 +373,6 @@
     };
 
     const funFn = () => "Respects have been paid.";
-    // noinspection JSUnusedGlobalSymbols
     const fun = {
         fn: funFn,
         args: [],
@@ -444,7 +443,6 @@
             const result = lightdash.objFromDeep(lisaData);
             return this.setDeath(result, username, deathThrough);
         }
-        // noinspection JSMethodCanBeStatic
         createNewLisa(oldLisaData) {
             return {
                 status: {
@@ -463,14 +461,12 @@
                 }
             };
         }
-        // noinspection JSMethodCanBeStatic
         getLifetime(lisaData) {
             if (!lisaData.life.isAlive) {
                 return lisaData.life.death - lisaData.life.birth;
             }
             return Date.now() - lisaData.life.birth;
         }
-        // noinspection JSMethodCanBeStatic
         getTimeSinceDeath(lisaData) {
             return Date.now() - lisaData.life.death;
         }
@@ -478,7 +474,6 @@
             this.updateHighScoreIfRequired(lisaData);
             return lisaData.score.highScore;
         }
-        // noinspection JSMethodCanBeStatic
         getRelativeState(lisaData) {
             const relWater = lisaData.status.water / MAX_WATER;
             const relHappiness = lisaData.status.happiness / MAX_HAPPINESS;
@@ -547,7 +542,6 @@
                 : "Lifetime";
             return `${currentScoreTense}: ${humanizedCurrentScore} | Best lifetime: ${humanizedHighScore}.`;
         }
-        // noinspection JSMethodCanBeStatic
         humanizeDuration(duration) {
             return moment.duration(duration).humanize();
         }
@@ -622,7 +616,7 @@
             return "You're not a goat uwu";
         }
         const lisaController = lisaChevron.get(LisaController);
-        // noinspection SpellCheckingInspection
+        // Noinspection SpellCheckingInspection
         return lisaController.performAction(diNgy.toFullName(msg.author), 0, 30, ["Baa", "Baa~", "Baaaaaaa ^w^", ":goat:"], ["Baa? a dead Lisa..."]);
     };
     const baa = {
@@ -639,14 +633,14 @@
 
     const burnFn = (args, argsAll, msg) => {
         const lisaController = lisaChevron.get(LisaController);
-        // noinspection SpellCheckingInspection
+        // Noinspection SpellCheckingInspection
         return lisaController.performKill(diNgy.toFullName(msg.author), Death.FIRE, [
             "_You hear muffled plant-screams as you set Lisa on fire_",
             "_Lisa looks at you, judging your actions._",
             "AAAAAAAAAAAAAAAAAAAAAAAAAAAA"
         ], ["Lisa is already dead!"]);
     };
-    // noinspection SpellCheckingInspection
+    // Noinspection SpellCheckingInspection
     const burn = {
         fn: burnFn,
         args: [],
@@ -661,10 +655,10 @@
 
     const hugFn = (args, argsAll, msg) => {
         const lisaController = lisaChevron.get(LisaController);
-        // noinspection SpellCheckingInspection
+        // Noinspection SpellCheckingInspection
         return lisaController.performAction(diNgy.toFullName(msg.author), 0, 20, ["_Is hugged_.", "_hug_"], ["It's too late to hug poor Lisa..."]);
     };
-    // noinspection SpellCheckingInspection
+    // Noinspection SpellCheckingInspection
     const hug = {
         fn: hugFn,
         args: [],
@@ -677,7 +671,7 @@
         }
     };
 
-    // noinspection SpellCheckingInspection
+    // Noinspection SpellCheckingInspection
     const HIGH_QUALITY_JOKES = [
         "Why do trees have so many friends? They branch out.",
         "A photographer was great at botany because he knew photo synthesis.",
@@ -703,7 +697,7 @@
     const jokeFn = (args, argsAll, msg) => {
         const lisaController = lisaChevron.get(LisaController);
         const goodJoke = Math.random() > 0.5;
-        // noinspection SpellCheckingInspection
+        // Noinspection SpellCheckingInspection
         return lisaController.performAction(diNgy.toFullName(msg.author), 0, goodJoke ? 15 : -15, HIGH_QUALITY_JOKES, ["Dead plants can't listen to your jokes (probably)."]);
     };
     const joke = {
@@ -724,10 +718,10 @@
             return "You're not a missy <w<";
         }
         const lisaController = lisaChevron.get(LisaController);
-        // noinspection SpellCheckingInspection
+        // Noinspection SpellCheckingInspection
         return lisaController.performAction(diNgy.toFullName(msg.author), 0, 40, ["_Baaaaaaaaaaaaaa_"], ["OwO whats this? a dead Lisa..."]);
     };
-    // noinspection SpellCheckingInspection
+    // Noinspection SpellCheckingInspection
     const missy = {
         fn: missyFn,
         args: [],
@@ -746,7 +740,7 @@
             return "You're not a niklas uwu";
         }
         const lisaController = lisaChevron.get(LisaController);
-        // noinspection SpellCheckingInspection
+        // Noinspection SpellCheckingInspection
         return lisaController.performAction(diNgy.toFullName(msg.author), 0, 40, ["_tight huggu_"], ["OwO whats this? a dead Lisa..."]);
     };
     const niklas = {
@@ -763,7 +757,7 @@
 
     const punchFn = (args, argsAll, msg) => {
         const lisaController = lisaChevron.get(LisaController);
-        // noinspection SpellCheckingInspection
+        // Noinspection SpellCheckingInspection
         return lisaController.performAction(diNgy.toFullName(msg.author), 0, -10, ["_Is being punched in the leaves._", "oof.", "ouch ouw owie."], ["The dead feel no pain..."]);
     };
     const punch = {
@@ -903,7 +897,6 @@
         power: 999
     };
     const createConfig = (prefix) => {
-        // noinspection JSUnusedGlobalSymbols
         return {
             prefix,
             roles: [diNgy.DEFAULT_ROLE, ADMIN_ROLE],
