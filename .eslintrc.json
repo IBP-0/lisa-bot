@@ -37,7 +37,6 @@
         "no-shadow": "error",
         "no-undef-init": "warn",
         "prettier/prettier": "warn",
-        "@typescript-eslint/explicit-member-accessibility": "warn",
         "@typescript-eslint/interface-name-prefix": [
             "warn",
             {
