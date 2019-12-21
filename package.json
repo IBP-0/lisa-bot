@@ -9,24 +9,14 @@
         "moduleName": "lisaBot",
         "outputName": "lisa-bot",
         "external": [
+            "discord.js",
+            "discord.js-commando",
             "moment",
-            "promise-queue",
-            "yamljs",
-            "logby",
+            "lodash",
+            "winston",
             "chevronjs",
-            "cli-ngy",
-            "di-ngy",
             "lightdash"
-        ],
-        "globals": {
-            "lightdash": "l_",
-            "logby": "logby",
-            "chevronjs": "Chevron",
-            "cli-ngy": "clingy",
-            "di-ngy": "dingy",
-            "yamljs": "YAML",
-            "moment": "moment"
-        }
+        ]
     },
     "scripts": {
         "start": "npm-run-all build serve",

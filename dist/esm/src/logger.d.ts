@@ -1,7 +1,4 @@
-import { Logby } from "logby";
-/**
- * Logby instance used by Di-ngy.
- */
-declare const lisaLogby: Logby;
-export { lisaLogby };
+import * as winston from "winston";
+declare const rootLogger: winston.Logger;
+export { rootLogger };
 //# sourceMappingURL=logger.d.ts.map
