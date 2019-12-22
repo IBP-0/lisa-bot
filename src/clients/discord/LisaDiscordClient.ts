@@ -1,4 +1,8 @@
-import { CommandoClient, CommandoClientOptions } from "discord.js-commando";
+import {
+    CommandGroup,
+    CommandoClient,
+    CommandoClientOptions
+} from "discord.js-commando";
 import { AboutCommand } from "./commands/core/AboutCommand";
 import { InviteCommand } from "./commands/core/InviteCommand";
 import { ServersCommand } from "./commands/core/ServersCommand";
@@ -9,6 +13,9 @@ class LisaDiscordClient {
     constructor(options: CommandoClientOptions) {
         this.commandoClient = new CommandoClient(options);
 
+        /*
+         * Defaults
+         */
         this.commandoClient.registry
             .registerDefaultTypes()
             .registerDefaultGroups()
@@ -20,6 +27,16 @@ class LisaDiscordClient {
                 commandState: false
             });
 
+        /*
+         * Custom groups
+         */
+        this.commandoClient.registry.registerGroup(
+            new CommandGroup(this.commandoClient, "lisa", "Lisa")
+        );
+
+        /*
+         * Custom commands
+         */
         this.commandoClient.registry.registerCommands([
             AboutCommand,
             InviteCommand,

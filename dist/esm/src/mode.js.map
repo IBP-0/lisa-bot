@@ -1,1 +1,1 @@
-{"version":3,"file":"mode.js","sourceRoot":"","sources":["../../../src/mode.ts"],"names":[],"mappings":"AAAA,MAAM,gBAAgB,GAAG,GAAG,EAAE,CAAC,OAAO,CAAC,GAAG,CAAC,QAAQ,KAAK,YAAY,CAAC;AAErE,OAAO,EAAE,gBAAgB,EAAE,CAAC"}
+{"version":3,"file":"mode.js","sourceRoot":"","sources":["../../../src/mode.ts"],"names":[],"mappings":"AAAA,MAAM,gBAAgB,GAAG,GAAY,EAAE,CAAC,OAAO,CAAC,GAAG,CAAC,QAAQ,KAAK,YAAY,CAAC;AAE9E,OAAO,EAAE,gBAAgB,EAAE,CAAC"}
