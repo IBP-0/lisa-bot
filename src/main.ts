@@ -1,8 +1,9 @@
 import { isNil } from "lodash";
 import { chevron } from "./chevron";
 import { LisaDiscordClient } from "./clients/discord/LisaDiscordClient";
+import { LisaDiscordController } from "./clients/discord/LisaDiscordController";
 import { LisaTimer } from "./lisa/LisaTimer";
-import { LisaStateController } from "./lisa/state/LisaStateController";
+import { LisaStateController } from "./lisa/LisaStateController";
 import { rootLogger } from "./logger";
 import { isProductionMode } from "./mode";
 
@@ -34,13 +35,21 @@ const startLisaDiscordClient = async (): Promise<void> => {
         throw new Error("No token set.");
     }
 
-    const lisaDiscordClient = new LisaDiscordClient({
+    const lisaDiscordClient: LisaDiscordClient = chevron.getInjectableInstance(
+        LisaDiscordClient
+    );
+    lisaDiscordClient.init({
         commandPrefix: "$",
         owner: "128985967875850240",
         invite:
             "https://discordapp.com/oauth2/authorize?&client_id=263671526279086092&scope=bot"
     });
-    return lisaDiscordClient.login(discordToken);
+    const lisaDiscordController: LisaDiscordController = chevron.getInjectableInstance(
+        LisaDiscordController
+    );
+
+    await lisaDiscordClient.login(discordToken);
+    lisaDiscordController.bindEvents();
 };
 
 logger.info("Starting Lisa bot...");

@@ -10,12 +10,12 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var LisaStateController_1;
 import { DefaultBootstrappings, Injectable } from "chevronjs";
 import { pathExists } from "fs-extra";
-import { clone } from "lodash";
+import { clone, cloneDeep } from "lodash";
 import { Subject } from "rxjs";
-import { debounceTime } from "rxjs/operators";
-import { chevron } from "../../chevron";
-import { rootLogger } from "../../logger";
-import { LisaStorageService } from "../LisaStorageService";
+import { throttleTime } from "rxjs/operators";
+import { chevron } from "../chevron";
+import { rootLogger } from "../logger";
+import { LisaStorageService } from "./service/LisaStorageService";
 const createInitialLisaState = () => {
     return {
         status: {
@@ -40,7 +40,7 @@ let LisaStateController = LisaStateController_1 = class LisaStateController {
         this.state = createInitialLisaState();
         this.stateChangeSubject = new Subject();
         this.storeSubscription = this.stateChangeSubject
-            .pipe(debounceTime(LisaStateController_1.STORAGE_DELAY))
+            .pipe(throttleTime(LisaStateController_1.STORAGE_THROTTLE_TIMEOUT))
             .subscribe(() => {
             this.storeState().catch(e => LisaStateController_1.logger.error("Could not save state!", e));
         });
@@ -83,6 +83,9 @@ let LisaStateController = LisaStateController_1 = class LisaStateController {
         this.state.death = { time, byUser, cause };
         this.stateChangeSubject.next();
     }
+    getStateCopy() {
+        return cloneDeep(this.state);
+    }
     async storedStateExists() {
         return pathExists(LisaStateController_1.STORAGE_PATH);
     }
@@ -101,7 +104,7 @@ LisaStateController.STORAGE_PATH = "data/lisaState.json";
 LisaStateController.logger = rootLogger.child({
     service: LisaStateController_1
 });
-LisaStateController.STORAGE_DELAY = 10000;
+LisaStateController.STORAGE_THROTTLE_TIMEOUT = 10000;
 LisaStateController = LisaStateController_1 = __decorate([
     Injectable(chevron, {
         bootstrapping: DefaultBootstrappings.CLASS,

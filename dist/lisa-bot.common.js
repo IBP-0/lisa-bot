@@ -3,8 +3,8 @@
 var lodash = require('lodash');
 var chevronjs = require('chevronjs');
 var discord_jsCommando = require('discord.js-commando');
-var winston = require('winston');
 var fsExtra = require('fs-extra');
+var winston = require('winston');
 
 const chevron = new chevronjs.Chevron();
 
@@ -71,8 +71,20 @@ class ServersCommand extends discord_jsCommando.Command {
     }
 }
 
-class LisaDiscordClient {
-    constructor(options) {
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+let LisaDiscordClient = class LisaDiscordClient {
+    constructor() {
+        this.commandoClient = null;
+    }
+    init(options) {
         this.commandoClient = new discord_jsCommando.CommandoClient(options);
         /*
          * Defaults
@@ -101,26 +113,25 @@ class LisaDiscordClient {
         ]);
     }
     async login(token) {
+        if (this.commandoClient == null) {
+            throw new TypeError("Client has not been initialized.");
+        }
         await this.commandoClient.login(token);
     }
-}
-
-const isProductionMode = () => process.env.NODE_ENV === "production";
-
-const logFormat = winston.format.combine(winston.format.timestamp(), winston.format.printf(({ level, message, timestamp }) => `${timestamp} [${level}]: ${message}`));
-const rootLogger = winston.createLogger({
-    level: isProductionMode() ? "info" : "debug",
-    format: logFormat,
-    defaultMeta: { service: "root" },
-    transports: [new winston.transports.File({ filename: "log/lisa-bot.log" })]
-});
-//
-// If we're not in production then log to the `console` with the format:
-// `${info.level}: ${info.message} JSON.stringify({ ...rest }) `
-//
-if (!isProductionMode()) {
-    rootLogger.add(new winston.transports.Console());
-}
+    getCommandoClient() {
+        if (this.commandoClient == null) {
+            throw new TypeError("Client has not been initialized.");
+        }
+        return this.commandoClient;
+    }
+};
+LisaDiscordClient = __decorate([
+    chevronjs.Injectable(chevron, {
+        bootstrapping: chevronjs.DefaultBootstrappings.CLASS,
+        dependencies: []
+    }),
+    __metadata("design:paramtypes", [])
+], LisaDiscordClient);
 
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation. All rights reserved.
@@ -577,6 +588,9 @@ var SafeSubscriber = /*@__PURE__*/ (function (_super) {
     return SafeSubscriber;
 }(Subscriber));
 
+/** PURE_IMPORTS_START  PURE_IMPORTS_END */
+var observable = /*@__PURE__*/ (function () { return typeof Symbol === 'function' && Symbol.observable || '@@observable'; })();
+
 /** PURE_IMPORTS_START _Subscriber PURE_IMPORTS_END */
 function canReportError(observer) {
     while (observer) {
@@ -609,9 +623,6 @@ function toSubscriber(nextOrObserver, error, complete) {
     }
     return new Subscriber(nextOrObserver, error, complete);
 }
-
-/** PURE_IMPORTS_START  PURE_IMPORTS_END */
-var observable = /*@__PURE__*/ (function () { return typeof Symbol === 'function' && Symbol.observable || '@@observable'; })();
 
 /** PURE_IMPORTS_START  PURE_IMPORTS_END */
 function noop() { }
@@ -738,6 +749,186 @@ function getPromiseCtor(promiseCtor) {
     }
     return promiseCtor;
 }
+
+/** PURE_IMPORTS_START tslib,_Subscription PURE_IMPORTS_END */
+var Action = /*@__PURE__*/ (function (_super) {
+    __extends(Action, _super);
+    function Action(scheduler, work) {
+        return _super.call(this) || this;
+    }
+    Action.prototype.schedule = function (state, delay) {
+        return this;
+    };
+    return Action;
+}(Subscription));
+
+/** PURE_IMPORTS_START tslib,_Action PURE_IMPORTS_END */
+var AsyncAction = /*@__PURE__*/ (function (_super) {
+    __extends(AsyncAction, _super);
+    function AsyncAction(scheduler, work) {
+        var _this = _super.call(this, scheduler, work) || this;
+        _this.scheduler = scheduler;
+        _this.work = work;
+        _this.pending = false;
+        return _this;
+    }
+    AsyncAction.prototype.schedule = function (state, delay) {
+        if (delay === void 0) {
+            delay = 0;
+        }
+        if (this.closed) {
+            return this;
+        }
+        this.state = state;
+        var id = this.id;
+        var scheduler = this.scheduler;
+        if (id != null) {
+            this.id = this.recycleAsyncId(scheduler, id, delay);
+        }
+        this.pending = true;
+        this.delay = delay;
+        this.id = this.id || this.requestAsyncId(scheduler, this.id, delay);
+        return this;
+    };
+    AsyncAction.prototype.requestAsyncId = function (scheduler, id, delay) {
+        if (delay === void 0) {
+            delay = 0;
+        }
+        return setInterval(scheduler.flush.bind(scheduler, this), delay);
+    };
+    AsyncAction.prototype.recycleAsyncId = function (scheduler, id, delay) {
+        if (delay === void 0) {
+            delay = 0;
+        }
+        if (delay !== null && this.delay === delay && this.pending === false) {
+            return id;
+        }
+        clearInterval(id);
+        return undefined;
+    };
+    AsyncAction.prototype.execute = function (state, delay) {
+        if (this.closed) {
+            return new Error('executing a cancelled action');
+        }
+        this.pending = false;
+        var error = this._execute(state, delay);
+        if (error) {
+            return error;
+        }
+        else if (this.pending === false && this.id != null) {
+            this.id = this.recycleAsyncId(this.scheduler, this.id, null);
+        }
+    };
+    AsyncAction.prototype._execute = function (state, delay) {
+        var errored = false;
+        var errorValue = undefined;
+        try {
+            this.work(state);
+        }
+        catch (e) {
+            errored = true;
+            errorValue = !!e && e || new Error(e);
+        }
+        if (errored) {
+            this.unsubscribe();
+            return errorValue;
+        }
+    };
+    AsyncAction.prototype._unsubscribe = function () {
+        var id = this.id;
+        var scheduler = this.scheduler;
+        var actions = scheduler.actions;
+        var index = actions.indexOf(this);
+        this.work = null;
+        this.state = null;
+        this.pending = false;
+        this.scheduler = null;
+        if (index !== -1) {
+            actions.splice(index, 1);
+        }
+        if (id != null) {
+            this.id = this.recycleAsyncId(scheduler, id, null);
+        }
+        this.delay = null;
+    };
+    return AsyncAction;
+}(Action));
+
+var Scheduler = /*@__PURE__*/ (function () {
+    function Scheduler(SchedulerAction, now) {
+        if (now === void 0) {
+            now = Scheduler.now;
+        }
+        this.SchedulerAction = SchedulerAction;
+        this.now = now;
+    }
+    Scheduler.prototype.schedule = function (work, delay, state) {
+        if (delay === void 0) {
+            delay = 0;
+        }
+        return new this.SchedulerAction(this, work).schedule(state, delay);
+    };
+    Scheduler.now = function () { return Date.now(); };
+    return Scheduler;
+}());
+
+/** PURE_IMPORTS_START tslib,_Scheduler PURE_IMPORTS_END */
+var AsyncScheduler = /*@__PURE__*/ (function (_super) {
+    __extends(AsyncScheduler, _super);
+    function AsyncScheduler(SchedulerAction, now) {
+        if (now === void 0) {
+            now = Scheduler.now;
+        }
+        var _this = _super.call(this, SchedulerAction, function () {
+            if (AsyncScheduler.delegate && AsyncScheduler.delegate !== _this) {
+                return AsyncScheduler.delegate.now();
+            }
+            else {
+                return now();
+            }
+        }) || this;
+        _this.actions = [];
+        _this.active = false;
+        _this.scheduled = undefined;
+        return _this;
+    }
+    AsyncScheduler.prototype.schedule = function (work, delay, state) {
+        if (delay === void 0) {
+            delay = 0;
+        }
+        if (AsyncScheduler.delegate && AsyncScheduler.delegate !== this) {
+            return AsyncScheduler.delegate.schedule(work, delay, state);
+        }
+        else {
+            return _super.prototype.schedule.call(this, work, delay, state);
+        }
+    };
+    AsyncScheduler.prototype.flush = function (action) {
+        var actions = this.actions;
+        if (this.active) {
+            actions.push(action);
+            return;
+        }
+        var error;
+        this.active = true;
+        do {
+            if (error = action.execute(action.state, action.delay)) {
+                break;
+            }
+        } while (action = actions.shift());
+        this.active = false;
+        if (error) {
+            while (action = actions.shift()) {
+                action.unsubscribe();
+            }
+            throw error;
+        }
+    };
+    return AsyncScheduler;
+}(Scheduler));
+
+/** PURE_IMPORTS_START _AsyncAction,_AsyncScheduler PURE_IMPORTS_END */
+var async = /*@__PURE__*/ new AsyncScheduler(AsyncAction);
 
 /** PURE_IMPORTS_START  PURE_IMPORTS_END */
 var ObjectUnsubscribedErrorImpl = /*@__PURE__*/ (function () {
@@ -929,248 +1120,126 @@ var AnonymousSubject = /*@__PURE__*/ (function (_super) {
     return AnonymousSubject;
 }(Subject));
 
-/** PURE_IMPORTS_START tslib,_Subscription PURE_IMPORTS_END */
-var Action = /*@__PURE__*/ (function (_super) {
-    __extends(Action, _super);
-    function Action(scheduler, work) {
-        return _super.call(this) || this;
-    }
-    Action.prototype.schedule = function (state, delay) {
-        return this;
-    };
-    return Action;
-}(Subscription));
+/** PURE_IMPORTS_START tslib,_OuterSubscriber,_util_subscribeToResult PURE_IMPORTS_END */
+var defaultThrottleConfig = {
+    leading: true,
+    trailing: false
+};
 
-/** PURE_IMPORTS_START tslib,_Action PURE_IMPORTS_END */
-var AsyncAction = /*@__PURE__*/ (function (_super) {
-    __extends(AsyncAction, _super);
-    function AsyncAction(scheduler, work) {
-        var _this = _super.call(this, scheduler, work) || this;
-        _this.scheduler = scheduler;
-        _this.work = work;
-        _this.pending = false;
-        return _this;
-    }
-    AsyncAction.prototype.schedule = function (state, delay) {
-        if (delay === void 0) {
-            delay = 0;
-        }
-        if (this.closed) {
-            return this;
-        }
-        this.state = state;
-        var id = this.id;
-        var scheduler = this.scheduler;
-        if (id != null) {
-            this.id = this.recycleAsyncId(scheduler, id, delay);
-        }
-        this.pending = true;
-        this.delay = delay;
-        this.id = this.id || this.requestAsyncId(scheduler, this.id, delay);
-        return this;
-    };
-    AsyncAction.prototype.requestAsyncId = function (scheduler, id, delay) {
-        if (delay === void 0) {
-            delay = 0;
-        }
-        return setInterval(scheduler.flush.bind(scheduler, this), delay);
-    };
-    AsyncAction.prototype.recycleAsyncId = function (scheduler, id, delay) {
-        if (delay === void 0) {
-            delay = 0;
-        }
-        if (delay !== null && this.delay === delay && this.pending === false) {
-            return id;
-        }
-        clearInterval(id);
-        return undefined;
-    };
-    AsyncAction.prototype.execute = function (state, delay) {
-        if (this.closed) {
-            return new Error('executing a cancelled action');
-        }
-        this.pending = false;
-        var error = this._execute(state, delay);
-        if (error) {
-            return error;
-        }
-        else if (this.pending === false && this.id != null) {
-            this.id = this.recycleAsyncId(this.scheduler, this.id, null);
-        }
-    };
-    AsyncAction.prototype._execute = function (state, delay) {
-        var errored = false;
-        var errorValue = undefined;
-        try {
-            this.work(state);
-        }
-        catch (e) {
-            errored = true;
-            errorValue = !!e && e || new Error(e);
-        }
-        if (errored) {
-            this.unsubscribe();
-            return errorValue;
-        }
-    };
-    AsyncAction.prototype._unsubscribe = function () {
-        var id = this.id;
-        var scheduler = this.scheduler;
-        var actions = scheduler.actions;
-        var index = actions.indexOf(this);
-        this.work = null;
-        this.state = null;
-        this.pending = false;
-        this.scheduler = null;
-        if (index !== -1) {
-            actions.splice(index, 1);
-        }
-        if (id != null) {
-            this.id = this.recycleAsyncId(scheduler, id, null);
-        }
-        this.delay = null;
-    };
-    return AsyncAction;
-}(Action));
-
-var Scheduler = /*@__PURE__*/ (function () {
-    function Scheduler(SchedulerAction, now) {
-        if (now === void 0) {
-            now = Scheduler.now;
-        }
-        this.SchedulerAction = SchedulerAction;
-        this.now = now;
-    }
-    Scheduler.prototype.schedule = function (work, delay, state) {
-        if (delay === void 0) {
-            delay = 0;
-        }
-        return new this.SchedulerAction(this, work).schedule(state, delay);
-    };
-    Scheduler.now = function () { return Date.now(); };
-    return Scheduler;
-}());
-
-/** PURE_IMPORTS_START tslib,_Scheduler PURE_IMPORTS_END */
-var AsyncScheduler = /*@__PURE__*/ (function (_super) {
-    __extends(AsyncScheduler, _super);
-    function AsyncScheduler(SchedulerAction, now) {
-        if (now === void 0) {
-            now = Scheduler.now;
-        }
-        var _this = _super.call(this, SchedulerAction, function () {
-            if (AsyncScheduler.delegate && AsyncScheduler.delegate !== _this) {
-                return AsyncScheduler.delegate.now();
-            }
-            else {
-                return now();
-            }
-        }) || this;
-        _this.actions = [];
-        _this.active = false;
-        _this.scheduled = undefined;
-        return _this;
-    }
-    AsyncScheduler.prototype.schedule = function (work, delay, state) {
-        if (delay === void 0) {
-            delay = 0;
-        }
-        if (AsyncScheduler.delegate && AsyncScheduler.delegate !== this) {
-            return AsyncScheduler.delegate.schedule(work, delay, state);
-        }
-        else {
-            return _super.prototype.schedule.call(this, work, delay, state);
-        }
-    };
-    AsyncScheduler.prototype.flush = function (action) {
-        var actions = this.actions;
-        if (this.active) {
-            actions.push(action);
-            return;
-        }
-        var error;
-        this.active = true;
-        do {
-            if (error = action.execute(action.state, action.delay)) {
-                break;
-            }
-        } while (action = actions.shift());
-        this.active = false;
-        if (error) {
-            while (action = actions.shift()) {
-                action.unsubscribe();
-            }
-            throw error;
-        }
-    };
-    return AsyncScheduler;
-}(Scheduler));
-
-/** PURE_IMPORTS_START _AsyncAction,_AsyncScheduler PURE_IMPORTS_END */
-var async = /*@__PURE__*/ new AsyncScheduler(AsyncAction);
-
-/** PURE_IMPORTS_START tslib,_Subscriber,_scheduler_async PURE_IMPORTS_END */
-function debounceTime(dueTime, scheduler) {
+/** PURE_IMPORTS_START tslib,_Subscriber,_scheduler_async,_throttle PURE_IMPORTS_END */
+function throttleTime(duration, scheduler, config) {
     if (scheduler === void 0) {
         scheduler = async;
     }
-    return function (source) { return source.lift(new DebounceTimeOperator(dueTime, scheduler)); };
-}
-var DebounceTimeOperator = /*@__PURE__*/ (function () {
-    function DebounceTimeOperator(dueTime, scheduler) {
-        this.dueTime = dueTime;
-        this.scheduler = scheduler;
+    if (config === void 0) {
+        config = defaultThrottleConfig;
     }
-    DebounceTimeOperator.prototype.call = function (subscriber, source) {
-        return source.subscribe(new DebounceTimeSubscriber(subscriber, this.dueTime, this.scheduler));
+    return function (source) { return source.lift(new ThrottleTimeOperator(duration, scheduler, config.leading, config.trailing)); };
+}
+var ThrottleTimeOperator = /*@__PURE__*/ (function () {
+    function ThrottleTimeOperator(duration, scheduler, leading, trailing) {
+        this.duration = duration;
+        this.scheduler = scheduler;
+        this.leading = leading;
+        this.trailing = trailing;
+    }
+    ThrottleTimeOperator.prototype.call = function (subscriber, source) {
+        return source.subscribe(new ThrottleTimeSubscriber(subscriber, this.duration, this.scheduler, this.leading, this.trailing));
     };
-    return DebounceTimeOperator;
+    return ThrottleTimeOperator;
 }());
-var DebounceTimeSubscriber = /*@__PURE__*/ (function (_super) {
-    __extends(DebounceTimeSubscriber, _super);
-    function DebounceTimeSubscriber(destination, dueTime, scheduler) {
+var ThrottleTimeSubscriber = /*@__PURE__*/ (function (_super) {
+    __extends(ThrottleTimeSubscriber, _super);
+    function ThrottleTimeSubscriber(destination, duration, scheduler, leading, trailing) {
         var _this = _super.call(this, destination) || this;
-        _this.dueTime = dueTime;
+        _this.duration = duration;
         _this.scheduler = scheduler;
-        _this.debouncedSubscription = null;
-        _this.lastValue = null;
-        _this.hasValue = false;
+        _this.leading = leading;
+        _this.trailing = trailing;
+        _this._hasTrailingValue = false;
+        _this._trailingValue = null;
         return _this;
     }
-    DebounceTimeSubscriber.prototype._next = function (value) {
-        this.clearDebounce();
-        this.lastValue = value;
-        this.hasValue = true;
-        this.add(this.debouncedSubscription = this.scheduler.schedule(dispatchNext, this.dueTime, this));
-    };
-    DebounceTimeSubscriber.prototype._complete = function () {
-        this.debouncedNext();
-        this.destination.complete();
-    };
-    DebounceTimeSubscriber.prototype.debouncedNext = function () {
-        this.clearDebounce();
-        if (this.hasValue) {
-            var lastValue = this.lastValue;
-            this.lastValue = null;
-            this.hasValue = false;
-            this.destination.next(lastValue);
+    ThrottleTimeSubscriber.prototype._next = function (value) {
+        if (this.throttled) {
+            if (this.trailing) {
+                this._trailingValue = value;
+                this._hasTrailingValue = true;
+            }
+        }
+        else {
+            this.add(this.throttled = this.scheduler.schedule(dispatchNext, this.duration, { subscriber: this }));
+            if (this.leading) {
+                this.destination.next(value);
+            }
+            else if (this.trailing) {
+                this._trailingValue = value;
+                this._hasTrailingValue = true;
+            }
         }
     };
-    DebounceTimeSubscriber.prototype.clearDebounce = function () {
-        var debouncedSubscription = this.debouncedSubscription;
-        if (debouncedSubscription !== null) {
-            this.remove(debouncedSubscription);
-            debouncedSubscription.unsubscribe();
-            this.debouncedSubscription = null;
+    ThrottleTimeSubscriber.prototype._complete = function () {
+        if (this._hasTrailingValue) {
+            this.destination.next(this._trailingValue);
+            this.destination.complete();
+        }
+        else {
+            this.destination.complete();
         }
     };
-    return DebounceTimeSubscriber;
+    ThrottleTimeSubscriber.prototype.clearThrottle = function () {
+        var throttled = this.throttled;
+        if (throttled) {
+            if (this.trailing && this._hasTrailingValue) {
+                this.destination.next(this._trailingValue);
+                this._trailingValue = null;
+                this._hasTrailingValue = false;
+            }
+            throttled.unsubscribe();
+            this.remove(throttled);
+            this.throttled = null;
+        }
+    };
+    return ThrottleTimeSubscriber;
 }(Subscriber));
-function dispatchNext(subscriber) {
-    subscriber.debouncedNext();
+function dispatchNext(arg) {
+    var subscriber = arg.subscriber;
+    subscriber.clearThrottle();
 }
 
-var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+var __decorate$1 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+let LisaTextService = class LisaTextService {
+    determineStatusLabel(state) {
+        return "foo";
+    }
+};
+LisaTextService = __decorate$1([
+    chevronjs.Injectable(chevron, { bootstrapping: chevronjs.DefaultBootstrappings.CLASS })
+], LisaTextService);
+
+const isProductionMode = () => process.env.NODE_ENV === "production";
+
+const logFormat = winston.format.combine(winston.format.timestamp(), winston.format.printf(({ level, message, timestamp }) => `${timestamp} [${level}]: ${message}`));
+const rootLogger = winston.createLogger({
+    level: isProductionMode() ? "info" : "silly",
+    format: logFormat,
+    defaultMeta: { service: "root" },
+    transports: [new winston.transports.File({ filename: "log/lisa-bot.log" })]
+});
+//
+// If we're not in production then log to the `console` with the format:
+// `${info.level}: ${info.message} JSON.stringify({ ...rest }) `
+//
+if (!isProductionMode()) {
+    rootLogger.add(new winston.transports.Console());
+}
+
+var __decorate$2 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
@@ -1206,17 +1275,17 @@ let LisaStorageService = class LisaStorageService {
         return storedState;
     }
 };
-LisaStorageService = __decorate([
+LisaStorageService = __decorate$2([
     chevronjs.Injectable(chevron, { bootstrapping: chevronjs.DefaultBootstrappings.CLASS })
 ], LisaStorageService);
 
-var __decorate$1 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+var __decorate$3 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+var __metadata$1 = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var LisaStateController_1;
@@ -1244,7 +1313,7 @@ let LisaStateController = LisaStateController_1 = class LisaStateController {
         this.state = createInitialLisaState();
         this.stateChangeSubject = new Subject();
         this.storeSubscription = this.stateChangeSubject
-            .pipe(debounceTime(LisaStateController_1.STORAGE_DELAY))
+            .pipe(throttleTime(LisaStateController_1.STORAGE_THROTTLE_TIMEOUT))
             .subscribe(() => {
             this.storeState().catch(e => LisaStateController_1.logger.error("Could not save state!", e));
         });
@@ -1287,6 +1356,9 @@ let LisaStateController = LisaStateController_1 = class LisaStateController {
         this.state.death = { time, byUser, cause };
         this.stateChangeSubject.next();
     }
+    getStateCopy() {
+        return lodash.cloneDeep(this.state);
+    }
     async storedStateExists() {
         return fsExtra.pathExists(LisaStateController_1.STORAGE_PATH);
     }
@@ -1305,22 +1377,83 @@ LisaStateController.STORAGE_PATH = "data/lisaState.json";
 LisaStateController.logger = rootLogger.child({
     service: LisaStateController_1
 });
-LisaStateController.STORAGE_DELAY = 10000;
-LisaStateController = LisaStateController_1 = __decorate$1([
+LisaStateController.STORAGE_THROTTLE_TIMEOUT = 10000;
+LisaStateController = LisaStateController_1 = __decorate$3([
     chevronjs.Injectable(chevron, {
         bootstrapping: chevronjs.DefaultBootstrappings.CLASS,
         dependencies: [LisaStorageService]
     }),
-    __metadata("design:paramtypes", [LisaStorageService])
+    __metadata$1("design:paramtypes", [LisaStorageService])
 ], LisaStateController);
 
-var __decorate$2 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+var __decorate$4 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __metadata$1 = (undefined && undefined.__metadata) || function (k, v) {
+var __metadata$2 = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var LisaDiscordController_1;
+const createPresence = (name) => ({
+    game: {
+        name
+    }
+});
+let LisaDiscordController = LisaDiscordController_1 = class LisaDiscordController {
+    constructor(lisaStateController, lisaDiscordClient, lisaTextService) {
+        this.lisaStateController = lisaStateController;
+        this.lisaDiscordClient = lisaDiscordClient;
+        this.lisaTextService = lisaTextService;
+    }
+    bindEvents() {
+        this.lisaDiscordClient.getCommandoClient().on("message", message => {
+            if (!message.system && !message.author.bot) {
+                this.onMessage();
+            }
+        });
+        this.lisaStateController.stateChangeSubject
+            .pipe(throttleTime(LisaDiscordController_1.PRESENCE_UPDATE_THROTTLE_TIMEOUT))
+            .subscribe(() => this.onStateChange());
+        this.onStateChange();
+    }
+    onMessage() {
+        LisaDiscordController_1.logger.silly("A message was sent, increasing happiness.");
+        this.lisaStateController.setHappiness(this.lisaStateController.getHappiness() +
+            LisaDiscordController_1.MESSAGE_HAPPINESS_MODIFIER);
+    }
+    onStateChange() {
+        const presence = createPresence(this.lisaTextService.determineStatusLabel(this.lisaStateController.getStateCopy()));
+        this.lisaDiscordClient
+            .getCommandoClient()
+            .user.setPresence(presence)
+            .then(() => LisaDiscordController_1.logger.debug("Updated presence."))
+            .catch(e => LisaDiscordController_1.logger.error("Could not update presence.", e));
+    }
+};
+LisaDiscordController.logger = rootLogger.child({
+    service: LisaDiscordController_1
+});
+LisaDiscordController.PRESENCE_UPDATE_THROTTLE_TIMEOUT = 10000;
+LisaDiscordController.MESSAGE_HAPPINESS_MODIFIER = 0.25;
+LisaDiscordController = LisaDiscordController_1 = __decorate$4([
+    chevronjs.Injectable(chevron, {
+        bootstrapping: chevronjs.DefaultBootstrappings.CLASS,
+        dependencies: [LisaStateController, LisaDiscordClient, LisaTextService]
+    }),
+    __metadata$2("design:paramtypes", [LisaStateController,
+        LisaDiscordClient,
+        LisaTextService])
+], LisaDiscordController);
+
+var __decorate$5 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata$3 = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var LisaTimer_1;
@@ -1334,9 +1467,7 @@ let LisaTimer = LisaTimer_1 = class LisaTimer {
         LisaTimer_1.logger.info(`Started Lisa timer with an interval of ${LisaTimer_1.TIMEOUT}.`);
     }
     tick() {
-        LisaTimer_1.logger.debug(`Performing tick.
-Water modifier: ${LisaTimer_1.WATER_MODIFIER}.
-Happiness modifier: ${LisaTimer_1.HAPPINESS_MODIFIER}.`);
+        LisaTimer_1.logger.debug(`Performing tick.`);
         this.lisaStateController.setWater(this.lisaStateController.getWater() + LisaTimer_1.WATER_MODIFIER);
         this.lisaStateController.setHappiness(this.lisaStateController.getHappiness() +
             LisaTimer_1.HAPPINESS_MODIFIER);
@@ -1348,12 +1479,12 @@ LisaTimer.logger = rootLogger.child({
 LisaTimer.TIMEOUT = 60000;
 LisaTimer.WATER_MODIFIER = -2;
 LisaTimer.HAPPINESS_MODIFIER = -1;
-LisaTimer = LisaTimer_1 = __decorate$2([
+LisaTimer = LisaTimer_1 = __decorate$5([
     chevronjs.Injectable(chevron, {
         bootstrapping: chevronjs.DefaultBootstrappings.CLASS,
         dependencies: [LisaStateController]
     }),
-    __metadata$1("design:paramtypes", [LisaStateController])
+    __metadata$3("design:paramtypes", [LisaStateController])
 ], LisaTimer);
 
 const logger = rootLogger.child({ service: "main" });
@@ -1378,12 +1509,15 @@ const startLisaDiscordClient = async () => {
     if (lodash.isNil(discordToken)) {
         throw new Error("No token set.");
     }
-    const lisaDiscordClient = new LisaDiscordClient({
+    const lisaDiscordClient = chevron.getInjectableInstance(LisaDiscordClient);
+    lisaDiscordClient.init({
         commandPrefix: "$",
         owner: "128985967875850240",
         invite: "https://discordapp.com/oauth2/authorize?&client_id=263671526279086092&scope=bot"
     });
-    return lisaDiscordClient.login(discordToken);
+    const lisaDiscordController = chevron.getInjectableInstance(LisaDiscordController);
+    await lisaDiscordClient.login(discordToken);
+    lisaDiscordController.bindEvents();
 };
 logger.info("Starting Lisa bot...");
 startLisaMainClient()

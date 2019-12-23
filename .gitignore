@@ -37,3 +37,9 @@ tsconfig.tsbuildinfo
 
 # Safe files
 _key*
+
+
+
+# Project files
+log/
+data/*.json

@@ -9,7 +9,7 @@ const logFormat = winston.format.combine(
 );
 
 const rootLogger = winston.createLogger({
-    level: isProductionMode() ? "info" : "debug",
+    level: isProductionMode() ? "info" : "silly",
     format: logFormat,
     defaultMeta: { service: "root" },
     transports: [new winston.transports.File({ filename: "log/lisa-bot.log" })]

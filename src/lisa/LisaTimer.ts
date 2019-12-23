@@ -1,7 +1,7 @@
 import { DefaultBootstrappings, Injectable } from "chevronjs";
 import { chevron } from "../chevron";
 import { rootLogger } from "../logger";
-import { LisaStateController } from "./state/LisaStateController";
+import { LisaStateController } from "./LisaStateController";
 import Timer = NodeJS.Timer;
 
 @Injectable(chevron, {
@@ -31,11 +31,7 @@ class LisaTimer {
     }
 
     private tick(): void {
-        LisaTimer.logger.debug(
-            `Performing tick.
-Water modifier: ${LisaTimer.WATER_MODIFIER}.
-Happiness modifier: ${LisaTimer.HAPPINESS_MODIFIER}.`
-        );
+        LisaTimer.logger.debug(`Performing tick.`);
         this.lisaStateController.setWater(
             this.lisaStateController.getWater() + LisaTimer.WATER_MODIFIER
         );

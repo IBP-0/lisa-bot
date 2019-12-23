@@ -11,7 +11,7 @@ var LisaTimer_1;
 import { DefaultBootstrappings, Injectable } from "chevronjs";
 import { chevron } from "../chevron";
 import { rootLogger } from "../logger";
-import { LisaStateController } from "./state/LisaStateController";
+import { LisaStateController } from "./LisaStateController";
 let LisaTimer = LisaTimer_1 = class LisaTimer {
     constructor(lisaStateController) {
         this.lisaStateController = lisaStateController;
@@ -22,9 +22,7 @@ let LisaTimer = LisaTimer_1 = class LisaTimer {
         LisaTimer_1.logger.info(`Started Lisa timer with an interval of ${LisaTimer_1.TIMEOUT}.`);
     }
     tick() {
-        LisaTimer_1.logger.debug(`Performing tick.
-Water modifier: ${LisaTimer_1.WATER_MODIFIER}.
-Happiness modifier: ${LisaTimer_1.HAPPINESS_MODIFIER}.`);
+        LisaTimer_1.logger.debug(`Performing tick.`);
         this.lisaStateController.setWater(this.lisaStateController.getWater() + LisaTimer_1.WATER_MODIFIER);
         this.lisaStateController.setHappiness(this.lisaStateController.getHappiness() +
             LisaTimer_1.HAPPINESS_MODIFIER);

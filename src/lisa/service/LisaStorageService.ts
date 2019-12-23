@@ -1,8 +1,8 @@
 import { DefaultBootstrappings, Injectable } from "chevronjs";
 import { readJSON, writeJSON } from "fs-extra";
 import { cloneDeep } from "lodash";
-import { chevron } from "../chevron";
-import { LisaDeathCause, LisaState } from "./state/LisaState";
+import { chevron } from "../../chevron";
+import { LisaDeathCause, LisaState } from "../LisaState";
 
 interface JsonLisaState {
     status: {

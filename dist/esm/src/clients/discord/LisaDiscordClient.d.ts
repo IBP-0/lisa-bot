@@ -1,8 +1,10 @@
-import { CommandoClientOptions } from "discord.js-commando";
+import { CommandoClient, CommandoClientOptions } from "discord.js-commando";
 declare class LisaDiscordClient {
-    private readonly commandoClient;
-    constructor(options: CommandoClientOptions);
+    private commandoClient;
+    constructor();
+    init(options: CommandoClientOptions): void;
     login(token: string): Promise<void>;
+    getCommandoClient(): CommandoClient;
 }
 export { LisaDiscordClient };
 //# sourceMappingURL=LisaDiscordClient.d.ts.map

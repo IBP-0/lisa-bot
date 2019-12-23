@@ -7,7 +7,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 import { DefaultBootstrappings, Injectable } from "chevronjs";
 import { readJSON, writeJSON } from "fs-extra";
 import { cloneDeep } from "lodash";
-import { chevron } from "../chevron";
+import { chevron } from "../../chevron";
 let LisaStorageService = class LisaStorageService {
     async loadStoredState(path) {
         const storedState = await readJSON(path);

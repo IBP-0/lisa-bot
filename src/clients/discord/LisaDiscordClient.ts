@@ -1,16 +1,26 @@
+import { DefaultBootstrappings, Injectable } from "chevronjs";
 import {
     CommandGroup,
     CommandoClient,
     CommandoClientOptions
 } from "discord.js-commando";
+import { chevron } from "../../chevron";
 import { AboutCommand } from "./commands/core/AboutCommand";
 import { InviteCommand } from "./commands/core/InviteCommand";
 import { ServersCommand } from "./commands/core/ServersCommand";
 
+@Injectable(chevron, {
+    bootstrapping: DefaultBootstrappings.CLASS,
+    dependencies: []
+})
 class LisaDiscordClient {
-    private readonly commandoClient: CommandoClient;
+    private commandoClient: CommandoClient | null;
 
-    constructor(options: CommandoClientOptions) {
+    constructor() {
+        this.commandoClient = null;
+    }
+
+    public init(options: CommandoClientOptions): void {
         this.commandoClient = new CommandoClient(options);
 
         /*
@@ -45,7 +55,17 @@ class LisaDiscordClient {
     }
 
     public async login(token: string): Promise<void> {
+        if (this.commandoClient == null) {
+            throw new TypeError("Client has not been initialized.");
+        }
         await this.commandoClient.login(token);
+    }
+
+    public getCommandoClient(): CommandoClient {
+        if (this.commandoClient == null) {
+            throw new TypeError("Client has not been initialized.");
+        }
+        return this.commandoClient;
     }
 }
 

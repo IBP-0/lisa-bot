@@ -1,11 +1,11 @@
 import { DefaultBootstrappings, Injectable } from "chevronjs";
 import { pathExists } from "fs-extra";
-import { clone } from "lodash";
+import { clone, cloneDeep } from "lodash";
 import { Subject, Subscription } from "rxjs";
-import { debounceTime } from "rxjs/operators";
-import { chevron } from "../../chevron";
-import { rootLogger } from "../../logger";
-import { LisaStorageService } from "../LisaStorageService";
+import { throttleTime } from "rxjs/operators";
+import { chevron } from "../chevron";
+import { rootLogger } from "../logger";
+import { LisaStorageService } from "./service/LisaStorageService";
 import { LisaDeath, LisaDeathCause, LisaLife, LisaState } from "./LisaState";
 
 const createInitialLisaState = (): LisaState => {
@@ -38,7 +38,7 @@ class LisaStateController {
         service: LisaStateController
     });
 
-    private static readonly STORAGE_DELAY = 10000;
+    private static readonly STORAGE_THROTTLE_TIMEOUT = 10000;
 
     public readonly stateChangeSubject: Subject<void>;
     private state: LisaState;
@@ -48,7 +48,7 @@ class LisaStateController {
         this.state = createInitialLisaState();
         this.stateChangeSubject = new Subject<void>();
         this.storeSubscription = this.stateChangeSubject
-            .pipe(debounceTime(LisaStateController.STORAGE_DELAY))
+            .pipe(throttleTime(LisaStateController.STORAGE_THROTTLE_TIMEOUT))
             .subscribe(() => {
                 this.storeState().catch(e =>
                     LisaStateController.logger.error("Could not save state!", e)
@@ -103,6 +103,10 @@ class LisaStateController {
     public setDeath(time: Date, byUser: string, cause: LisaDeathCause): void {
         this.state.death = { time, byUser, cause };
         this.stateChangeSubject.next();
+    }
+
+    public getStateCopy(): LisaState {
+        return cloneDeep(this.state);
     }
 
     public async storedStateExists(): Promise<boolean> {

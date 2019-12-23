@@ -1,4 +1,4 @@
-import { LisaStateController } from "./state/LisaStateController";
+import { LisaStateController } from "./LisaStateController";
 declare class LisaTimer {
     private readonly lisaStateController;
     private static readonly logger;
