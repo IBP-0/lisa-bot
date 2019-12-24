@@ -15,8 +15,8 @@ class LisaTimer {
     });
 
     private static readonly TIMEOUT = 60000;
-    private static readonly WATER_MODIFIER = -2;
-    private static readonly HAPPINESS_MODIFIER = -1;
+    private static readonly WATER_MODIFIER = -0.5;
+    private static readonly HAPPINESS_MODIFIER = -0.75;
 
     private timer: Timer | null;
 
