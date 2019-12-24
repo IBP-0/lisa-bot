@@ -1228,13 +1228,9 @@ const logFormat = winston.format.combine(winston.format.timestamp(), winston.for
 const rootLogger = winston.createLogger({
     level: isProductionMode() ? "info" : "silly",
     format: logFormat,
-    defaultMeta: { service: "root" },
+    defaultMeta: { target: "root" },
     transports: [new winston.transports.File({ filename: "log/lisa-bot.log" })]
 });
-//
-// If we're not in production then log to the `console` with the format:
-// `${info.level}: ${info.message} JSON.stringify({ ...rest }) `
-//
 if (!isProductionMode()) {
     rootLogger.add(new winston.transports.Console());
 }
