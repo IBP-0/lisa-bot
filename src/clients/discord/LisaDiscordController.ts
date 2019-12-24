@@ -51,21 +51,22 @@ class LisaDiscordController {
         LisaDiscordController.logger.silly(
             "A message was sent, increasing happiness."
         );
-        this.lisaStateController.setHappiness(
-            this.lisaStateController.getHappiness() +
-                LisaDiscordController.MESSAGE_HAPPINESS_MODIFIER
-        );
+        const newHappiness =
+            this.lisaStateController.getStateCopy().status.water +
+            LisaDiscordController.MESSAGE_HAPPINESS_MODIFIER;
+        this.lisaStateController.setHappiness(newHappiness, "Discord activity");
     }
 
     private onStateChange(): void {
-        const presence = createPresence(
-            this.lisaTextService.determineStatusLabel(
-                this.lisaStateController.getStateCopy()
-            )
+        const statusLabel = this.lisaTextService.determineStatusLabel(
+            this.lisaStateController.getStateCopy()
+        );
+        LisaDiscordController.logger.debug(
+            `Updating presence to '${statusLabel}'.`
         );
         this.lisaDiscordClient
             .getCommandoClient()
-            .user.setPresence(presence)
+            .user.setPresence(createPresence(statusLabel))
             .then(() => LisaDiscordController.logger.debug("Updated presence."))
             .catch(e =>
                 LisaDiscordController.logger.error(

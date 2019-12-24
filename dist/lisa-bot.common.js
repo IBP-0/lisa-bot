@@ -1237,6 +1237,19 @@ function dispatch(state) {
     this.schedule({ subscriber: subscriber, counter: counter + 1, period: period }, period);
 }
 
+const isProductionMode = () => process.env.NODE_ENV === "production";
+
+const logFormat = winston.format.combine(winston.format.timestamp(), winston.format.printf(({ level, message, timestamp }) => `${timestamp} [${level}]: ${message}`));
+const rootLogger = winston.createLogger({
+    level: isProductionMode() ? "info" : "silly",
+    format: logFormat,
+    defaultMeta: { target: "root" },
+    transports: [new winston.transports.File({ filename: "log/lisa-bot.log" })]
+});
+if (!isProductionMode()) {
+    rootLogger.add(new winston.transports.Console());
+}
+
 var LisaDeathCause;
 (function (LisaDeathCause) {
     LisaDeathCause["UNKNOWN"] = "something unknown";
@@ -1255,6 +1268,7 @@ var __decorate$1 = (undefined && undefined.__decorate) || function (decorators, 
 var __metadata$1 = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var LisaStateController_1;
 const WATER_INITIAL = 100;
 const WATER_MIN = 0.1;
 const WATER_MAX = 150;
@@ -1262,27 +1276,27 @@ const HAPPINESS_INITIAL = 100;
 const HAPPINESS_MIN = 0.1;
 const HAPPINESS_MAX = 100;
 const USER_SYSTEM = "System";
-const createInitialLisaState = () => {
+const createNewLisaState = (createdByUser, highScore = 0) => {
     return {
+        highScore,
         status: {
             water: WATER_INITIAL,
             happiness: HAPPINESS_INITIAL
         },
         life: {
             time: new Date(),
-            byUser: USER_SYSTEM
+            byUser: createdByUser
         },
         death: {
             time: null,
             byUser: null,
             cause: null
-        },
-        highScore: 0
+        }
     };
 };
-let LisaStateController = class LisaStateController {
+let LisaStateController = LisaStateController_1 = class LisaStateController {
     constructor() {
-        this.state = createInitialLisaState();
+        this.state = createNewLisaState(USER_SYSTEM);
         this.stateChangeSubject = new Subject();
     }
     /**
@@ -1302,74 +1316,69 @@ let LisaStateController = class LisaStateController {
         this.state = state;
         this.stateChanged(USER_SYSTEM);
     }
-    isAlive() {
+    isLisaAlive() {
         return this.state.death.time == null;
     }
-    getWater() {
-        return this.state.status.water;
-    }
     setWater(water, byUser = USER_SYSTEM) {
+        LisaStateController_1.logger.debug(`'${byUser}' set water from ${this.state.status.water} to ${water}.`);
         this.state.status.water = water;
         this.stateChanged(byUser);
     }
-    getHappiness() {
-        return this.state.status.happiness;
-    }
     setHappiness(happiness, byUser = USER_SYSTEM) {
+        LisaStateController_1.logger.debug(`'${byUser}' set happiness from ${this.state.status.happiness} to ${happiness}.`);
         this.state.status.happiness = happiness;
         this.stateChanged(byUser);
     }
-    getHighScore() {
-        return this.state.highScore;
-    }
-    getLife() {
-        return lodash.clone(this.state.life);
-    }
-    setLife(byUser = USER_SYSTEM) {
-        this.state.life = { time: new Date(), byUser };
+    replantLisa(byUser = USER_SYSTEM) {
+        LisaStateController_1.logger.debug(`'${byUser}' replanted lisa.`);
+        this.state = createNewLisaState(byUser, this.state.highScore);
         this.stateChanged(byUser);
     }
-    getDeath() {
-        return lodash.clone(this.state.death);
-    }
-    setDeath(cause, byUser = USER_SYSTEM) {
+    killLisa(cause, byUser = USER_SYSTEM) {
+        LisaStateController_1.logger.debug(`'${byUser}' killed lisa by ${cause}.`);
         this.state.death = { time: new Date(), byUser, cause };
         this.stateChanged(byUser);
     }
     stateChanged(byUser) {
-        if (this.isAlive()) {
-            // Adjust stats if alive
-            this.updateStats(byUser);
+        LisaStateController_1.logger.silly("Lisa state changed.");
+        if (this.isLisaAlive()) {
+            // Check stats if alive
+            this.checkStats(byUser);
             // Check again to see if Lisa was killed through the update.
-            if (!this.isAlive()) {
+            if (!this.isLisaAlive()) {
                 this.updateHighScoreIfRequired();
             }
         }
         this.stateChangeSubject.next(this.getStateCopy());
     }
-    updateStats(byUser) {
+    checkStats(byUser) {
         if (this.state.status.water > WATER_MAX) {
-            this.setDeath(LisaDeathCause.DROWNING, byUser);
+            LisaStateController_1.logger.debug(`Water level ${this.state.status.water} is above limit of ${WATER_MAX} -> ${LisaDeathCause.DROWNING}.`);
+            this.killLisa(LisaDeathCause.DROWNING, byUser);
         }
         else if (this.state.status.water < WATER_MIN) {
-            this.setDeath(LisaDeathCause.DEHYDRATION, byUser);
+            LisaStateController_1.logger.debug(`Water level ${this.state.status.water} is below limit of ${WATER_MIN} -> ${LisaDeathCause.DEHYDRATION}.`);
+            this.killLisa(LisaDeathCause.DEHYDRATION, byUser);
         }
         if (this.state.status.happiness > HAPPINESS_MAX) {
+            LisaStateController_1.logger.debug(`Happiness level ${this.state.status.happiness} is above limit of ${HAPPINESS_MAX} -> reducing to limit.`);
             this.state.status.happiness = HAPPINESS_MAX;
         }
         else if (this.state.status.happiness < HAPPINESS_MIN) {
-            this.setDeath(LisaDeathCause.SADNESS, byUser);
+            LisaStateController_1.logger.debug(`Happiness level ${this.state.status.happiness} is below limit of ${HAPPINESS_MIN} -> ${LisaDeathCause.SADNESS}.`);
+            this.killLisa(LisaDeathCause.SADNESS, byUser);
         }
     }
     updateHighScoreIfRequired() {
         const lifetime = this.getLifetime();
         if (lifetime > this.state.highScore) {
+            LisaStateController_1.logger.debug(`Increasing high score from ${this.state.highScore} to ${lifetime}.`);
             this.state.highScore = lifetime;
         }
     }
     getLifetime() {
         const birth = this.state.life.time.getTime();
-        if (!this.isAlive()) {
+        if (!this.isLisaAlive()) {
             const death = this.state.death.time.getTime();
             return death - birth;
         }
@@ -1377,7 +1386,10 @@ let LisaStateController = class LisaStateController {
         return now - birth;
     }
 };
-LisaStateController = __decorate$1([
+LisaStateController.logger = rootLogger.child({
+    target: LisaStateController_1
+});
+LisaStateController = LisaStateController_1 = __decorate$1([
     chevronjs.Injectable(chevron, {
         bootstrapping: chevronjs.DefaultBootstrappings.CLASS,
         dependencies: []
@@ -1399,19 +1411,6 @@ let LisaTextService = class LisaTextService {
 LisaTextService = __decorate$2([
     chevronjs.Injectable(chevron, { bootstrapping: chevronjs.DefaultBootstrappings.CLASS })
 ], LisaTextService);
-
-const isProductionMode = () => process.env.NODE_ENV === "production";
-
-const logFormat = winston.format.combine(winston.format.timestamp(), winston.format.printf(({ level, message, timestamp }) => `${timestamp} [${level}]: ${message}`));
-const rootLogger = winston.createLogger({
-    level: isProductionMode() ? "info" : "silly",
-    format: logFormat,
-    defaultMeta: { target: "root" },
-    transports: [new winston.transports.File({ filename: "log/lisa-bot.log" })]
-});
-if (!isProductionMode()) {
-    rootLogger.add(new winston.transports.Console());
-}
 
 var __decorate$3 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -1447,14 +1446,16 @@ let LisaDiscordController = LisaDiscordController_1 = class LisaDiscordControlle
     }
     onMessage() {
         LisaDiscordController_1.logger.silly("A message was sent, increasing happiness.");
-        this.lisaStateController.setHappiness(this.lisaStateController.getHappiness() +
-            LisaDiscordController_1.MESSAGE_HAPPINESS_MODIFIER);
+        const newHappiness = this.lisaStateController.getStateCopy().status.water +
+            LisaDiscordController_1.MESSAGE_HAPPINESS_MODIFIER;
+        this.lisaStateController.setHappiness(newHappiness, "Discord activity");
     }
     onStateChange() {
-        const presence = createPresence(this.lisaTextService.determineStatusLabel(this.lisaStateController.getStateCopy()));
+        const statusLabel = this.lisaTextService.determineStatusLabel(this.lisaStateController.getStateCopy());
+        LisaDiscordController_1.logger.debug(`Updating presence to '${statusLabel}'.`);
         this.lisaDiscordClient
             .getCommandoClient()
-            .user.setPresence(presence)
+            .user.setPresence(createPresence(statusLabel))
             .then(() => LisaDiscordController_1.logger.debug("Updated presence."))
             .catch(e => LisaDiscordController_1.logger.error("Could not update presence.", e));
     }
@@ -1578,8 +1579,9 @@ let LisaTimer = LisaTimer_1 = class LisaTimer {
     }
     tick() {
         LisaTimer_1.logger.debug(`Performing tick.`);
-        this.lisaStateController.setWater(this.lisaStateController.getWater() + LisaTimer_1.WATER_MODIFIER);
-        this.lisaStateController.setHappiness(this.lisaStateController.getHappiness() +
+        this.lisaStateController.setWater(this.lisaStateController.getStateCopy().status.water +
+            LisaTimer_1.WATER_MODIFIER);
+        this.lisaStateController.setHappiness(this.lisaStateController.getStateCopy().status.happiness +
             LisaTimer_1.HAPPINESS_MODIFIER);
     }
 };

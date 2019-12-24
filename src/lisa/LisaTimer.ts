@@ -34,10 +34,11 @@ class LisaTimer {
     private tick(): void {
         LisaTimer.logger.debug(`Performing tick.`);
         this.lisaStateController.setWater(
-            this.lisaStateController.getWater() + LisaTimer.WATER_MODIFIER
+            this.lisaStateController.getStateCopy().status.water +
+                LisaTimer.WATER_MODIFIER
         );
         this.lisaStateController.setHappiness(
-            this.lisaStateController.getHappiness() +
+            this.lisaStateController.getStateCopy().status.happiness +
                 LisaTimer.HAPPINESS_MODIFIER
         );
     }

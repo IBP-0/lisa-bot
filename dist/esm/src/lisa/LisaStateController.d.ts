@@ -1,6 +1,7 @@
 import { Subject } from "rxjs";
-import { LisaDeath, LisaDeathCause, LisaLife, LisaState } from "./LisaState";
+import { LisaDeathCause, LisaState } from "./LisaState";
 declare class LisaStateController {
+    private static readonly logger;
     readonly stateChangeSubject: Subject<LisaState>;
     private state;
     constructor();
@@ -16,18 +17,13 @@ declare class LisaStateController {
      * @param state State to load.
      */
     load(state: LisaState): void;
-    isAlive(): boolean;
-    getWater(): number;
+    isLisaAlive(): boolean;
     setWater(water: number, byUser?: string): void;
-    getHappiness(): number;
     setHappiness(happiness: number, byUser?: string): void;
-    getHighScore(): number;
-    getLife(): LisaLife;
-    setLife(byUser?: string): void;
-    getDeath(): LisaDeath;
-    setDeath(cause: LisaDeathCause, byUser?: string): void;
+    replantLisa(byUser?: string): void;
+    killLisa(cause: LisaDeathCause, byUser?: string): void;
     private stateChanged;
-    private updateStats;
+    private checkStats;
     private updateHighScoreIfRequired;
     private getLifetime;
 }
