@@ -8,131 +8,6 @@ var fsExtra = require('fs-extra');
 
 const chevron = new chevronjs.Chevron();
 
-const IMAGE_LINK = "http://static.tumblr.com/df323b732955715fe3fb5a506999afc7/" +
-    "rflrqqy/H9Cnsyji6/tumblr_static_88pgfgk82y4ok80ckowwwwow4.jpg";
-const ABOUT_MESSAGE = `Hello!
-I am Lisa, an indoor plant, inspired by Lisa from 'Life is Strange'.
-<http://dontnodentertainment.wikia.com/wiki/Lisa_the_Plant>
-----------
-For more information, use \`$help\` or go to <https://github.com/FelixRilling/lisa-bot>.
-If you have questions or want to report a bug, message my creator: NobodyRocks#5051.`;
-class AboutCommand extends discord_jsCommando.Command {
-    constructor(client) {
-        super(client, {
-            name: "about",
-            aliases: ["why", "info"],
-            group: "util",
-            memberName: "about",
-            description: "Shows info about the bot."
-        });
-    }
-    run(message) {
-        return message.say(ABOUT_MESSAGE, { files: [IMAGE_LINK] });
-    }
-}
-
-const INVITE_MESSAGE = `I'm always happy to join new servers!
-If you want me to join your server, follow this link:
-<https://discordapp.com/oauth2/authorize?&client_id=263671526279086092&scope=bot>`;
-class InviteCommand extends discord_jsCommando.Command {
-    constructor(client) {
-        super(client, {
-            name: "invite",
-            aliases: ["join"],
-            group: "util",
-            memberName: "invite",
-            description: "Add Lisa to your server."
-        });
-    }
-    run(message) {
-        return message.say(INVITE_MESSAGE);
-    }
-}
-
-class ServersCommand extends discord_jsCommando.Command {
-    constructor(client) {
-        super(client, {
-            name: "servers",
-            aliases: [],
-            group: "util",
-            memberName: "servers",
-            description: "Shows the servers the bot is on.",
-            ownerOnly: true
-        });
-    }
-    run(message) {
-        return message.say(this.getServers());
-    }
-    getServers() {
-        return this.client.guilds
-            .array()
-            .map(guild => `${guild.id}: ${guild.name}`)
-            .join("\n");
-    }
-}
-
-var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (undefined && undefined.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-let LisaDiscordClient = class LisaDiscordClient {
-    constructor() {
-        this.commandoClient = null;
-    }
-    init(options) {
-        this.commandoClient = new discord_jsCommando.CommandoClient(options);
-        /*
-         * Defaults
-         */
-        this.commandoClient.registry
-            .registerDefaultTypes()
-            .registerDefaultGroups()
-            .registerDefaultCommands({
-            help: true,
-            eval_: false,
-            ping: true,
-            prefix: false,
-            commandState: false
-        });
-        /*
-         * Custom groups
-         */
-        this.commandoClient.registry.registerGroup(new discord_jsCommando.CommandGroup(this.commandoClient, "lisa", "Lisa"));
-        /*
-         * Custom commands
-         */
-        this.commandoClient.registry.registerCommands([
-            AboutCommand,
-            InviteCommand,
-            ServersCommand
-        ]);
-    }
-    async login(token) {
-        if (this.commandoClient == null) {
-            throw new TypeError("Client has not been initialized.");
-        }
-        await this.commandoClient.login(token);
-    }
-    getCommandoClient() {
-        if (this.commandoClient == null) {
-            throw new TypeError("Client has not been initialized.");
-        }
-        return this.commandoClient;
-    }
-};
-LisaDiscordClient = __decorate([
-    chevronjs.Injectable(chevron, {
-        bootstrapping: chevronjs.DefaultBootstrappings.CLASS,
-        dependencies: []
-    }),
-    __metadata("design:paramtypes", [])
-], LisaDiscordClient);
-
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation. All rights reserved.
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use
@@ -588,9 +463,6 @@ var SafeSubscriber = /*@__PURE__*/ (function (_super) {
     return SafeSubscriber;
 }(Subscriber));
 
-/** PURE_IMPORTS_START  PURE_IMPORTS_END */
-var observable = /*@__PURE__*/ (function () { return typeof Symbol === 'function' && Symbol.observable || '@@observable'; })();
-
 /** PURE_IMPORTS_START _Subscriber PURE_IMPORTS_END */
 function canReportError(observer) {
     while (observer) {
@@ -623,6 +495,9 @@ function toSubscriber(nextOrObserver, error, complete) {
     }
     return new Subscriber(nextOrObserver, error, complete);
 }
+
+/** PURE_IMPORTS_START  PURE_IMPORTS_END */
+var observable = /*@__PURE__*/ (function () { return typeof Symbol === 'function' && Symbol.observable || '@@observable'; })();
 
 /** PURE_IMPORTS_START  PURE_IMPORTS_END */
 function noop() { }
@@ -748,191 +623,6 @@ function getPromiseCtor(promiseCtor) {
         throw new Error('no Promise impl found');
     }
     return promiseCtor;
-}
-
-/** PURE_IMPORTS_START tslib,_Subscription PURE_IMPORTS_END */
-var Action = /*@__PURE__*/ (function (_super) {
-    __extends(Action, _super);
-    function Action(scheduler, work) {
-        return _super.call(this) || this;
-    }
-    Action.prototype.schedule = function (state, delay) {
-        return this;
-    };
-    return Action;
-}(Subscription));
-
-/** PURE_IMPORTS_START tslib,_Action PURE_IMPORTS_END */
-var AsyncAction = /*@__PURE__*/ (function (_super) {
-    __extends(AsyncAction, _super);
-    function AsyncAction(scheduler, work) {
-        var _this = _super.call(this, scheduler, work) || this;
-        _this.scheduler = scheduler;
-        _this.work = work;
-        _this.pending = false;
-        return _this;
-    }
-    AsyncAction.prototype.schedule = function (state, delay) {
-        if (delay === void 0) {
-            delay = 0;
-        }
-        if (this.closed) {
-            return this;
-        }
-        this.state = state;
-        var id = this.id;
-        var scheduler = this.scheduler;
-        if (id != null) {
-            this.id = this.recycleAsyncId(scheduler, id, delay);
-        }
-        this.pending = true;
-        this.delay = delay;
-        this.id = this.id || this.requestAsyncId(scheduler, this.id, delay);
-        return this;
-    };
-    AsyncAction.prototype.requestAsyncId = function (scheduler, id, delay) {
-        if (delay === void 0) {
-            delay = 0;
-        }
-        return setInterval(scheduler.flush.bind(scheduler, this), delay);
-    };
-    AsyncAction.prototype.recycleAsyncId = function (scheduler, id, delay) {
-        if (delay === void 0) {
-            delay = 0;
-        }
-        if (delay !== null && this.delay === delay && this.pending === false) {
-            return id;
-        }
-        clearInterval(id);
-        return undefined;
-    };
-    AsyncAction.prototype.execute = function (state, delay) {
-        if (this.closed) {
-            return new Error('executing a cancelled action');
-        }
-        this.pending = false;
-        var error = this._execute(state, delay);
-        if (error) {
-            return error;
-        }
-        else if (this.pending === false && this.id != null) {
-            this.id = this.recycleAsyncId(this.scheduler, this.id, null);
-        }
-    };
-    AsyncAction.prototype._execute = function (state, delay) {
-        var errored = false;
-        var errorValue = undefined;
-        try {
-            this.work(state);
-        }
-        catch (e) {
-            errored = true;
-            errorValue = !!e && e || new Error(e);
-        }
-        if (errored) {
-            this.unsubscribe();
-            return errorValue;
-        }
-    };
-    AsyncAction.prototype._unsubscribe = function () {
-        var id = this.id;
-        var scheduler = this.scheduler;
-        var actions = scheduler.actions;
-        var index = actions.indexOf(this);
-        this.work = null;
-        this.state = null;
-        this.pending = false;
-        this.scheduler = null;
-        if (index !== -1) {
-            actions.splice(index, 1);
-        }
-        if (id != null) {
-            this.id = this.recycleAsyncId(scheduler, id, null);
-        }
-        this.delay = null;
-    };
-    return AsyncAction;
-}(Action));
-
-var Scheduler = /*@__PURE__*/ (function () {
-    function Scheduler(SchedulerAction, now) {
-        if (now === void 0) {
-            now = Scheduler.now;
-        }
-        this.SchedulerAction = SchedulerAction;
-        this.now = now;
-    }
-    Scheduler.prototype.schedule = function (work, delay, state) {
-        if (delay === void 0) {
-            delay = 0;
-        }
-        return new this.SchedulerAction(this, work).schedule(state, delay);
-    };
-    Scheduler.now = function () { return Date.now(); };
-    return Scheduler;
-}());
-
-/** PURE_IMPORTS_START tslib,_Scheduler PURE_IMPORTS_END */
-var AsyncScheduler = /*@__PURE__*/ (function (_super) {
-    __extends(AsyncScheduler, _super);
-    function AsyncScheduler(SchedulerAction, now) {
-        if (now === void 0) {
-            now = Scheduler.now;
-        }
-        var _this = _super.call(this, SchedulerAction, function () {
-            if (AsyncScheduler.delegate && AsyncScheduler.delegate !== _this) {
-                return AsyncScheduler.delegate.now();
-            }
-            else {
-                return now();
-            }
-        }) || this;
-        _this.actions = [];
-        _this.active = false;
-        _this.scheduled = undefined;
-        return _this;
-    }
-    AsyncScheduler.prototype.schedule = function (work, delay, state) {
-        if (delay === void 0) {
-            delay = 0;
-        }
-        if (AsyncScheduler.delegate && AsyncScheduler.delegate !== this) {
-            return AsyncScheduler.delegate.schedule(work, delay, state);
-        }
-        else {
-            return _super.prototype.schedule.call(this, work, delay, state);
-        }
-    };
-    AsyncScheduler.prototype.flush = function (action) {
-        var actions = this.actions;
-        if (this.active) {
-            actions.push(action);
-            return;
-        }
-        var error;
-        this.active = true;
-        do {
-            if (error = action.execute(action.state, action.delay)) {
-                break;
-            }
-        } while (action = actions.shift());
-        this.active = false;
-        if (error) {
-            while (action = actions.shift()) {
-                action.unsubscribe();
-            }
-            throw error;
-        }
-    };
-    return AsyncScheduler;
-}(Scheduler));
-
-/** PURE_IMPORTS_START _AsyncAction,_AsyncScheduler PURE_IMPORTS_END */
-var async = /*@__PURE__*/ new AsyncScheduler(AsyncAction);
-
-/** PURE_IMPORTS_START _isArray PURE_IMPORTS_END */
-function isNumeric(val) {
-    return !isArray(val) && (val - parseFloat(val) + 1) >= 0;
 }
 
 /** PURE_IMPORTS_START  PURE_IMPORTS_END */
@@ -1125,6 +815,352 @@ var AnonymousSubject = /*@__PURE__*/ (function (_super) {
     return AnonymousSubject;
 }(Subject));
 
+/** PURE_IMPORTS_START tslib,_Subscription PURE_IMPORTS_END */
+var Action = /*@__PURE__*/ (function (_super) {
+    __extends(Action, _super);
+    function Action(scheduler, work) {
+        return _super.call(this) || this;
+    }
+    Action.prototype.schedule = function (state, delay) {
+        return this;
+    };
+    return Action;
+}(Subscription));
+
+/** PURE_IMPORTS_START tslib,_Action PURE_IMPORTS_END */
+var AsyncAction = /*@__PURE__*/ (function (_super) {
+    __extends(AsyncAction, _super);
+    function AsyncAction(scheduler, work) {
+        var _this = _super.call(this, scheduler, work) || this;
+        _this.scheduler = scheduler;
+        _this.work = work;
+        _this.pending = false;
+        return _this;
+    }
+    AsyncAction.prototype.schedule = function (state, delay) {
+        if (delay === void 0) {
+            delay = 0;
+        }
+        if (this.closed) {
+            return this;
+        }
+        this.state = state;
+        var id = this.id;
+        var scheduler = this.scheduler;
+        if (id != null) {
+            this.id = this.recycleAsyncId(scheduler, id, delay);
+        }
+        this.pending = true;
+        this.delay = delay;
+        this.id = this.id || this.requestAsyncId(scheduler, this.id, delay);
+        return this;
+    };
+    AsyncAction.prototype.requestAsyncId = function (scheduler, id, delay) {
+        if (delay === void 0) {
+            delay = 0;
+        }
+        return setInterval(scheduler.flush.bind(scheduler, this), delay);
+    };
+    AsyncAction.prototype.recycleAsyncId = function (scheduler, id, delay) {
+        if (delay === void 0) {
+            delay = 0;
+        }
+        if (delay !== null && this.delay === delay && this.pending === false) {
+            return id;
+        }
+        clearInterval(id);
+        return undefined;
+    };
+    AsyncAction.prototype.execute = function (state, delay) {
+        if (this.closed) {
+            return new Error('executing a cancelled action');
+        }
+        this.pending = false;
+        var error = this._execute(state, delay);
+        if (error) {
+            return error;
+        }
+        else if (this.pending === false && this.id != null) {
+            this.id = this.recycleAsyncId(this.scheduler, this.id, null);
+        }
+    };
+    AsyncAction.prototype._execute = function (state, delay) {
+        var errored = false;
+        var errorValue = undefined;
+        try {
+            this.work(state);
+        }
+        catch (e) {
+            errored = true;
+            errorValue = !!e && e || new Error(e);
+        }
+        if (errored) {
+            this.unsubscribe();
+            return errorValue;
+        }
+    };
+    AsyncAction.prototype._unsubscribe = function () {
+        var id = this.id;
+        var scheduler = this.scheduler;
+        var actions = scheduler.actions;
+        var index = actions.indexOf(this);
+        this.work = null;
+        this.state = null;
+        this.pending = false;
+        this.scheduler = null;
+        if (index !== -1) {
+            actions.splice(index, 1);
+        }
+        if (id != null) {
+            this.id = this.recycleAsyncId(scheduler, id, null);
+        }
+        this.delay = null;
+    };
+    return AsyncAction;
+}(Action));
+
+var Scheduler = /*@__PURE__*/ (function () {
+    function Scheduler(SchedulerAction, now) {
+        if (now === void 0) {
+            now = Scheduler.now;
+        }
+        this.SchedulerAction = SchedulerAction;
+        this.now = now;
+    }
+    Scheduler.prototype.schedule = function (work, delay, state) {
+        if (delay === void 0) {
+            delay = 0;
+        }
+        return new this.SchedulerAction(this, work).schedule(state, delay);
+    };
+    Scheduler.now = function () { return Date.now(); };
+    return Scheduler;
+}());
+
+/** PURE_IMPORTS_START tslib,_Scheduler PURE_IMPORTS_END */
+var AsyncScheduler = /*@__PURE__*/ (function (_super) {
+    __extends(AsyncScheduler, _super);
+    function AsyncScheduler(SchedulerAction, now) {
+        if (now === void 0) {
+            now = Scheduler.now;
+        }
+        var _this = _super.call(this, SchedulerAction, function () {
+            if (AsyncScheduler.delegate && AsyncScheduler.delegate !== _this) {
+                return AsyncScheduler.delegate.now();
+            }
+            else {
+                return now();
+            }
+        }) || this;
+        _this.actions = [];
+        _this.active = false;
+        _this.scheduled = undefined;
+        return _this;
+    }
+    AsyncScheduler.prototype.schedule = function (work, delay, state) {
+        if (delay === void 0) {
+            delay = 0;
+        }
+        if (AsyncScheduler.delegate && AsyncScheduler.delegate !== this) {
+            return AsyncScheduler.delegate.schedule(work, delay, state);
+        }
+        else {
+            return _super.prototype.schedule.call(this, work, delay, state);
+        }
+    };
+    AsyncScheduler.prototype.flush = function (action) {
+        var actions = this.actions;
+        if (this.active) {
+            actions.push(action);
+            return;
+        }
+        var error;
+        this.active = true;
+        do {
+            if (error = action.execute(action.state, action.delay)) {
+                break;
+            }
+        } while (action = actions.shift());
+        this.active = false;
+        if (error) {
+            while (action = actions.shift()) {
+                action.unsubscribe();
+            }
+            throw error;
+        }
+    };
+    return AsyncScheduler;
+}(Scheduler));
+
+/** PURE_IMPORTS_START _AsyncAction,_AsyncScheduler PURE_IMPORTS_END */
+var async = /*@__PURE__*/ new AsyncScheduler(AsyncAction);
+
+/** PURE_IMPORTS_START _isArray PURE_IMPORTS_END */
+function isNumeric(val) {
+    return !isArray(val) && (val - parseFloat(val) + 1) >= 0;
+}
+
+/** PURE_IMPORTS_START _Observable,_scheduler_async,_util_isNumeric PURE_IMPORTS_END */
+function interval(period, scheduler) {
+    if (period === void 0) {
+        period = 0;
+    }
+    if (scheduler === void 0) {
+        scheduler = async;
+    }
+    if (!isNumeric(period) || period < 0) {
+        period = 0;
+    }
+    if (!scheduler || typeof scheduler.schedule !== 'function') {
+        scheduler = async;
+    }
+    return new Observable(function (subscriber) {
+        subscriber.add(scheduler.schedule(dispatch, period, { subscriber: subscriber, counter: 0, period: period }));
+        return subscriber;
+    });
+}
+function dispatch(state) {
+    var subscriber = state.subscriber, counter = state.counter, period = state.period;
+    subscriber.next(counter);
+    this.schedule({ subscriber: subscriber, counter: counter + 1, period: period }, period);
+}
+
+const IMAGE_LINK = "http://static.tumblr.com/df323b732955715fe3fb5a506999afc7/" +
+    "rflrqqy/H9Cnsyji6/tumblr_static_88pgfgk82y4ok80ckowwwwow4.jpg";
+const ABOUT_MESSAGE = `Hello!
+I am Lisa, an indoor plant, inspired by Lisa from 'Life is Strange'.
+<http://dontnodentertainment.wikia.com/wiki/Lisa_the_Plant>
+----------
+For more information, use \`$help\` or go to <https://github.com/FelixRilling/lisa-bot>.
+If you have questions or want to report a bug, message my creator: NobodyRocks#5051.`;
+class AboutCommand extends discord_jsCommando.Command {
+    constructor(client) {
+        super(client, {
+            name: "about",
+            aliases: ["why", "info"],
+            group: "util",
+            memberName: "about",
+            description: "Shows info about the bot."
+        });
+    }
+    run(message) {
+        return message.say(ABOUT_MESSAGE, { files: [IMAGE_LINK] });
+    }
+}
+
+const INVITE_MESSAGE = `I'm always happy to join new servers!
+If you want me to join your server, follow this link:
+<https://discordapp.com/oauth2/authorize?&client_id=263671526279086092&scope=bot>`;
+class InviteCommand extends discord_jsCommando.Command {
+    constructor(client) {
+        super(client, {
+            name: "invite",
+            aliases: ["join"],
+            group: "util",
+            memberName: "invite",
+            description: "Add Lisa to your server."
+        });
+    }
+    run(message) {
+        return message.say(INVITE_MESSAGE);
+    }
+}
+
+class ServersCommand extends discord_jsCommando.Command {
+    constructor(client) {
+        super(client, {
+            name: "servers",
+            aliases: [],
+            group: "util",
+            memberName: "servers",
+            description: "Shows the servers the bot is on.",
+            ownerOnly: true
+        });
+    }
+    run(message) {
+        return message.say(this.getServers());
+    }
+    getServers() {
+        return this.client.guilds
+            .array()
+            .map(guild => `${guild.id}: ${guild.name}`)
+            .join("\n");
+    }
+}
+
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+function createUninitializedClientError() {
+    return new TypeError("Client has not been initialized.");
+}
+let LisaDiscordClient = class LisaDiscordClient {
+    constructor() {
+        this.commandoClient = null;
+    }
+    init(options) {
+        this.commandoClient = new discord_jsCommando.CommandoClient(options);
+        /*
+         * Defaults
+         */
+        this.commandoClient.registry
+            .registerDefaultTypes()
+            .registerDefaultGroups()
+            .registerDefaultCommands({
+            help: true,
+            eval_: false,
+            ping: true,
+            prefix: false,
+            commandState: false
+        });
+        /*
+         * Custom groups
+         */
+        this.commandoClient.registry.registerGroup(new discord_jsCommando.CommandGroup(this.commandoClient, "lisa", "Lisa"));
+        /*
+         * Custom commands
+         */
+        this.commandoClient.registry.registerCommands([
+            AboutCommand,
+            InviteCommand,
+            ServersCommand
+        ]);
+    }
+    async login(token) {
+        if (this.commandoClient == null) {
+            throw createUninitializedClientError();
+        }
+        await this.commandoClient.login(token);
+    }
+    async setPresence(data) {
+        if (this.commandoClient == null) {
+            throw createUninitializedClientError();
+        }
+        await this.commandoClient.user.setPresence(data);
+    }
+    getMessageObservable() {
+        if (this.commandoClient == null) {
+            throw createUninitializedClientError();
+        }
+        return new Observable(subscriber => {
+            this.commandoClient.on("message", message => subscriber.next(message));
+        });
+    }
+};
+LisaDiscordClient = __decorate([
+    chevronjs.Injectable(chevron, {
+        bootstrapping: chevronjs.DefaultBootstrappings.CLASS,
+        dependencies: []
+    }),
+    __metadata("design:paramtypes", [])
+], LisaDiscordClient);
+
 /** PURE_IMPORTS_START tslib,_OuterSubscriber,_util_subscribeToResult PURE_IMPORTS_END */
 var defaultThrottleConfig = {
     leading: true,
@@ -1210,31 +1246,6 @@ var ThrottleTimeSubscriber = /*@__PURE__*/ (function (_super) {
 function dispatchNext(arg) {
     var subscriber = arg.subscriber;
     subscriber.clearThrottle();
-}
-
-/** PURE_IMPORTS_START _Observable,_scheduler_async,_util_isNumeric PURE_IMPORTS_END */
-function interval(period, scheduler) {
-    if (period === void 0) {
-        period = 0;
-    }
-    if (scheduler === void 0) {
-        scheduler = async;
-    }
-    if (!isNumeric(period) || period < 0) {
-        period = 0;
-    }
-    if (!scheduler || typeof scheduler.schedule !== 'function') {
-        scheduler = async;
-    }
-    return new Observable(function (subscriber) {
-        subscriber.add(scheduler.schedule(dispatch, period, { subscriber: subscriber, counter: 0, period: period }));
-        return subscriber;
-    });
-}
-function dispatch(state) {
-    var subscriber = state.subscriber, counter = state.counter, period = state.period;
-    subscriber.next(counter);
-    this.schedule({ subscriber: subscriber, counter: counter + 1, period: period }, period);
 }
 
 const isProductionMode = () => process.env.NODE_ENV === "production";
@@ -1434,7 +1445,10 @@ let LisaDiscordController = LisaDiscordController_1 = class LisaDiscordControlle
         this.lisaTextService = lisaTextService;
     }
     bindListeners() {
-        this.lisaDiscordClient.getCommandoClient().on("message", message => {
+        this.lisaDiscordClient
+            .getMessageObservable()
+            .pipe(throttleTime(LisaDiscordController_1.MESSAGE_THROTTLE_TIMEOUT))
+            .subscribe((message) => {
             if (!message.system && !message.author.bot) {
                 this.onMessage();
             }
@@ -1454,8 +1468,7 @@ let LisaDiscordController = LisaDiscordController_1 = class LisaDiscordControlle
         const statusLabel = this.lisaTextService.determineStatusLabel(this.lisaStateController.getStateCopy());
         LisaDiscordController_1.logger.debug(`Updating presence to '${statusLabel}'.`);
         this.lisaDiscordClient
-            .getCommandoClient()
-            .user.setPresence(createPresence(statusLabel))
+            .setPresence(createPresence(statusLabel))
             .then(() => LisaDiscordController_1.logger.debug("Updated presence."))
             .catch(e => LisaDiscordController_1.logger.error("Could not update presence.", e));
     }
@@ -1464,6 +1477,7 @@ LisaDiscordController.logger = rootLogger.child({
     target: LisaDiscordController_1
 });
 LisaDiscordController.PRESENCE_UPDATE_THROTTLE_TIMEOUT = 10000;
+LisaDiscordController.MESSAGE_THROTTLE_TIMEOUT = 1000;
 LisaDiscordController.MESSAGE_HAPPINESS_MODIFIER = 0.25;
 LisaDiscordController = LisaDiscordController_1 = __decorate$3([
     chevronjs.Injectable(chevron, {

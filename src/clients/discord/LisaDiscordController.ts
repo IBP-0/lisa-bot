@@ -1,5 +1,6 @@
 import { DefaultBootstrappings, Injectable } from "chevronjs";
-import { PresenceData } from "discord.js";
+import { Message, PresenceData } from "discord.js";
+import { Observable } from "rxjs";
 import { throttleTime } from "rxjs/operators";
 import { chevron } from "../../chevron";
 import { LisaStateController } from "../../lisa/LisaStateController";
@@ -22,6 +23,7 @@ class LisaDiscordController {
         target: LisaDiscordController
     });
     private static readonly PRESENCE_UPDATE_THROTTLE_TIMEOUT = 10000;
+    private static readonly MESSAGE_THROTTLE_TIMEOUT = 1000;
     private static readonly MESSAGE_HAPPINESS_MODIFIER = 0.25;
 
     constructor(
@@ -31,11 +33,14 @@ class LisaDiscordController {
     ) {}
 
     public bindListeners(): void {
-        this.lisaDiscordClient.getCommandoClient().on("message", message => {
-            if (!message.system && !message.author.bot) {
-                this.onMessage();
-            }
-        });
+        this.lisaDiscordClient
+            .getMessageObservable()
+            .pipe(throttleTime(LisaDiscordController.MESSAGE_THROTTLE_TIMEOUT))
+            .subscribe((message: Message) => {
+                if (!message.system && !message.author.bot) {
+                    this.onMessage();
+                }
+            });
 
         this.lisaStateController.stateChangeSubject
             .pipe(
@@ -65,8 +70,7 @@ class LisaDiscordController {
             `Updating presence to '${statusLabel}'.`
         );
         this.lisaDiscordClient
-            .getCommandoClient()
-            .user.setPresence(createPresence(statusLabel))
+            .setPresence(createPresence(statusLabel))
             .then(() => LisaDiscordController.logger.debug("Updated presence."))
             .catch(e =>
                 LisaDiscordController.logger.error(

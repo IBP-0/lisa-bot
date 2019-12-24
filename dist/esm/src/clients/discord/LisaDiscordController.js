@@ -27,7 +27,10 @@ let LisaDiscordController = LisaDiscordController_1 = class LisaDiscordControlle
         this.lisaTextService = lisaTextService;
     }
     bindListeners() {
-        this.lisaDiscordClient.getCommandoClient().on("message", message => {
+        this.lisaDiscordClient
+            .getMessageObservable()
+            .pipe(throttleTime(LisaDiscordController_1.MESSAGE_THROTTLE_TIMEOUT))
+            .subscribe((message) => {
             if (!message.system && !message.author.bot) {
                 this.onMessage();
             }
@@ -47,8 +50,7 @@ let LisaDiscordController = LisaDiscordController_1 = class LisaDiscordControlle
         const statusLabel = this.lisaTextService.determineStatusLabel(this.lisaStateController.getStateCopy());
         LisaDiscordController_1.logger.debug(`Updating presence to '${statusLabel}'.`);
         this.lisaDiscordClient
-            .getCommandoClient()
-            .user.setPresence(createPresence(statusLabel))
+            .setPresence(createPresence(statusLabel))
             .then(() => LisaDiscordController_1.logger.debug("Updated presence."))
             .catch(e => LisaDiscordController_1.logger.error("Could not update presence.", e));
     }
@@ -57,6 +59,7 @@ LisaDiscordController.logger = rootLogger.child({
     target: LisaDiscordController_1
 });
 LisaDiscordController.PRESENCE_UPDATE_THROTTLE_TIMEOUT = 10000;
+LisaDiscordController.MESSAGE_THROTTLE_TIMEOUT = 1000;
 LisaDiscordController.MESSAGE_HAPPINESS_MODIFIER = 0.25;
 LisaDiscordController = LisaDiscordController_1 = __decorate([
     Injectable(chevron, {

@@ -9,10 +9,14 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 import { DefaultBootstrappings, Injectable } from "chevronjs";
 import { CommandGroup, CommandoClient } from "discord.js-commando";
+import { Observable } from "rxjs";
 import { chevron } from "../../chevron";
 import { AboutCommand } from "./commands/core/AboutCommand";
 import { InviteCommand } from "./commands/core/InviteCommand";
 import { ServersCommand } from "./commands/core/ServersCommand";
+function createUninitializedClientError() {
+    return new TypeError("Client has not been initialized.");
+}
 let LisaDiscordClient = class LisaDiscordClient {
     constructor() {
         this.commandoClient = null;
@@ -47,15 +51,23 @@ let LisaDiscordClient = class LisaDiscordClient {
     }
     async login(token) {
         if (this.commandoClient == null) {
-            throw new TypeError("Client has not been initialized.");
+            throw createUninitializedClientError();
         }
         await this.commandoClient.login(token);
     }
-    getCommandoClient() {
+    async setPresence(data) {
         if (this.commandoClient == null) {
-            throw new TypeError("Client has not been initialized.");
+            throw createUninitializedClientError();
         }
-        return this.commandoClient;
+        await this.commandoClient.user.setPresence(data);
+    }
+    getMessageObservable() {
+        if (this.commandoClient == null) {
+            throw createUninitializedClientError();
+        }
+        return new Observable(subscriber => {
+            this.commandoClient.on("message", message => subscriber.next(message));
+        });
     }
 };
 LisaDiscordClient = __decorate([
