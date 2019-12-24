@@ -42,12 +42,11 @@ class LisaStateController {
 
     public readonly stateChangeSubject: Subject<void>;
     private state: LisaState;
-    private readonly storeSubscription: Subscription;
 
     constructor(private readonly lisaStorageService: LisaStorageService) {
         this.state = createInitialLisaState();
         this.stateChangeSubject = new Subject<void>();
-        this.storeSubscription = this.stateChangeSubject
+        this.stateChangeSubject
             .pipe(throttleTime(LisaStateController.STORAGE_THROTTLE_TIMEOUT))
             .subscribe(() => {
                 this.storeState().catch(e =>

@@ -1,4 +1,5 @@
 import { DefaultBootstrappings, Injectable } from "chevronjs";
+import { interval } from "rxjs";
 import { chevron } from "../chevron";
 import { rootLogger } from "../logger";
 import { LisaStateController } from "./LisaStateController";
@@ -24,7 +25,7 @@ class LisaTimer {
     }
 
     public start(): void {
-        this.timer = setInterval(() => this.tick(), LisaTimer.TIMEOUT);
+        interval(LisaTimer.TIMEOUT).subscribe(() => this.tick());
         LisaTimer.logger.info(
             `Started Lisa timer with an interval of ${LisaTimer.TIMEOUT}.`
         );
