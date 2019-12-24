@@ -1,6 +1,8 @@
 import { DefaultBootstrappings, Injectable } from "chevronjs";
 import { chevron } from "../../chevron";
-import { LisaState } from "../LisaState";
+import { HAPPINESS_MAX, LisaState, WATER_MAX } from "../LisaState";
+
+const FACTOR = (WATER_MAX + HAPPINESS_MAX) / 2;
 
 @Injectable(chevron, { bootstrapping: DefaultBootstrappings.CLASS })
 class LisaStatusService {
@@ -28,6 +30,18 @@ class LisaStatusService {
         const death = state.death.time!.getTime();
         const now = Date.now();
         return now - death;
+    }
+
+    /**
+     * Returns an relative index how well lisa is doing.
+     *
+     * @return relative index.
+     */
+    public getRelativeIndex(state: LisaState): number {
+        const relWater = state.status.water / WATER_MAX;
+        const relHappiness = state.status.happiness / HAPPINESS_MAX;
+
+        return relWater * relHappiness * FACTOR;
     }
 }
 

@@ -1,3 +1,10 @@
+declare const WATER_INITIAL = 100;
+declare const WATER_MIN = 0.1;
+declare const WATER_MAX = 150;
+declare const HAPPINESS_INITIAL = 100;
+declare const HAPPINESS_MIN = 0.1;
+declare const HAPPINESS_MAX = 100;
+declare const USER_SYSTEM = "System";
 declare enum LisaDeathCause {
     UNKNOWN = "something unknown",
     DROWNING = "drowning",
@@ -23,5 +30,5 @@ interface LisaState {
     death: LisaDeath;
     highScore: number;
 }
-export { LisaState, LisaLife, LisaDeath, LisaDeathCause };
+export { LisaState, LisaLife, LisaDeath, LisaDeathCause, WATER_INITIAL, WATER_MIN, WATER_MAX, HAPPINESS_INITIAL, HAPPINESS_MIN, HAPPINESS_MAX, USER_SYSTEM };
 //# sourceMappingURL=LisaState.d.ts.map

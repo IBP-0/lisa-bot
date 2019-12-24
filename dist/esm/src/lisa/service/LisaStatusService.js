@@ -6,6 +6,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 import { DefaultBootstrappings, Injectable } from "chevronjs";
 import { chevron } from "../../chevron";
+import { HAPPINESS_MAX, WATER_MAX } from "../LisaState";
+const FACTOR = (WATER_MAX + HAPPINESS_MAX) / 2;
 let LisaStatusService = class LisaStatusService {
     isAlive(state) {
         return state.death.time == null;
@@ -26,6 +28,16 @@ let LisaStatusService = class LisaStatusService {
         const death = state.death.time.getTime();
         const now = Date.now();
         return now - death;
+    }
+    /**
+     * Returns an relative index how well lisa is doing.
+     *
+     * @return relative index.
+     */
+    getRelativeIndex(state) {
+        const relWater = state.status.water / WATER_MAX;
+        const relHappiness = state.status.happiness / HAPPINESS_MAX;
+        return relWater * relHappiness * FACTOR;
     }
 };
 LisaStatusService = __decorate([

@@ -1,3 +1,13 @@
+const WATER_INITIAL = 100;
+const WATER_MIN = 0.1;
+const WATER_MAX = 150;
+
+const HAPPINESS_INITIAL = 100;
+const HAPPINESS_MIN = 0.1;
+const HAPPINESS_MAX = 100;
+
+const USER_SYSTEM = "System";
+
 enum LisaDeathCause {
     UNKNOWN = "something unknown",
     DROWNING = "drowning",
@@ -27,4 +37,16 @@ interface LisaState {
     highScore: number;
 }
 
-export { LisaState, LisaLife, LisaDeath, LisaDeathCause };
+export {
+    LisaState,
+    LisaLife,
+    LisaDeath,
+    LisaDeathCause,
+    WATER_INITIAL,
+    WATER_MIN,
+    WATER_MAX,
+    HAPPINESS_INITIAL,
+    HAPPINESS_MIN,
+    HAPPINESS_MAX,
+    USER_SYSTEM
+};

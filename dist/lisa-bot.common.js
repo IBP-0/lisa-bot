@@ -1302,6 +1302,13 @@ if (!isProductionMode()) {
     rootLogger.add(new winston.transports.Console());
 }
 
+const WATER_INITIAL = 100;
+const WATER_MIN = 0.1;
+const WATER_MAX = 150;
+const HAPPINESS_INITIAL = 100;
+const HAPPINESS_MIN = 0.1;
+const HAPPINESS_MAX = 100;
+const USER_SYSTEM = "System";
 var LisaDeathCause;
 (function (LisaDeathCause) {
     LisaDeathCause["UNKNOWN"] = "something unknown";
@@ -1317,6 +1324,7 @@ var __decorate$1 = (undefined && undefined.__decorate) || function (decorators, 
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+const FACTOR = (WATER_MAX + HAPPINESS_MAX) / 2;
 let LisaStatusService = class LisaStatusService {
     isAlive(state) {
         return state.death.time == null;
@@ -1338,6 +1346,16 @@ let LisaStatusService = class LisaStatusService {
         const now = Date.now();
         return now - death;
     }
+    /**
+     * Returns an relative index how well lisa is doing.
+     *
+     * @return relative index.
+     */
+    getRelativeIndex(state) {
+        const relWater = state.status.water / WATER_MAX;
+        const relHappiness = state.status.happiness / HAPPINESS_MAX;
+        return relWater * relHappiness * FACTOR;
+    }
 };
 LisaStatusService = __decorate$1([
     chevronjs.Injectable(chevron, { bootstrapping: chevronjs.DefaultBootstrappings.CLASS })
@@ -1353,13 +1371,6 @@ var __metadata$1 = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var LisaStateController_1;
-const WATER_INITIAL = 100;
-const WATER_MIN = 0.1;
-const WATER_MAX = 150;
-const HAPPINESS_INITIAL = 100;
-const HAPPINESS_MIN = 0.1;
-const HAPPINESS_MAX = 100;
-const USER_SYSTEM = "System";
 const createNewLisaState = (createdByUser, highScore = 0) => {
     return {
         highScore,
@@ -1476,13 +1487,35 @@ var __decorate$3 = (undefined && undefined.__decorate) || function (decorators, 
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __metadata$2 = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+const RELATIVE_STATE_GOOD = 90;
+const RELATIVE_STATE_OK = 40;
 let LisaTextService = class LisaTextService {
+    constructor(lisaStatusService) {
+        this.lisaStatusService = lisaStatusService;
+    }
     determineStatusLabel(state) {
-        return "foo";
+        if (!this.lisaStatusService.isAlive(state)) {
+            return "is dead.";
+        }
+        const relativeState = this.lisaStatusService.getRelativeIndex(state);
+        if (relativeState > RELATIVE_STATE_GOOD) {
+            return "doing great.";
+        }
+        if (relativeState > RELATIVE_STATE_OK) {
+            return "doing fine.";
+        }
+        return "close to dying.";
     }
 };
 LisaTextService = __decorate$3([
-    chevronjs.Injectable(chevron, { bootstrapping: chevronjs.DefaultBootstrappings.CLASS })
+    chevronjs.Injectable(chevron, {
+        bootstrapping: chevronjs.DefaultBootstrappings.CLASS,
+        dependencies: [LisaStatusService]
+    }),
+    __metadata$2("design:paramtypes", [LisaStatusService])
 ], LisaTextService);
 
 var __decorate$4 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
@@ -1491,7 +1524,7 @@ var __decorate$4 = (undefined && undefined.__decorate) || function (decorators, 
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __metadata$2 = (undefined && undefined.__metadata) || function (k, v) {
+var __metadata$3 = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var LisaDiscordController_1;
@@ -1544,7 +1577,7 @@ LisaDiscordController = LisaDiscordController_1 = __decorate$4([
         bootstrapping: chevronjs.DefaultBootstrappings.CLASS,
         dependencies: [LisaStateController, LisaDiscordClient, LisaTextService]
     }),
-    __metadata$2("design:paramtypes", [LisaStateController,
+    __metadata$3("design:paramtypes", [LisaStateController,
         LisaDiscordClient,
         LisaTextService])
 ], LisaDiscordController);
@@ -1600,7 +1633,7 @@ var __decorate$6 = (undefined && undefined.__decorate) || function (decorators, 
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __metadata$3 = (undefined && undefined.__metadata) || function (k, v) {
+var __metadata$4 = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var LisaStorageController_1;
@@ -1629,7 +1662,7 @@ LisaStorageController = LisaStorageController_1 = __decorate$6([
         bootstrapping: chevronjs.DefaultBootstrappings.CLASS,
         dependencies: [LisaStateController, LisaStorageService]
     }),
-    __metadata$3("design:paramtypes", [LisaStateController,
+    __metadata$4("design:paramtypes", [LisaStateController,
         LisaStorageService])
 ], LisaStorageController);
 
@@ -1639,7 +1672,7 @@ var __decorate$7 = (undefined && undefined.__decorate) || function (decorators, 
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __metadata$4 = (undefined && undefined.__metadata) || function (k, v) {
+var __metadata$5 = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var LisaTimer_1;
@@ -1671,7 +1704,7 @@ LisaTimer = LisaTimer_1 = __decorate$7([
         bootstrapping: chevronjs.DefaultBootstrappings.CLASS,
         dependencies: [LisaStateController]
     }),
-    __metadata$4("design:paramtypes", [LisaStateController])
+    __metadata$5("design:paramtypes", [LisaStateController])
 ], LisaTimer);
 
 const logger = rootLogger.child({ target: "main" });

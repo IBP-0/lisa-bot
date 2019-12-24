@@ -13,15 +13,8 @@ import { cloneDeep } from "lodash";
 import { Subject } from "rxjs";
 import { chevron } from "../chevron";
 import { rootLogger } from "../logger";
-import { LisaDeathCause } from "./LisaState";
+import { HAPPINESS_INITIAL, HAPPINESS_MAX, HAPPINESS_MIN, LisaDeathCause, USER_SYSTEM, WATER_INITIAL, WATER_MAX, WATER_MIN } from "./LisaState";
 import { LisaStatusService } from "./service/LisaStatusService";
-const WATER_INITIAL = 100;
-const WATER_MIN = 0.1;
-const WATER_MAX = 150;
-const HAPPINESS_INITIAL = 100;
-const HAPPINESS_MIN = 0.1;
-const HAPPINESS_MAX = 100;
-const USER_SYSTEM = "System";
 const createNewLisaState = (createdByUser, highScore = 0) => {
     return {
         highScore,
