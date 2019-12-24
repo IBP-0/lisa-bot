@@ -11,7 +11,7 @@ import Timer = NodeJS.Timer;
 })
 class LisaTimer {
     private static readonly logger = rootLogger.child({
-        service: LisaTimer
+        target: LisaTimer
     });
 
     private static readonly TIMEOUT = 60000;

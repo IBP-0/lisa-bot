@@ -7,7 +7,7 @@ import { LisaTimer } from "./lisa/LisaTimer";
 import { rootLogger } from "./logger";
 import { isProductionMode } from "./mode";
 
-const logger = rootLogger.child({ service: "main" });
+const logger = rootLogger.child({ target: "main" });
 
 const startLisaMainClient = async (): Promise<void> => {
     logger.info("Starting Lisa main client...");

@@ -19,7 +19,7 @@ const createPresence = (name: string): PresenceData => ({
 })
 class LisaDiscordController {
     private static readonly logger = rootLogger.child({
-        service: LisaDiscordController
+        target: LisaDiscordController
     });
     private static readonly PRESENCE_UPDATE_THROTTLE_TIMEOUT = 10000;
     private static readonly MESSAGE_HAPPINESS_MODIFIER = 0.25;
@@ -28,8 +28,7 @@ class LisaDiscordController {
         private readonly lisaStateController: LisaStateController,
         private readonly lisaDiscordClient: LisaDiscordClient,
         private readonly lisaTextService: LisaTextService
-    ) {
-    }
+    ) {}
 
     public bindEvents(): void {
         this.lisaDiscordClient.getCommandoClient().on("message", message => {
@@ -54,7 +53,7 @@ class LisaDiscordController {
         );
         this.lisaStateController.setHappiness(
             this.lisaStateController.getHappiness() +
-            LisaDiscordController.MESSAGE_HAPPINESS_MODIFIER
+                LisaDiscordController.MESSAGE_HAPPINESS_MODIFIER
         );
     }
 

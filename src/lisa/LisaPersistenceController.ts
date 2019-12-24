@@ -16,7 +16,7 @@ class LisaPersistenceController {
     private static readonly STORAGE_THROTTLE_TIMEOUT = 10000;
 
     private static readonly logger = rootLogger.child({
-        service: LisaStateController
+        target: LisaStateController
     });
 
     constructor(
