@@ -50,6 +50,7 @@ let LisaStateController = LisaStateController_1 = class LisaStateController {
      * @return copy of the current state.
      */
     getStateCopy() {
+        console.log(JSON.stringify(this.state));
         return cloneDeep(this.state);
     }
     /**

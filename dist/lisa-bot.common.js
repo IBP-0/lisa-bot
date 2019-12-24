@@ -1357,6 +1357,7 @@ let LisaStateController = LisaStateController_1 = class LisaStateController {
      * @return copy of the current state.
      */
     getStateCopy() {
+        console.log(JSON.stringify(this.state));
         return lodash.cloneDeep(this.state);
     }
     /**
@@ -1499,7 +1500,7 @@ let LisaDiscordController = LisaDiscordController_1 = class LisaDiscordControlle
     }
     onMessage() {
         LisaDiscordController_1.logger.silly("A message was sent, increasing happiness.");
-        const newHappiness = this.lisaStateController.getStateCopy().status.water +
+        const newHappiness = this.lisaStateController.getStateCopy().status.happiness +
             LisaDiscordController_1.MESSAGE_HAPPINESS_MODIFIER;
         this.lisaStateController.setHappiness(newHappiness, "Discord activity");
     }
