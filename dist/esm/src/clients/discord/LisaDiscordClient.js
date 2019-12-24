@@ -14,9 +14,7 @@ import { chevron } from "../../chevron";
 import { AboutCommand } from "./commands/core/AboutCommand";
 import { InviteCommand } from "./commands/core/InviteCommand";
 import { ServersCommand } from "./commands/core/ServersCommand";
-function createUninitializedClientError() {
-    return new TypeError("Client has not been initialized.");
-}
+const createUninitializedClientError = () => new TypeError("Client has not been initialized.");
 let LisaDiscordClient = class LisaDiscordClient {
     constructor() {
         this.commandoClient = null;
@@ -66,7 +64,9 @@ let LisaDiscordClient = class LisaDiscordClient {
             throw createUninitializedClientError();
         }
         return new Observable(subscriber => {
-            this.commandoClient.on("message", message => subscriber.next(message));
+            this.commandoClient.on("message", message => {
+                subscriber.next(message);
+            });
         });
     }
 };

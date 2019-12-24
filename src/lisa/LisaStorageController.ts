@@ -24,16 +24,15 @@ class LisaStorageController {
     public bindListeners(): void {
         this.lisaStateController.stateChangeSubject
             .pipe(throttleTime(LisaStorageController.STORAGE_THROTTLE_TIMEOUT))
-            .subscribe(lisaState => {
-                this.lisaStorageService
-                    .storeState(lisaState)
-                    .catch(e =>
-                        LisaStorageController.logger.error(
-                            "Could not save state!",
-                            e
-                        )
-                    );
-            });
+            .subscribe(() => this.storeState());
+    }
+
+    private storeState(): void {
+        this.lisaStorageService
+            .storeState(this.lisaStateController.getStateCopy())
+            .catch(e =>
+                LisaStorageController.logger.error("Could not save state!", e)
+            );
     }
 }
 

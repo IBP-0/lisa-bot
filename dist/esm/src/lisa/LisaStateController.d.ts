@@ -2,7 +2,7 @@ import { Subject } from "rxjs";
 import { LisaDeathCause, LisaState } from "./LisaState";
 declare class LisaStateController {
     private static readonly logger;
-    readonly stateChangeSubject: Subject<LisaState>;
+    readonly stateChangeSubject: Subject<void>;
     private state;
     constructor();
     /**

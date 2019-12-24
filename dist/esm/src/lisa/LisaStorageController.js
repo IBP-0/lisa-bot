@@ -22,11 +22,12 @@ let LisaStorageController = LisaStorageController_1 = class LisaStorageControlle
     bindListeners() {
         this.lisaStateController.stateChangeSubject
             .pipe(throttleTime(LisaStorageController_1.STORAGE_THROTTLE_TIMEOUT))
-            .subscribe(lisaState => {
-            this.lisaStorageService
-                .storeState(lisaState)
-                .catch(e => LisaStorageController_1.logger.error("Could not save state!", e));
-        });
+            .subscribe(() => this.storeState());
+    }
+    storeState() {
+        this.lisaStorageService
+            .storeState(this.lisaStateController.getStateCopy())
+            .catch(e => LisaStorageController_1.logger.error("Could not save state!", e));
     }
 };
 LisaStorageController.STORAGE_THROTTLE_TIMEOUT = 10000;

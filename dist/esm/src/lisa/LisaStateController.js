@@ -94,7 +94,7 @@ let LisaStateController = LisaStateController_1 = class LisaStateController {
                 this.updateHighScoreIfRequired();
             }
         }
-        this.stateChangeSubject.next(this.getStateCopy());
+        this.stateChangeSubject.next();
     }
     checkStats(byUser) {
         if (this.state.status.water > WATER_MAX) {

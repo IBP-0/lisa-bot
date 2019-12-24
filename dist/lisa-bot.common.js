@@ -1025,6 +1025,47 @@ function dispatch(state) {
     this.schedule({ subscriber: subscriber, counter: counter + 1, period: period }, period);
 }
 
+/** PURE_IMPORTS_START tslib,_Subscriber PURE_IMPORTS_END */
+function filter(predicate, thisArg) {
+    return function filterOperatorFunction(source) {
+        return source.lift(new FilterOperator(predicate, thisArg));
+    };
+}
+var FilterOperator = /*@__PURE__*/ (function () {
+    function FilterOperator(predicate, thisArg) {
+        this.predicate = predicate;
+        this.thisArg = thisArg;
+    }
+    FilterOperator.prototype.call = function (subscriber, source) {
+        return source.subscribe(new FilterSubscriber(subscriber, this.predicate, this.thisArg));
+    };
+    return FilterOperator;
+}());
+var FilterSubscriber = /*@__PURE__*/ (function (_super) {
+    __extends(FilterSubscriber, _super);
+    function FilterSubscriber(destination, predicate, thisArg) {
+        var _this = _super.call(this, destination) || this;
+        _this.predicate = predicate;
+        _this.thisArg = thisArg;
+        _this.count = 0;
+        return _this;
+    }
+    FilterSubscriber.prototype._next = function (value) {
+        var result;
+        try {
+            result = this.predicate.call(this.thisArg, value, this.count++);
+        }
+        catch (err) {
+            this.destination.error(err);
+            return;
+        }
+        if (result) {
+            this.destination.next(value);
+        }
+    };
+    return FilterSubscriber;
+}(Subscriber));
+
 const IMAGE_LINK = "http://static.tumblr.com/df323b732955715fe3fb5a506999afc7/" +
     "rflrqqy/H9Cnsyji6/tumblr_static_88pgfgk82y4ok80ckowwwwow4.jpg";
 const ABOUT_MESSAGE = `Hello!
@@ -1097,9 +1138,7 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 var __metadata = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-function createUninitializedClientError() {
-    return new TypeError("Client has not been initialized.");
-}
+const createUninitializedClientError = () => new TypeError("Client has not been initialized.");
 let LisaDiscordClient = class LisaDiscordClient {
     constructor() {
         this.commandoClient = null;
@@ -1149,7 +1188,9 @@ let LisaDiscordClient = class LisaDiscordClient {
             throw createUninitializedClientError();
         }
         return new Observable(subscriber => {
-            this.commandoClient.on("message", message => subscriber.next(message));
+            this.commandoClient.on("message", message => {
+                subscriber.next(message);
+            });
         });
     }
 };
@@ -1360,7 +1401,7 @@ let LisaStateController = LisaStateController_1 = class LisaStateController {
                 this.updateHighScoreIfRequired();
             }
         }
-        this.stateChangeSubject.next(this.getStateCopy());
+        this.stateChangeSubject.next();
     }
     checkStats(byUser) {
         if (this.state.status.water > WATER_MAX) {
@@ -1433,11 +1474,13 @@ var __metadata$2 = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var LisaDiscordController_1;
-const createPresence = (name) => ({
-    game: {
-        name
-    }
-});
+const createPresence = (name) => {
+    return {
+        game: {
+            name
+        }
+    };
+};
 let LisaDiscordController = LisaDiscordController_1 = class LisaDiscordController {
     constructor(lisaStateController, lisaDiscordClient, lisaTextService) {
         this.lisaStateController = lisaStateController;
@@ -1447,12 +1490,8 @@ let LisaDiscordController = LisaDiscordController_1 = class LisaDiscordControlle
     bindListeners() {
         this.lisaDiscordClient
             .getMessageObservable()
-            .pipe(throttleTime(LisaDiscordController_1.MESSAGE_THROTTLE_TIMEOUT))
-            .subscribe((message) => {
-            if (!message.system && !message.author.bot) {
-                this.onMessage();
-            }
-        });
+            .pipe(filter(message => !message.system && !message.author.bot), throttleTime(LisaDiscordController_1.MESSAGE_THROTTLE_TIMEOUT))
+            .subscribe(() => this.onMessage());
         this.lisaStateController.stateChangeSubject
             .pipe(throttleTime(LisaDiscordController_1.PRESENCE_UPDATE_THROTTLE_TIMEOUT))
             .subscribe(() => this.onStateChange());
@@ -1552,11 +1591,12 @@ let LisaStorageController = LisaStorageController_1 = class LisaStorageControlle
     bindListeners() {
         this.lisaStateController.stateChangeSubject
             .pipe(throttleTime(LisaStorageController_1.STORAGE_THROTTLE_TIMEOUT))
-            .subscribe(lisaState => {
-            this.lisaStorageService
-                .storeState(lisaState)
-                .catch(e => LisaStorageController_1.logger.error("Could not save state!", e));
-        });
+            .subscribe(() => this.storeState());
+    }
+    storeState() {
+        this.lisaStorageService
+            .storeState(this.lisaStateController.getStateCopy())
+            .catch(e => LisaStorageController_1.logger.error("Could not save state!", e));
     }
 };
 LisaStorageController.STORAGE_THROTTLE_TIMEOUT = 10000;

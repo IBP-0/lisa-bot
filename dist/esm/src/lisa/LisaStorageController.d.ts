@@ -7,6 +7,7 @@ declare class LisaStorageController {
     private static readonly logger;
     constructor(lisaStateController: LisaStateController, lisaStorageService: LisaStorageService);
     bindListeners(): void;
+    private storeState;
 }
 export { LisaStorageController };
 //# sourceMappingURL=LisaStorageController.d.ts.map

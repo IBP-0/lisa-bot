@@ -46,12 +46,12 @@ class LisaStateController {
         target: LisaStateController
     });
 
-    public readonly stateChangeSubject: Subject<LisaState>;
+    public readonly stateChangeSubject: Subject<void>;
     private state: LisaState;
 
     constructor() {
         this.state = createNewLisaState(USER_SYSTEM);
-        this.stateChangeSubject = new Subject<LisaState>();
+        this.stateChangeSubject = new Subject<void>();
     }
 
     /**
@@ -122,7 +122,7 @@ class LisaStateController {
             }
         }
 
-        this.stateChangeSubject.next(this.getStateCopy());
+        this.stateChangeSubject.next();
     }
 
     private checkStats(byUser: string): void {

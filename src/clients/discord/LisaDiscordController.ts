@@ -1,18 +1,20 @@
 import { DefaultBootstrappings, Injectable } from "chevronjs";
 import { Message, PresenceData } from "discord.js";
 import { Observable } from "rxjs";
-import { throttleTime } from "rxjs/operators";
+import { filter, throttleTime } from "rxjs/operators";
 import { chevron } from "../../chevron";
 import { LisaStateController } from "../../lisa/LisaStateController";
 import { LisaTextService } from "../../lisa/service/LisaTextService";
 import { rootLogger } from "../../logger";
 import { LisaDiscordClient } from "./LisaDiscordClient";
 
-const createPresence = (name: string): PresenceData => ({
-    game: {
-        name
-    }
-});
+const createPresence = (name: string): PresenceData => {
+    return {
+        game: {
+            name
+        }
+    };
+};
 
 @Injectable(chevron, {
     bootstrapping: DefaultBootstrappings.CLASS,
@@ -35,12 +37,11 @@ class LisaDiscordController {
     public bindListeners(): void {
         this.lisaDiscordClient
             .getMessageObservable()
-            .pipe(throttleTime(LisaDiscordController.MESSAGE_THROTTLE_TIMEOUT))
-            .subscribe((message: Message) => {
-                if (!message.system && !message.author.bot) {
-                    this.onMessage();
-                }
-            });
+            .pipe(
+                filter(message => !message.system && !message.author.bot),
+                throttleTime(LisaDiscordController.MESSAGE_THROTTLE_TIMEOUT)
+            )
+            .subscribe(() => this.onMessage());
 
         this.lisaStateController.stateChangeSubject
             .pipe(

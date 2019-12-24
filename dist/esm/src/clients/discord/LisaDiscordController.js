@@ -9,17 +9,19 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var LisaDiscordController_1;
 import { DefaultBootstrappings, Injectable } from "chevronjs";
-import { throttleTime } from "rxjs/operators";
+import { filter, throttleTime } from "rxjs/operators";
 import { chevron } from "../../chevron";
 import { LisaStateController } from "../../lisa/LisaStateController";
 import { LisaTextService } from "../../lisa/service/LisaTextService";
 import { rootLogger } from "../../logger";
 import { LisaDiscordClient } from "./LisaDiscordClient";
-const createPresence = (name) => ({
-    game: {
-        name
-    }
-});
+const createPresence = (name) => {
+    return {
+        game: {
+            name
+        }
+    };
+};
 let LisaDiscordController = LisaDiscordController_1 = class LisaDiscordController {
     constructor(lisaStateController, lisaDiscordClient, lisaTextService) {
         this.lisaStateController = lisaStateController;
@@ -29,12 +31,8 @@ let LisaDiscordController = LisaDiscordController_1 = class LisaDiscordControlle
     bindListeners() {
         this.lisaDiscordClient
             .getMessageObservable()
-            .pipe(throttleTime(LisaDiscordController_1.MESSAGE_THROTTLE_TIMEOUT))
-            .subscribe((message) => {
-            if (!message.system && !message.author.bot) {
-                this.onMessage();
-            }
-        });
+            .pipe(filter(message => !message.system && !message.author.bot), throttleTime(LisaDiscordController_1.MESSAGE_THROTTLE_TIMEOUT))
+            .subscribe(() => this.onMessage());
         this.lisaStateController.stateChangeSubject
             .pipe(throttleTime(LisaDiscordController_1.PRESENCE_UPDATE_THROTTLE_TIMEOUT))
             .subscribe(() => this.onStateChange());
