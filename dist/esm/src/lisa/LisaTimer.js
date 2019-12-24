@@ -9,6 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var LisaTimer_1;
 import { DefaultBootstrappings, Injectable } from "chevronjs";
+import { interval } from "rxjs";
 import { chevron } from "../chevron";
 import { rootLogger } from "../logger";
 import { LisaStateController } from "./LisaStateController";
@@ -18,7 +19,7 @@ let LisaTimer = LisaTimer_1 = class LisaTimer {
         this.timer = null;
     }
     start() {
-        this.timer = setInterval(() => this.tick(), LisaTimer_1.TIMEOUT);
+        interval(LisaTimer_1.TIMEOUT).subscribe(() => this.tick());
         LisaTimer_1.logger.info(`Started Lisa timer with an interval of ${LisaTimer_1.TIMEOUT}.`);
     }
     tick() {
@@ -32,8 +33,8 @@ LisaTimer.logger = rootLogger.child({
     service: LisaTimer_1
 });
 LisaTimer.TIMEOUT = 60000;
-LisaTimer.WATER_MODIFIER = -2;
-LisaTimer.HAPPINESS_MODIFIER = -1;
+LisaTimer.WATER_MODIFIER = -0.5;
+LisaTimer.HAPPINESS_MODIFIER = -0.75;
 LisaTimer = LisaTimer_1 = __decorate([
     Injectable(chevron, {
         bootstrapping: DefaultBootstrappings.CLASS,

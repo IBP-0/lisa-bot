@@ -1,11 +1,7 @@
 import { DefaultBootstrappings, Injectable } from "chevronjs";
-import { pathExists } from "fs-extra";
 import { clone, cloneDeep } from "lodash";
-import { Subject, Subscription } from "rxjs";
-import { throttleTime } from "rxjs/operators";
+import { Subject } from "rxjs";
 import { chevron } from "../chevron";
-import { rootLogger } from "../logger";
-import { LisaStorageService } from "./service/LisaStorageService";
 import { LisaDeath, LisaDeathCause, LisaLife, LisaState } from "./LisaState";
 
 const createInitialLisaState = (): LisaState => {
@@ -29,30 +25,34 @@ const createInitialLisaState = (): LisaState => {
 
 @Injectable(chevron, {
     bootstrapping: DefaultBootstrappings.CLASS,
-    dependencies: [LisaStorageService]
+    dependencies: []
 })
 class LisaStateController {
-    public static readonly STORAGE_PATH = "data/lisaState.json";
-
-    private static readonly logger = rootLogger.child({
-        service: LisaStateController
-    });
-
-    private static readonly STORAGE_THROTTLE_TIMEOUT = 10000;
-
     public readonly stateChangeSubject: Subject<void>;
     private state: LisaState;
 
-    constructor(private readonly lisaStorageService: LisaStorageService) {
+    constructor() {
         this.state = createInitialLisaState();
         this.stateChangeSubject = new Subject<void>();
-        this.stateChangeSubject
-            .pipe(throttleTime(LisaStateController.STORAGE_THROTTLE_TIMEOUT))
-            .subscribe(() => {
-                this.storeState().catch(e =>
-                    LisaStateController.logger.error("Could not save state!", e)
-                );
-            });
+    }
+
+    /**
+     * Gets a copy of the state to process e.g. when creating text for the current status.
+     *
+     * @return copy of the current state.
+     */
+    public getStateCopy(): LisaState {
+        return cloneDeep(this.state);
+    }
+
+    /**
+     * Only used for loading od persisted data, do not use for regular state changes.
+     *
+     * @param state State to load.
+     */
+    public load(state: LisaState): void {
+        this.state = state;
+        this.stateChangeSubject.next();
     }
 
     public isAlive(): boolean {
@@ -102,35 +102,6 @@ class LisaStateController {
     public setDeath(time: Date, byUser: string, cause: LisaDeathCause): void {
         this.state.death = { time, byUser, cause };
         this.stateChangeSubject.next();
-    }
-
-    public getStateCopy(): LisaState {
-        return cloneDeep(this.state);
-    }
-
-    public async storedStateExists(): Promise<boolean> {
-        return pathExists(LisaStateController.STORAGE_PATH);
-    }
-
-    public async loadStoredState(): Promise<void> {
-        this.state = await this.lisaStorageService.loadStoredState(
-            LisaStateController.STORAGE_PATH
-        );
-        LisaStateController.logger.debug("Loaded stored Lisa state.");
-        this.stateChangeSubject.next();
-    }
-
-    private async storeState(): Promise<void> {
-        LisaStateController.logger.debug(
-            `Saving Lisa's state to '${LisaStateController.STORAGE_PATH}'...`
-        );
-        await this.lisaStorageService.storeState(
-            LisaStateController.STORAGE_PATH,
-            this.state
-        );
-        LisaStateController.logger.debug(
-            `Saved Lisa's state to '${LisaStateController.STORAGE_PATH}'.`
-        );
     }
 }
 

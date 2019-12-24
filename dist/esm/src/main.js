@@ -2,17 +2,17 @@ import { isNil } from "lodash";
 import { chevron } from "./chevron";
 import { LisaDiscordClient } from "./clients/discord/LisaDiscordClient";
 import { LisaDiscordController } from "./clients/discord/LisaDiscordController";
+import { LisaPersistenceController } from "./lisa/LisaPersistenceController";
 import { LisaTimer } from "./lisa/LisaTimer";
-import { LisaStateController } from "./lisa/LisaStateController";
 import { rootLogger } from "./logger";
 import { isProductionMode } from "./mode";
 const logger = rootLogger.child({ service: "main" });
 const startLisaMainClient = async () => {
     logger.info("Starting Lisa main client...");
-    const lisaStateController = chevron.getInjectableInstance(LisaStateController);
-    if (await lisaStateController.storedStateExists()) {
+    const lisaPersistenceController = chevron.getInjectableInstance(LisaPersistenceController);
+    if (await lisaPersistenceController.storedStateExists()) {
         logger.info("Found stored Lisa state,loading it.");
-        await lisaStateController.loadStoredState();
+        await lisaPersistenceController.loadStoredState();
     }
     else {
         logger.info("No stored state found, skipping loading.");

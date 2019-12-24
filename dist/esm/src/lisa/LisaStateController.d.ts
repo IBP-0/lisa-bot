@@ -1,15 +1,21 @@
 import { Subject } from "rxjs";
-import { LisaStorageService } from "./service/LisaStorageService";
 import { LisaDeath, LisaDeathCause, LisaLife, LisaState } from "./LisaState";
 declare class LisaStateController {
-    private readonly lisaStorageService;
-    static readonly STORAGE_PATH = "data/lisaState.json";
-    private static readonly logger;
-    private static readonly STORAGE_THROTTLE_TIMEOUT;
     readonly stateChangeSubject: Subject<void>;
     private state;
-    private readonly storeSubscription;
-    constructor(lisaStorageService: LisaStorageService);
+    constructor();
+    /**
+     * Gets a copy of the state to process e.g. when creating text for the current status.
+     *
+     * @return copy of the current state.
+     */
+    getStateCopy(): LisaState;
+    /**
+     * Only used for loading od persisted data, do not use for regular state changes.
+     *
+     * @param state State to load.
+     */
+    load(state: LisaState): void;
     isAlive(): boolean;
     getWater(): number;
     setWater(water: number): void;
@@ -21,10 +27,6 @@ declare class LisaStateController {
     setLife(time: Date, byUser: string): void;
     getDeath(): LisaDeath;
     setDeath(time: Date, byUser: string, cause: LisaDeathCause): void;
-    getStateCopy(): LisaState;
-    storedStateExists(): Promise<boolean>;
-    loadStoredState(): Promise<void>;
-    private storeState;
 }
 export { LisaStateController };
 //# sourceMappingURL=LisaStateController.d.ts.map

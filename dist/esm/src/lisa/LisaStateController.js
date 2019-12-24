@@ -7,15 +7,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var LisaStateController_1;
 import { DefaultBootstrappings, Injectable } from "chevronjs";
-import { pathExists } from "fs-extra";
 import { clone, cloneDeep } from "lodash";
 import { Subject } from "rxjs";
-import { throttleTime } from "rxjs/operators";
 import { chevron } from "../chevron";
-import { rootLogger } from "../logger";
-import { LisaStorageService } from "./service/LisaStorageService";
 const createInitialLisaState = () => {
     return {
         status: {
@@ -34,16 +29,27 @@ const createInitialLisaState = () => {
         highScore: 0
     };
 };
-let LisaStateController = LisaStateController_1 = class LisaStateController {
-    constructor(lisaStorageService) {
-        this.lisaStorageService = lisaStorageService;
+let LisaStateController = class LisaStateController {
+    constructor() {
         this.state = createInitialLisaState();
         this.stateChangeSubject = new Subject();
-        this.storeSubscription = this.stateChangeSubject
-            .pipe(throttleTime(LisaStateController_1.STORAGE_THROTTLE_TIMEOUT))
-            .subscribe(() => {
-            this.storeState().catch(e => LisaStateController_1.logger.error("Could not save state!", e));
-        });
+    }
+    /**
+     * Gets a copy of the state to process e.g. when creating text for the current status.
+     *
+     * @return copy of the current state.
+     */
+    getStateCopy() {
+        return cloneDeep(this.state);
+    }
+    /**
+     * Only used for loading od persisted data, do not use for regular state changes.
+     *
+     * @param state State to load.
+     */
+    load(state) {
+        this.state = state;
+        this.stateChangeSubject.next();
     }
     isAlive() {
         return this.state.death.time == null;
@@ -83,34 +89,13 @@ let LisaStateController = LisaStateController_1 = class LisaStateController {
         this.state.death = { time, byUser, cause };
         this.stateChangeSubject.next();
     }
-    getStateCopy() {
-        return cloneDeep(this.state);
-    }
-    async storedStateExists() {
-        return pathExists(LisaStateController_1.STORAGE_PATH);
-    }
-    async loadStoredState() {
-        this.state = await this.lisaStorageService.loadStoredState(LisaStateController_1.STORAGE_PATH);
-        LisaStateController_1.logger.debug("Loaded stored Lisa state.");
-        this.stateChangeSubject.next();
-    }
-    async storeState() {
-        LisaStateController_1.logger.debug(`Saving Lisa's state to '${LisaStateController_1.STORAGE_PATH}'...`);
-        await this.lisaStorageService.storeState(LisaStateController_1.STORAGE_PATH, this.state);
-        LisaStateController_1.logger.debug(`Saved Lisa's state to '${LisaStateController_1.STORAGE_PATH}'.`);
-    }
 };
-LisaStateController.STORAGE_PATH = "data/lisaState.json";
-LisaStateController.logger = rootLogger.child({
-    service: LisaStateController_1
-});
-LisaStateController.STORAGE_THROTTLE_TIMEOUT = 10000;
-LisaStateController = LisaStateController_1 = __decorate([
+LisaStateController = __decorate([
     Injectable(chevron, {
         bootstrapping: DefaultBootstrappings.CLASS,
-        dependencies: [LisaStorageService]
+        dependencies: []
     }),
-    __metadata("design:paramtypes", [LisaStorageService])
+    __metadata("design:paramtypes", [])
 ], LisaStateController);
 export { LisaStateController };
 //# sourceMappingURL=LisaStateController.js.map

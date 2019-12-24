@@ -2,8 +2,8 @@ import { DefaultBootstrappings, Injectable } from "chevronjs";
 import { PresenceData } from "discord.js";
 import { throttleTime } from "rxjs/operators";
 import { chevron } from "../../chevron";
-import { LisaTextService } from "../../lisa/service/LisaTextService";
 import { LisaStateController } from "../../lisa/LisaStateController";
+import { LisaTextService } from "../../lisa/service/LisaTextService";
 import { rootLogger } from "../../logger";
 import { LisaDiscordClient } from "./LisaDiscordClient";
 
@@ -28,7 +28,8 @@ class LisaDiscordController {
         private readonly lisaStateController: LisaStateController,
         private readonly lisaDiscordClient: LisaDiscordClient,
         private readonly lisaTextService: LisaTextService
-    ) {}
+    ) {
+    }
 
     public bindEvents(): void {
         this.lisaDiscordClient.getCommandoClient().on("message", message => {
@@ -53,7 +54,7 @@ class LisaDiscordController {
         );
         this.lisaStateController.setHappiness(
             this.lisaStateController.getHappiness() +
-                LisaDiscordController.MESSAGE_HAPPINESS_MODIFIER
+            LisaDiscordController.MESSAGE_HAPPINESS_MODIFIER
         );
     }
 

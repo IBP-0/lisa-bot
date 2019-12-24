@@ -3,8 +3,8 @@
 var lodash = require('lodash');
 var chevronjs = require('chevronjs');
 var discord_jsCommando = require('discord.js-commando');
-var fsExtra = require('fs-extra');
 var winston = require('winston');
+var fsExtra = require('fs-extra');
 
 const chevron = new chevronjs.Chevron();
 
@@ -930,6 +930,11 @@ var AsyncScheduler = /*@__PURE__*/ (function (_super) {
 /** PURE_IMPORTS_START _AsyncAction,_AsyncScheduler PURE_IMPORTS_END */
 var async = /*@__PURE__*/ new AsyncScheduler(AsyncAction);
 
+/** PURE_IMPORTS_START _isArray PURE_IMPORTS_END */
+function isNumeric(val) {
+    return !isArray(val) && (val - parseFloat(val) + 1) >= 0;
+}
+
 /** PURE_IMPORTS_START  PURE_IMPORTS_END */
 var ObjectUnsubscribedErrorImpl = /*@__PURE__*/ (function () {
     function ObjectUnsubscribedErrorImpl() {
@@ -1222,17 +1227,29 @@ LisaTextService = __decorate$1([
     chevronjs.Injectable(chevron, { bootstrapping: chevronjs.DefaultBootstrappings.CLASS })
 ], LisaTextService);
 
-const isProductionMode = () => process.env.NODE_ENV === "production";
-
-const logFormat = winston.format.combine(winston.format.timestamp(), winston.format.printf(({ level, message, timestamp }) => `${timestamp} [${level}]: ${message}`));
-const rootLogger = winston.createLogger({
-    level: isProductionMode() ? "info" : "silly",
-    format: logFormat,
-    defaultMeta: { target: "root" },
-    transports: [new winston.transports.File({ filename: "log/lisa-bot.log" })]
-});
-if (!isProductionMode()) {
-    rootLogger.add(new winston.transports.Console());
+/** PURE_IMPORTS_START _Observable,_scheduler_async,_util_isNumeric PURE_IMPORTS_END */
+function interval(period, scheduler) {
+    if (period === void 0) {
+        period = 0;
+    }
+    if (scheduler === void 0) {
+        scheduler = async;
+    }
+    if (!isNumeric(period) || period < 0) {
+        period = 0;
+    }
+    if (!scheduler || typeof scheduler.schedule !== 'function') {
+        scheduler = async;
+    }
+    return new Observable(function (subscriber) {
+        subscriber.add(scheduler.schedule(dispatch, period, { subscriber: subscriber, counter: 0, period: period }));
+        return subscriber;
+    });
+}
+function dispatch(state) {
+    var subscriber = state.subscriber, counter = state.counter, period = state.period;
+    subscriber.next(counter);
+    this.schedule({ subscriber: subscriber, counter: counter + 1, period: period }, period);
 }
 
 var __decorate$2 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
@@ -1241,50 +1258,9 @@ var __decorate$2 = (undefined && undefined.__decorate) || function (decorators, 
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-let LisaStorageService = class LisaStorageService {
-    async loadStoredState(path) {
-        const storedState = await fsExtra.readJSON(path);
-        return this.fromJson(storedState);
-    }
-    async storeState(path, state) {
-        const jsonLisaState = this.toJson(state);
-        return await fsExtra.writeJSON(path, jsonLisaState);
-    }
-    fromJson(jsonState) {
-        const state = lodash.cloneDeep(jsonState);
-        if (state.life.time != null) {
-            state.life.time = new Date(state.life.time);
-        }
-        if (state.death.time != null) {
-            state.death.time = new Date(state.death.time);
-        }
-        return state;
-    }
-    toJson(state) {
-        const storedState = lodash.cloneDeep(state);
-        if (storedState.life.time != null) {
-            storedState.life.time = storedState.life.time.getTime();
-        }
-        if (storedState.death.time != null) {
-            storedState.death.time = storedState.death.time.getTime();
-        }
-        return storedState;
-    }
-};
-LisaStorageService = __decorate$2([
-    chevronjs.Injectable(chevron, { bootstrapping: chevronjs.DefaultBootstrappings.CLASS })
-], LisaStorageService);
-
-var __decorate$3 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
 var __metadata$1 = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var LisaStateController_1;
 const createInitialLisaState = () => {
     return {
         status: {
@@ -1303,16 +1279,27 @@ const createInitialLisaState = () => {
         highScore: 0
     };
 };
-let LisaStateController = LisaStateController_1 = class LisaStateController {
-    constructor(lisaStorageService) {
-        this.lisaStorageService = lisaStorageService;
+let LisaStateController = class LisaStateController {
+    constructor() {
         this.state = createInitialLisaState();
         this.stateChangeSubject = new Subject();
-        this.storeSubscription = this.stateChangeSubject
-            .pipe(throttleTime(LisaStateController_1.STORAGE_THROTTLE_TIMEOUT))
-            .subscribe(() => {
-            this.storeState().catch(e => LisaStateController_1.logger.error("Could not save state!", e));
-        });
+    }
+    /**
+     * Gets a copy of the state to process e.g. when creating text for the current status.
+     *
+     * @return copy of the current state.
+     */
+    getStateCopy() {
+        return lodash.cloneDeep(this.state);
+    }
+    /**
+     * Only used for loading od persisted data, do not use for regular state changes.
+     *
+     * @param state State to load.
+     */
+    load(state) {
+        this.state = state;
+        this.stateChangeSubject.next();
     }
     isAlive() {
         return this.state.death.time == null;
@@ -1352,37 +1339,29 @@ let LisaStateController = LisaStateController_1 = class LisaStateController {
         this.state.death = { time, byUser, cause };
         this.stateChangeSubject.next();
     }
-    getStateCopy() {
-        return lodash.cloneDeep(this.state);
-    }
-    async storedStateExists() {
-        return fsExtra.pathExists(LisaStateController_1.STORAGE_PATH);
-    }
-    async loadStoredState() {
-        this.state = await this.lisaStorageService.loadStoredState(LisaStateController_1.STORAGE_PATH);
-        LisaStateController_1.logger.debug("Loaded stored Lisa state.");
-        this.stateChangeSubject.next();
-    }
-    async storeState() {
-        LisaStateController_1.logger.debug(`Saving Lisa's state to '${LisaStateController_1.STORAGE_PATH}'...`);
-        await this.lisaStorageService.storeState(LisaStateController_1.STORAGE_PATH, this.state);
-        LisaStateController_1.logger.debug(`Saved Lisa's state to '${LisaStateController_1.STORAGE_PATH}'.`);
-    }
 };
-LisaStateController.STORAGE_PATH = "data/lisaState.json";
-LisaStateController.logger = rootLogger.child({
-    service: LisaStateController_1
-});
-LisaStateController.STORAGE_THROTTLE_TIMEOUT = 10000;
-LisaStateController = LisaStateController_1 = __decorate$3([
+LisaStateController = __decorate$2([
     chevronjs.Injectable(chevron, {
         bootstrapping: chevronjs.DefaultBootstrappings.CLASS,
-        dependencies: [LisaStorageService]
+        dependencies: []
     }),
-    __metadata$1("design:paramtypes", [LisaStorageService])
+    __metadata$1("design:paramtypes", [])
 ], LisaStateController);
 
-var __decorate$4 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+const isProductionMode = () => process.env.NODE_ENV === "production";
+
+const logFormat = winston.format.combine(winston.format.timestamp(), winston.format.printf(({ level, message, timestamp }) => `${timestamp} [${level}]: ${message}`));
+const rootLogger = winston.createLogger({
+    level: isProductionMode() ? "info" : "silly",
+    format: logFormat,
+    defaultMeta: { target: "root" },
+    transports: [new winston.transports.File({ filename: "log/lisa-bot.log" })]
+});
+if (!isProductionMode()) {
+    rootLogger.add(new winston.transports.Console());
+}
+
+var __decorate$3 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
@@ -1433,7 +1412,7 @@ LisaDiscordController.logger = rootLogger.child({
 });
 LisaDiscordController.PRESENCE_UPDATE_THROTTLE_TIMEOUT = 10000;
 LisaDiscordController.MESSAGE_HAPPINESS_MODIFIER = 0.25;
-LisaDiscordController = LisaDiscordController_1 = __decorate$4([
+LisaDiscordController = LisaDiscordController_1 = __decorate$3([
     chevronjs.Injectable(chevron, {
         bootstrapping: chevronjs.DefaultBootstrappings.CLASS,
         dependencies: [LisaStateController, LisaDiscordClient, LisaTextService]
@@ -1442,6 +1421,46 @@ LisaDiscordController = LisaDiscordController_1 = __decorate$4([
         LisaDiscordClient,
         LisaTextService])
 ], LisaDiscordController);
+
+var __decorate$4 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+let LisaStorageService = class LisaStorageService {
+    async loadStoredState(path) {
+        const storedState = await fsExtra.readJSON(path);
+        return this.fromJson(storedState);
+    }
+    async storeState(path, state) {
+        const jsonLisaState = this.toJson(state);
+        return await fsExtra.writeJSON(path, jsonLisaState);
+    }
+    fromJson(jsonState) {
+        const state = lodash.cloneDeep(jsonState);
+        if (state.life.time != null) {
+            state.life.time = new Date(state.life.time);
+        }
+        if (state.death.time != null) {
+            state.death.time = new Date(state.death.time);
+        }
+        return state;
+    }
+    toJson(state) {
+        const storedState = lodash.cloneDeep(state);
+        if (storedState.life.time != null) {
+            storedState.life.time = storedState.life.time.getTime();
+        }
+        if (storedState.death.time != null) {
+            storedState.death.time = storedState.death.time.getTime();
+        }
+        return storedState;
+    }
+};
+LisaStorageService = __decorate$4([
+    chevronjs.Injectable(chevron, { bootstrapping: chevronjs.DefaultBootstrappings.CLASS })
+], LisaStorageService);
 
 var __decorate$5 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -1452,6 +1471,54 @@ var __decorate$5 = (undefined && undefined.__decorate) || function (decorators, 
 var __metadata$3 = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var LisaPersistenceController_1;
+let LisaPersistenceController = LisaPersistenceController_1 = class LisaPersistenceController {
+    constructor(lisaStateController, lisaStorageService) {
+        this.lisaStateController = lisaStateController;
+        this.lisaStorageService = lisaStorageService;
+        this.lisaStateController.stateChangeSubject
+            .pipe(throttleTime(LisaPersistenceController_1.STORAGE_THROTTLE_TIMEOUT))
+            .subscribe(() => {
+            this.storeState().catch(e => LisaPersistenceController_1.logger.error("Could not save state!", e));
+        });
+    }
+    async storedStateExists() {
+        return fsExtra.pathExists(LisaPersistenceController_1.STORAGE_PATH);
+    }
+    async loadStoredState() {
+        const state = await this.lisaStorageService.loadStoredState(LisaPersistenceController_1.STORAGE_PATH);
+        LisaPersistenceController_1.logger.debug("Loaded stored Lisa state.");
+        this.lisaStateController.load(state);
+    }
+    async storeState() {
+        LisaPersistenceController_1.logger.debug(`Saving Lisa's state to '${LisaPersistenceController_1.STORAGE_PATH}'...`);
+        await this.lisaStorageService.storeState(LisaPersistenceController_1.STORAGE_PATH, this.lisaStateController.getStateCopy());
+        LisaPersistenceController_1.logger.debug(`Saved Lisa's state to '${LisaPersistenceController_1.STORAGE_PATH}'.`);
+    }
+};
+LisaPersistenceController.STORAGE_PATH = "data/lisaState.json";
+LisaPersistenceController.STORAGE_THROTTLE_TIMEOUT = 10000;
+LisaPersistenceController.logger = rootLogger.child({
+    service: LisaStateController
+});
+LisaPersistenceController = LisaPersistenceController_1 = __decorate$5([
+    chevronjs.Injectable(chevron, {
+        bootstrapping: chevronjs.DefaultBootstrappings.CLASS,
+        dependencies: [LisaStateController, LisaStorageService]
+    }),
+    __metadata$3("design:paramtypes", [LisaStateController,
+        LisaStorageService])
+], LisaPersistenceController);
+
+var __decorate$6 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata$4 = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
 var LisaTimer_1;
 let LisaTimer = LisaTimer_1 = class LisaTimer {
     constructor(lisaStateController) {
@@ -1459,7 +1526,7 @@ let LisaTimer = LisaTimer_1 = class LisaTimer {
         this.timer = null;
     }
     start() {
-        this.timer = setInterval(() => this.tick(), LisaTimer_1.TIMEOUT);
+        interval(LisaTimer_1.TIMEOUT).subscribe(() => this.tick());
         LisaTimer_1.logger.info(`Started Lisa timer with an interval of ${LisaTimer_1.TIMEOUT}.`);
     }
     tick() {
@@ -1473,23 +1540,23 @@ LisaTimer.logger = rootLogger.child({
     service: LisaTimer_1
 });
 LisaTimer.TIMEOUT = 60000;
-LisaTimer.WATER_MODIFIER = -2;
-LisaTimer.HAPPINESS_MODIFIER = -1;
-LisaTimer = LisaTimer_1 = __decorate$5([
+LisaTimer.WATER_MODIFIER = -0.5;
+LisaTimer.HAPPINESS_MODIFIER = -0.75;
+LisaTimer = LisaTimer_1 = __decorate$6([
     chevronjs.Injectable(chevron, {
         bootstrapping: chevronjs.DefaultBootstrappings.CLASS,
         dependencies: [LisaStateController]
     }),
-    __metadata$3("design:paramtypes", [LisaStateController])
+    __metadata$4("design:paramtypes", [LisaStateController])
 ], LisaTimer);
 
 const logger = rootLogger.child({ service: "main" });
 const startLisaMainClient = async () => {
     logger.info("Starting Lisa main client...");
-    const lisaStateController = chevron.getInjectableInstance(LisaStateController);
-    if (await lisaStateController.storedStateExists()) {
+    const lisaPersistenceController = chevron.getInjectableInstance(LisaPersistenceController);
+    if (await lisaPersistenceController.storedStateExists()) {
         logger.info("Found stored Lisa state,loading it.");
-        await lisaStateController.loadStoredState();
+        await lisaPersistenceController.loadStoredState();
     }
     else {
         logger.info("No stored state found, skipping loading.");
