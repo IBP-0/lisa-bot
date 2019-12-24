@@ -1,5 +1,5 @@
-import { LisaTextService } from "../../lisa/service/LisaTextService";
 import { LisaStateController } from "../../lisa/LisaStateController";
+import { LisaTextService } from "../../lisa/service/LisaTextService";
 import { LisaDiscordClient } from "./LisaDiscordClient";
 declare class LisaDiscordController {
     private readonly lisaStateController;

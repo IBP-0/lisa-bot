@@ -11,8 +11,8 @@ var LisaDiscordController_1;
 import { DefaultBootstrappings, Injectable } from "chevronjs";
 import { throttleTime } from "rxjs/operators";
 import { chevron } from "../../chevron";
-import { LisaTextService } from "../../lisa/service/LisaTextService";
 import { LisaStateController } from "../../lisa/LisaStateController";
+import { LisaTextService } from "../../lisa/service/LisaTextService";
 import { rootLogger } from "../../logger";
 import { LisaDiscordClient } from "./LisaDiscordClient";
 const createPresence = (name) => ({
@@ -52,7 +52,7 @@ let LisaDiscordController = LisaDiscordController_1 = class LisaDiscordControlle
     }
 };
 LisaDiscordController.logger = rootLogger.child({
-    service: LisaDiscordController_1
+    target: LisaDiscordController_1
 });
 LisaDiscordController.PRESENCE_UPDATE_THROTTLE_TIMEOUT = 10000;
 LisaDiscordController.MESSAGE_HAPPINESS_MODIFIER = 0.25;

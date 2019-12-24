@@ -6,12 +6,12 @@ import { LisaPersistenceController } from "./lisa/LisaPersistenceController";
 import { LisaTimer } from "./lisa/LisaTimer";
 import { rootLogger } from "./logger";
 import { isProductionMode } from "./mode";
-const logger = rootLogger.child({ service: "main" });
+const logger = rootLogger.child({ target: "main" });
 const startLisaMainClient = async () => {
     logger.info("Starting Lisa main client...");
     const lisaPersistenceController = chevron.getInjectableInstance(LisaPersistenceController);
     if (await lisaPersistenceController.storedStateExists()) {
-        logger.info("Found stored Lisa state,loading it.");
+        logger.info("Found stored Lisa state, loading it.");
         await lisaPersistenceController.loadStoredState();
     }
     else {

@@ -30,7 +30,6 @@ let LisaPersistenceController = LisaPersistenceController_1 = class LisaPersiste
     }
     async loadStoredState() {
         const state = await this.lisaStorageService.loadStoredState(LisaPersistenceController_1.STORAGE_PATH);
-        LisaPersistenceController_1.logger.debug("Loaded stored Lisa state.");
         this.lisaStateController.load(state);
     }
     async storeState() {
@@ -42,7 +41,7 @@ let LisaPersistenceController = LisaPersistenceController_1 = class LisaPersiste
 LisaPersistenceController.STORAGE_PATH = "data/lisaState.json";
 LisaPersistenceController.STORAGE_THROTTLE_TIMEOUT = 10000;
 LisaPersistenceController.logger = rootLogger.child({
-    service: LisaStateController
+    target: LisaStateController
 });
 LisaPersistenceController = LisaPersistenceController_1 = __decorate([
     Injectable(chevron, {

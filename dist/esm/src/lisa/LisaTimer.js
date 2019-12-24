@@ -30,7 +30,7 @@ let LisaTimer = LisaTimer_1 = class LisaTimer {
     }
 };
 LisaTimer.logger = rootLogger.child({
-    service: LisaTimer_1
+    target: LisaTimer_1
 });
 LisaTimer.TIMEOUT = 60000;
 LisaTimer.WATER_MODIFIER = -0.5;

@@ -18,15 +18,18 @@ declare class LisaStateController {
     load(state: LisaState): void;
     isAlive(): boolean;
     getWater(): number;
-    setWater(water: number): void;
+    setWater(water: number, byUser?: string): void;
     getHappiness(): number;
-    setHappiness(happiness: number): void;
+    setHappiness(happiness: number, byUser?: string): void;
     getHighScore(): number;
-    setHighScore(highScore: number): void;
     getLife(): LisaLife;
-    setLife(time: Date, byUser: string): void;
+    setLife(byUser?: string): void;
     getDeath(): LisaDeath;
-    setDeath(time: Date, byUser: string, cause: LisaDeathCause): void;
+    setDeath(cause: LisaDeathCause, byUser?: string): void;
+    private stateChanged;
+    private updateStats;
+    private updateHighScoreIfRequired;
+    private getLifetime;
 }
 export { LisaStateController };
 //# sourceMappingURL=LisaStateController.d.ts.map
