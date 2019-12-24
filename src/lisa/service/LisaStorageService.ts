@@ -1,5 +1,5 @@
 import { DefaultBootstrappings, Injectable } from "chevronjs";
-import { readJSON, writeJSON } from "fs-extra";
+import { pathExists, readJSON, writeJSON } from "fs-extra";
 import { cloneDeep } from "lodash";
 import { chevron } from "../../chevron";
 import { LisaDeathCause, LisaState } from "../LisaState";
@@ -23,14 +23,20 @@ interface JsonLisaState {
 
 @Injectable(chevron, { bootstrapping: DefaultBootstrappings.CLASS })
 class LisaStorageService {
-    public async loadStoredState(path: string): Promise<LisaState> {
-        const storedState = await readJSON(path);
+    public static readonly STORAGE_PATH = "data/lisaState.json";
+
+    public async hasStoredState(): Promise<boolean> {
+        return pathExists(LisaStorageService.STORAGE_PATH);
+    }
+
+    public async loadStoredState(): Promise<LisaState> {
+        const storedState = await readJSON(LisaStorageService.STORAGE_PATH);
         return this.fromJson(storedState);
     }
 
-    public async storeState(path: string, state: LisaState): Promise<void> {
+    public async storeState(state: LisaState): Promise<void> {
         const jsonLisaState = this.toJson(state);
-        return await writeJSON(path, jsonLisaState);
+        return await writeJSON(LisaStorageService.STORAGE_PATH, jsonLisaState);
     }
 
     private fromJson(jsonState: JsonLisaState): LisaState {

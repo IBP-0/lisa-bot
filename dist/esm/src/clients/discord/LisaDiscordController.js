@@ -26,7 +26,7 @@ let LisaDiscordController = LisaDiscordController_1 = class LisaDiscordControlle
         this.lisaDiscordClient = lisaDiscordClient;
         this.lisaTextService = lisaTextService;
     }
-    bindEvents() {
+    bindListeners() {
         this.lisaDiscordClient.getCommandoClient().on("message", message => {
             if (!message.system && !message.author.bot) {
                 this.onMessage();

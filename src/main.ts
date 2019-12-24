@@ -2,31 +2,44 @@ import { isNil } from "lodash";
 import { chevron } from "./chevron";
 import { LisaDiscordClient } from "./clients/discord/LisaDiscordClient";
 import { LisaDiscordController } from "./clients/discord/LisaDiscordController";
-import { LisaPersistenceController } from "./lisa/LisaPersistenceController";
+import { LisaStateController } from "./lisa/LisaStateController";
+import { LisaStorageController } from "./lisa/LisaStorageController";
 import { LisaTimer } from "./lisa/LisaTimer";
+import { LisaStorageService } from "./lisa/service/LisaStorageService";
 import { rootLogger } from "./logger";
 import { isProductionMode } from "./mode";
 
 const logger = rootLogger.child({ target: "main" });
 
 const startLisaMainClient = async (): Promise<void> => {
-    logger.info("Starting Lisa main client...");
-    const lisaPersistenceController: LisaPersistenceController = chevron.getInjectableInstance(
-        LisaPersistenceController
+    const lisaStateController: LisaStateController = chevron.getInjectableInstance(
+        LisaStateController
     );
+    const lisaStorageService: LisaStorageService = chevron.getInjectableInstance(
+        LisaStorageService
+    );
+    const lisaStorageController: LisaStorageController = chevron.getInjectableInstance(
+        LisaStorageController
+    );
+    const lisaTimer: LisaTimer = chevron.getInjectableInstance(LisaTimer);
 
-    if (await lisaPersistenceController.storedStateExists()) {
+    if (await lisaStorageService.hasStoredState()) {
         logger.info("Found stored Lisa state, loading it.");
-        await lisaPersistenceController.loadStoredState();
+        lisaStateController.load(await lisaStorageService.loadStoredState());
     } else {
         logger.info("No stored state found, skipping loading.");
     }
 
-    const lisaTimer: LisaTimer = chevron.getInjectableInstance(LisaTimer);
+    lisaStorageController.bindListeners();
     lisaTimer.start();
 };
 const startLisaDiscordClient = async (): Promise<void> => {
-    logger.info("Starting Lisa discord client...");
+    const lisaDiscordClient: LisaDiscordClient = chevron.getInjectableInstance(
+        LisaDiscordClient
+    );
+    const lisaDiscordController: LisaDiscordController = chevron.getInjectableInstance(
+        LisaDiscordController
+    );
 
     const discordToken = isProductionMode()
         ? process.env.DISCORD_TOKEN
@@ -35,29 +48,23 @@ const startLisaDiscordClient = async (): Promise<void> => {
         throw new Error("No token set.");
     }
 
-    const lisaDiscordClient: LisaDiscordClient = chevron.getInjectableInstance(
-        LisaDiscordClient
-    );
     lisaDiscordClient.init({
         commandPrefix: "$",
         owner: "128985967875850240",
         invite:
             "https://discordapp.com/oauth2/authorize?&client_id=263671526279086092&scope=bot"
     });
-    const lisaDiscordController: LisaDiscordController = chevron.getInjectableInstance(
-        LisaDiscordController
-    );
-
     await lisaDiscordClient.login(discordToken);
-    lisaDiscordController.bindEvents();
+
+    lisaDiscordController.bindListeners();
 };
 
-logger.info("Starting Lisa bot...");
-
+logger.info("Starting Lisa main client...");
 startLisaMainClient()
     .then(() => logger.info("Started Lisa main client."))
     .catch(e => console.error("Could not start Lisa main client.", e));
 
+logger.info("Starting Lisa discord client...");
 startLisaDiscordClient()
     .then(() => logger.info("Started Lisa discord client."))
     .catch(e => console.error("Could not start Lisa discord client.", e));

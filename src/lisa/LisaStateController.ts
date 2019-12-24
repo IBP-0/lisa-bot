@@ -38,12 +38,12 @@ const createInitialLisaState = (): LisaState => {
     dependencies: []
 })
 class LisaStateController {
-    public readonly stateChangeSubject: Subject<void>;
+    public readonly stateChangeSubject: Subject<LisaState>;
     private state: LisaState;
 
     constructor() {
         this.state = createInitialLisaState();
-        this.stateChangeSubject = new Subject<void>();
+        this.stateChangeSubject = new Subject<LisaState>();
     }
 
     /**
@@ -119,7 +119,7 @@ class LisaStateController {
             }
         }
 
-        this.stateChangeSubject.next();
+        this.stateChangeSubject.next(this.getStateCopy());
     }
 
     private updateStats(byUser: string): void {

@@ -7,49 +7,39 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var LisaPersistenceController_1;
+var LisaStorageController_1;
 import { DefaultBootstrappings, Injectable } from "chevronjs";
-import { pathExists } from "fs-extra";
 import { throttleTime } from "rxjs/operators";
 import { chevron } from "../chevron";
 import { rootLogger } from "../logger";
 import { LisaStateController } from "./LisaStateController";
 import { LisaStorageService } from "./service/LisaStorageService";
-let LisaPersistenceController = LisaPersistenceController_1 = class LisaPersistenceController {
+let LisaStorageController = LisaStorageController_1 = class LisaStorageController {
     constructor(lisaStateController, lisaStorageService) {
         this.lisaStateController = lisaStateController;
         this.lisaStorageService = lisaStorageService;
+    }
+    bindListeners() {
         this.lisaStateController.stateChangeSubject
-            .pipe(throttleTime(LisaPersistenceController_1.STORAGE_THROTTLE_TIMEOUT))
-            .subscribe(() => {
-            this.storeState().catch(e => LisaPersistenceController_1.logger.error("Could not save state!", e));
+            .pipe(throttleTime(LisaStorageController_1.STORAGE_THROTTLE_TIMEOUT))
+            .subscribe(lisaState => {
+            this.lisaStorageService
+                .storeState(lisaState)
+                .catch(e => LisaStorageController_1.logger.error("Could not save state!", e));
         });
     }
-    async storedStateExists() {
-        return pathExists(LisaPersistenceController_1.STORAGE_PATH);
-    }
-    async loadStoredState() {
-        const state = await this.lisaStorageService.loadStoredState(LisaPersistenceController_1.STORAGE_PATH);
-        this.lisaStateController.load(state);
-    }
-    async storeState() {
-        LisaPersistenceController_1.logger.debug(`Saving Lisa's state to '${LisaPersistenceController_1.STORAGE_PATH}'...`);
-        await this.lisaStorageService.storeState(LisaPersistenceController_1.STORAGE_PATH, this.lisaStateController.getStateCopy());
-        LisaPersistenceController_1.logger.debug(`Saved Lisa's state to '${LisaPersistenceController_1.STORAGE_PATH}'.`);
-    }
 };
-LisaPersistenceController.STORAGE_PATH = "data/lisaState.json";
-LisaPersistenceController.STORAGE_THROTTLE_TIMEOUT = 10000;
-LisaPersistenceController.logger = rootLogger.child({
-    target: LisaStateController
+LisaStorageController.STORAGE_THROTTLE_TIMEOUT = 10000;
+LisaStorageController.logger = rootLogger.child({
+    target: LisaStorageController_1
 });
-LisaPersistenceController = LisaPersistenceController_1 = __decorate([
+LisaStorageController = LisaStorageController_1 = __decorate([
     Injectable(chevron, {
         bootstrapping: DefaultBootstrappings.CLASS,
         dependencies: [LisaStateController, LisaStorageService]
     }),
     __metadata("design:paramtypes", [LisaStateController,
         LisaStorageService])
-], LisaPersistenceController);
-export { LisaPersistenceController };
-//# sourceMappingURL=LisaPersistenceController.js.map
+], LisaStorageController);
+export { LisaStorageController };
+//# sourceMappingURL=LisaStorageController.js.map

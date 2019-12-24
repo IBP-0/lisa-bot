@@ -1345,7 +1345,7 @@ let LisaStateController = class LisaStateController {
                 this.updateHighScoreIfRequired();
             }
         }
-        this.stateChangeSubject.next();
+        this.stateChangeSubject.next(this.getStateCopy());
     }
     updateStats(byUser) {
         if (this.state.status.water > WATER_MAX) {
@@ -1434,7 +1434,7 @@ let LisaDiscordController = LisaDiscordController_1 = class LisaDiscordControlle
         this.lisaDiscordClient = lisaDiscordClient;
         this.lisaTextService = lisaTextService;
     }
-    bindEvents() {
+    bindListeners() {
         this.lisaDiscordClient.getCommandoClient().on("message", message => {
             if (!message.system && !message.author.bot) {
                 this.onMessage();
@@ -1480,14 +1480,18 @@ var __decorate$4 = (undefined && undefined.__decorate) || function (decorators, 
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-let LisaStorageService = class LisaStorageService {
-    async loadStoredState(path) {
-        const storedState = await fsExtra.readJSON(path);
+var LisaStorageService_1;
+let LisaStorageService = LisaStorageService_1 = class LisaStorageService {
+    async hasStoredState() {
+        return fsExtra.pathExists(LisaStorageService_1.STORAGE_PATH);
+    }
+    async loadStoredState() {
+        const storedState = await fsExtra.readJSON(LisaStorageService_1.STORAGE_PATH);
         return this.fromJson(storedState);
     }
-    async storeState(path, state) {
+    async storeState(state) {
         const jsonLisaState = this.toJson(state);
-        return await fsExtra.writeJSON(path, jsonLisaState);
+        return await fsExtra.writeJSON(LisaStorageService_1.STORAGE_PATH, jsonLisaState);
     }
     fromJson(jsonState) {
         const state = lodash.cloneDeep(jsonState);
@@ -1510,7 +1514,8 @@ let LisaStorageService = class LisaStorageService {
         return storedState;
     }
 };
-LisaStorageService = __decorate$4([
+LisaStorageService.STORAGE_PATH = "data/lisaState.json";
+LisaStorageService = LisaStorageService_1 = __decorate$4([
     chevronjs.Injectable(chevron, { bootstrapping: chevronjs.DefaultBootstrappings.CLASS })
 ], LisaStorageService);
 
@@ -1523,43 +1528,34 @@ var __decorate$5 = (undefined && undefined.__decorate) || function (decorators, 
 var __metadata$3 = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var LisaPersistenceController_1;
-let LisaPersistenceController = LisaPersistenceController_1 = class LisaPersistenceController {
+var LisaStorageController_1;
+let LisaStorageController = LisaStorageController_1 = class LisaStorageController {
     constructor(lisaStateController, lisaStorageService) {
         this.lisaStateController = lisaStateController;
         this.lisaStorageService = lisaStorageService;
+    }
+    bindListeners() {
         this.lisaStateController.stateChangeSubject
-            .pipe(throttleTime(LisaPersistenceController_1.STORAGE_THROTTLE_TIMEOUT))
-            .subscribe(() => {
-            this.storeState().catch(e => LisaPersistenceController_1.logger.error("Could not save state!", e));
+            .pipe(throttleTime(LisaStorageController_1.STORAGE_THROTTLE_TIMEOUT))
+            .subscribe(lisaState => {
+            this.lisaStorageService
+                .storeState(lisaState)
+                .catch(e => LisaStorageController_1.logger.error("Could not save state!", e));
         });
     }
-    async storedStateExists() {
-        return fsExtra.pathExists(LisaPersistenceController_1.STORAGE_PATH);
-    }
-    async loadStoredState() {
-        const state = await this.lisaStorageService.loadStoredState(LisaPersistenceController_1.STORAGE_PATH);
-        this.lisaStateController.load(state);
-    }
-    async storeState() {
-        LisaPersistenceController_1.logger.debug(`Saving Lisa's state to '${LisaPersistenceController_1.STORAGE_PATH}'...`);
-        await this.lisaStorageService.storeState(LisaPersistenceController_1.STORAGE_PATH, this.lisaStateController.getStateCopy());
-        LisaPersistenceController_1.logger.debug(`Saved Lisa's state to '${LisaPersistenceController_1.STORAGE_PATH}'.`);
-    }
 };
-LisaPersistenceController.STORAGE_PATH = "data/lisaState.json";
-LisaPersistenceController.STORAGE_THROTTLE_TIMEOUT = 10000;
-LisaPersistenceController.logger = rootLogger.child({
-    target: LisaStateController
+LisaStorageController.STORAGE_THROTTLE_TIMEOUT = 10000;
+LisaStorageController.logger = rootLogger.child({
+    target: LisaStorageController_1
 });
-LisaPersistenceController = LisaPersistenceController_1 = __decorate$5([
+LisaStorageController = LisaStorageController_1 = __decorate$5([
     chevronjs.Injectable(chevron, {
         bootstrapping: chevronjs.DefaultBootstrappings.CLASS,
         dependencies: [LisaStateController, LisaStorageService]
     }),
     __metadata$3("design:paramtypes", [LisaStateController,
         LisaStorageService])
-], LisaPersistenceController);
+], LisaStorageController);
 
 var __decorate$6 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -1603,40 +1599,42 @@ LisaTimer = LisaTimer_1 = __decorate$6([
 
 const logger = rootLogger.child({ target: "main" });
 const startLisaMainClient = async () => {
-    logger.info("Starting Lisa main client...");
-    const lisaPersistenceController = chevron.getInjectableInstance(LisaPersistenceController);
-    if (await lisaPersistenceController.storedStateExists()) {
+    const lisaStateController = chevron.getInjectableInstance(LisaStateController);
+    const lisaStorageService = chevron.getInjectableInstance(LisaStorageService);
+    const lisaStorageController = chevron.getInjectableInstance(LisaStorageController);
+    const lisaTimer = chevron.getInjectableInstance(LisaTimer);
+    if (await lisaStorageService.hasStoredState()) {
         logger.info("Found stored Lisa state, loading it.");
-        await lisaPersistenceController.loadStoredState();
+        lisaStateController.load(await lisaStorageService.loadStoredState());
     }
     else {
         logger.info("No stored state found, skipping loading.");
     }
-    const lisaTimer = chevron.getInjectableInstance(LisaTimer);
+    lisaStorageController.bindListeners();
     lisaTimer.start();
 };
 const startLisaDiscordClient = async () => {
-    logger.info("Starting Lisa discord client...");
+    const lisaDiscordClient = chevron.getInjectableInstance(LisaDiscordClient);
+    const lisaDiscordController = chevron.getInjectableInstance(LisaDiscordController);
     const discordToken = isProductionMode()
         ? process.env.DISCORD_TOKEN
         : process.env.DISCORD_TOKEN_TEST;
     if (lodash.isNil(discordToken)) {
         throw new Error("No token set.");
     }
-    const lisaDiscordClient = chevron.getInjectableInstance(LisaDiscordClient);
     lisaDiscordClient.init({
         commandPrefix: "$",
         owner: "128985967875850240",
         invite: "https://discordapp.com/oauth2/authorize?&client_id=263671526279086092&scope=bot"
     });
-    const lisaDiscordController = chevron.getInjectableInstance(LisaDiscordController);
     await lisaDiscordClient.login(discordToken);
-    lisaDiscordController.bindEvents();
+    lisaDiscordController.bindListeners();
 };
-logger.info("Starting Lisa bot...");
+logger.info("Starting Lisa main client...");
 startLisaMainClient()
     .then(() => logger.info("Started Lisa main client."))
     .catch(e => console.error("Could not start Lisa main client.", e));
+logger.info("Starting Lisa discord client...");
 startLisaDiscordClient()
     .then(() => logger.info("Started Lisa discord client."))
     .catch(e => console.error("Could not start Lisa discord client.", e));

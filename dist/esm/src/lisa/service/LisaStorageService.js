@@ -4,18 +4,22 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var LisaStorageService_1;
 import { DefaultBootstrappings, Injectable } from "chevronjs";
-import { readJSON, writeJSON } from "fs-extra";
+import { pathExists, readJSON, writeJSON } from "fs-extra";
 import { cloneDeep } from "lodash";
 import { chevron } from "../../chevron";
-let LisaStorageService = class LisaStorageService {
-    async loadStoredState(path) {
-        const storedState = await readJSON(path);
+let LisaStorageService = LisaStorageService_1 = class LisaStorageService {
+    async hasStoredState() {
+        return pathExists(LisaStorageService_1.STORAGE_PATH);
+    }
+    async loadStoredState() {
+        const storedState = await readJSON(LisaStorageService_1.STORAGE_PATH);
         return this.fromJson(storedState);
     }
-    async storeState(path, state) {
+    async storeState(state) {
         const jsonLisaState = this.toJson(state);
-        return await writeJSON(path, jsonLisaState);
+        return await writeJSON(LisaStorageService_1.STORAGE_PATH, jsonLisaState);
     }
     fromJson(jsonState) {
         const state = cloneDeep(jsonState);
@@ -38,7 +42,8 @@ let LisaStorageService = class LisaStorageService {
         return storedState;
     }
 };
-LisaStorageService = __decorate([
+LisaStorageService.STORAGE_PATH = "data/lisaState.json";
+LisaStorageService = LisaStorageService_1 = __decorate([
     Injectable(chevron, { bootstrapping: DefaultBootstrappings.CLASS })
 ], LisaStorageService);
 export { LisaStorageService };

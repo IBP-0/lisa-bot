@@ -30,7 +30,7 @@ class LisaDiscordController {
         private readonly lisaTextService: LisaTextService
     ) {}
 
-    public bindEvents(): void {
+    public bindListeners(): void {
         this.lisaDiscordClient.getCommandoClient().on("message", message => {
             if (!message.system && !message.author.bot) {
                 this.onMessage();
