@@ -1,6 +1,5 @@
 import { DefaultBootstrappings, Injectable } from "chevronjs";
-import { Message, PresenceData } from "discord.js";
-import { Observable } from "rxjs";
+import { PresenceData } from "discord.js";
 import { filter, throttleTime } from "rxjs/operators";
 import { chevron } from "../../chevron";
 import { LisaStateController } from "../../lisa/LisaStateController";

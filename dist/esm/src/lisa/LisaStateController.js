@@ -14,6 +14,7 @@ import { Subject } from "rxjs";
 import { chevron } from "../chevron";
 import { rootLogger } from "../logger";
 import { LisaDeathCause } from "./LisaState";
+import { LisaStatusService } from "./service/LisaStatusService";
 const WATER_INITIAL = 100;
 const WATER_MIN = 0.1;
 const WATER_MAX = 150;
@@ -40,7 +41,8 @@ const createNewLisaState = (createdByUser, highScore = 0) => {
     };
 };
 let LisaStateController = LisaStateController_1 = class LisaStateController {
-    constructor() {
+    constructor(lisaStatusService) {
+        this.lisaStatusService = lisaStatusService;
         this.state = createNewLisaState(USER_SYSTEM);
         this.stateChangeSubject = new Subject();
     }
@@ -50,7 +52,6 @@ let LisaStateController = LisaStateController_1 = class LisaStateController {
      * @return copy of the current state.
      */
     getStateCopy() {
-        console.log(JSON.stringify(this.state));
         return cloneDeep(this.state);
     }
     /**
@@ -62,8 +63,15 @@ let LisaStateController = LisaStateController_1 = class LisaStateController {
         this.state = state;
         this.stateChanged(USER_SYSTEM);
     }
-    isLisaAlive() {
-        return this.state.death.time == null;
+    replantLisa(byUser = USER_SYSTEM) {
+        LisaStateController_1.logger.debug(`'${byUser}' replanted lisa.`);
+        this.state = createNewLisaState(byUser, this.state.highScore);
+        this.stateChanged(byUser);
+    }
+    killLisa(cause, byUser = USER_SYSTEM) {
+        LisaStateController_1.logger.debug(`'${byUser}' killed lisa by ${cause}.`);
+        this.state.death = { time: new Date(), byUser, cause };
+        this.stateChanged(byUser);
     }
     setWater(water, byUser = USER_SYSTEM) {
         LisaStateController_1.logger.debug(`'${byUser}' set water from ${this.state.status.water} to ${water}.`);
@@ -75,23 +83,13 @@ let LisaStateController = LisaStateController_1 = class LisaStateController {
         this.state.status.happiness = happiness;
         this.stateChanged(byUser);
     }
-    replantLisa(byUser = USER_SYSTEM) {
-        LisaStateController_1.logger.debug(`'${byUser}' replanted lisa.`);
-        this.state = createNewLisaState(byUser, this.state.highScore);
-        this.stateChanged(byUser);
-    }
-    killLisa(cause, byUser = USER_SYSTEM) {
-        LisaStateController_1.logger.debug(`'${byUser}' killed lisa by ${cause}.`);
-        this.state.death = { time: new Date(), byUser, cause };
-        this.stateChanged(byUser);
-    }
     stateChanged(byUser) {
         LisaStateController_1.logger.silly("Lisa state changed.");
-        if (this.isLisaAlive()) {
+        if (this.lisaStatusService.isAlive(this.getStateCopy())) {
             // Check stats if alive
             this.checkStats(byUser);
             // Check again to see if Lisa was killed through the update.
-            if (!this.isLisaAlive()) {
+            if (!this.lisaStatusService.isAlive(this.getStateCopy())) {
                 this.updateHighScoreIfRequired();
             }
         }
@@ -116,20 +114,11 @@ let LisaStateController = LisaStateController_1 = class LisaStateController {
         }
     }
     updateHighScoreIfRequired() {
-        const lifetime = this.getLifetime();
+        const lifetime = this.lisaStatusService.getLifetime(this.getStateCopy());
         if (lifetime > this.state.highScore) {
             LisaStateController_1.logger.debug(`Increasing high score from ${this.state.highScore} to ${lifetime}.`);
             this.state.highScore = lifetime;
         }
-    }
-    getLifetime() {
-        const birth = this.state.life.time.getTime();
-        if (!this.isLisaAlive()) {
-            const death = this.state.death.time.getTime();
-            return death - birth;
-        }
-        const now = Date.now();
-        return now - birth;
     }
 };
 LisaStateController.logger = rootLogger.child({
@@ -138,9 +127,9 @@ LisaStateController.logger = rootLogger.child({
 LisaStateController = LisaStateController_1 = __decorate([
     Injectable(chevron, {
         bootstrapping: DefaultBootstrappings.CLASS,
-        dependencies: []
+        dependencies: [LisaStatusService]
     }),
-    __metadata("design:paramtypes", [])
+    __metadata("design:paramtypes", [LisaStatusService])
 ], LisaStateController);
 export { LisaStateController };
 //# sourceMappingURL=LisaStateController.js.map

@@ -4,6 +4,7 @@ import { Subject } from "rxjs";
 import { chevron } from "../chevron";
 import { rootLogger } from "../logger";
 import { LisaDeathCause, LisaState } from "./LisaState";
+import { LisaStatusService } from "./service/LisaStatusService";
 
 const WATER_INITIAL = 100;
 const WATER_MIN = 0.1;
@@ -39,7 +40,7 @@ const createNewLisaState = (
 
 @Injectable(chevron, {
     bootstrapping: DefaultBootstrappings.CLASS,
-    dependencies: []
+    dependencies: [LisaStatusService]
 })
 class LisaStateController {
     private static readonly logger = rootLogger.child({
@@ -49,7 +50,7 @@ class LisaStateController {
     public readonly stateChangeSubject: Subject<void>;
     private state: LisaState;
 
-    constructor() {
+    constructor(private readonly lisaStatusService: LisaStatusService) {
         this.state = createNewLisaState(USER_SYSTEM);
         this.stateChangeSubject = new Subject<void>();
     }
@@ -73,8 +74,20 @@ class LisaStateController {
         this.stateChanged(USER_SYSTEM);
     }
 
-    public isLisaAlive(): boolean {
-        return this.state.death.time == null;
+    public replantLisa(byUser: string = USER_SYSTEM): void {
+        LisaStateController.logger.debug(`'${byUser}' replanted lisa.`);
+
+        this.state = createNewLisaState(byUser, this.state.highScore);
+        this.stateChanged(byUser);
+    }
+
+    public killLisa(cause: LisaDeathCause, byUser: string = USER_SYSTEM): void {
+        LisaStateController.logger.debug(
+            `'${byUser}' killed lisa by ${cause}.`
+        );
+
+        this.state.death = { time: new Date(), byUser, cause };
+        this.stateChanged(byUser);
     }
 
     public setWater(water: number, byUser: string = USER_SYSTEM): void {
@@ -95,29 +108,13 @@ class LisaStateController {
         this.stateChanged(byUser);
     }
 
-    public replantLisa(byUser: string = USER_SYSTEM): void {
-        LisaStateController.logger.debug(`'${byUser}' replanted lisa.`);
-
-        this.state = createNewLisaState(byUser, this.state.highScore);
-        this.stateChanged(byUser);
-    }
-
-    public killLisa(cause: LisaDeathCause, byUser: string = USER_SYSTEM): void {
-        LisaStateController.logger.debug(
-            `'${byUser}' killed lisa by ${cause}.`
-        );
-
-        this.state.death = { time: new Date(), byUser, cause };
-        this.stateChanged(byUser);
-    }
-
     private stateChanged(byUser: string): void {
         LisaStateController.logger.silly("Lisa state changed.");
-        if (this.isLisaAlive()) {
+        if (this.lisaStatusService.isAlive(this.getStateCopy())) {
             // Check stats if alive
             this.checkStats(byUser);
             // Check again to see if Lisa was killed through the update.
-            if (!this.isLisaAlive()) {
+            if (!this.lisaStatusService.isAlive(this.getStateCopy())) {
                 this.updateHighScoreIfRequired();
             }
         }
@@ -156,25 +153,15 @@ class LisaStateController {
     }
 
     private updateHighScoreIfRequired(): void {
-        const lifetime = this.getLifetime();
+        const lifetime = this.lisaStatusService.getLifetime(
+            this.getStateCopy()
+        );
         if (lifetime > this.state.highScore) {
             LisaStateController.logger.debug(
                 `Increasing high score from ${this.state.highScore} to ${lifetime}.`
             );
             this.state.highScore = lifetime;
         }
-    }
-
-    private getLifetime(): number {
-        const birth = this.state.life.time.getTime();
-
-        if (!this.isLisaAlive()) {
-            const death = this.state.death.time!.getTime();
-            return death - birth;
-        }
-
-        const now = Date.now();
-        return now - birth;
     }
 }
 
