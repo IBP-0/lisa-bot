@@ -49,7 +49,7 @@ let LisaDiscordController = LisaDiscordController_1 = class LisaDiscordControlle
     }
     onStateChange() {
         const statusLabel = this.lisaTextService.createStatusLabel(this.lisaStateController.getStateCopy());
-        LisaDiscordController_1.logger.debug(`Updating presence to '${statusLabel}'.`);
+        LisaDiscordController_1.logger.debug(`Updating presence to '${statusLabel}'...`);
         this.lisaDiscordClient
             .setPresence(createPresence(statusLabel))
             .then(() => LisaDiscordController_1.logger.debug("Updated presence."))

@@ -37,8 +37,7 @@ const startLisaDiscordClient = async () => {
     }
     lisaDiscordClient.init({
         commandPrefix: "$",
-        owner: "128985967875850240",
-        invite: "https://discordapp.com/oauth2/authorize?&client_id=263671526279086092&scope=bot"
+        owner: "128985967875850240"
     });
     await lisaDiscordClient.login(discordToken);
     lisaDiscordController.bindListeners();

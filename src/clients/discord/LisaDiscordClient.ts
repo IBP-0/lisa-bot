@@ -29,36 +29,38 @@ class LisaDiscordClient {
     public init(options: CommandoClientOptions): void {
         this.commandoClient = new CommandoClient(options);
 
-        /*
-         * Defaults
-         */
-        this.commandoClient.registry
-            .registerDefaultTypes()
-            .registerDefaultGroups()
-            .registerDefaultCommands({
-                help: true,
-                eval_: false,
-                ping: true,
-                prefix: false,
-                commandState: false
-            });
+        const commandRegistry = this.commandoClient.registry;
 
         /*
-         * Custom groups
+         * Types
          */
-        this.commandoClient.registry.registerGroup(
-            new CommandGroup(this.commandoClient, "lisa", "Lisa")
-        );
+        commandRegistry.registerDefaultTypes();
 
         /*
-         * Custom commands
+         * Groups
          */
-        this.commandoClient.registry.registerCommands([
+        commandRegistry.registerGroups([
+            ["util", "Utility"],
+            ["lisa", "Lisa"]
+        ]);
+
+        /*
+         * Commands
+         */
+        commandRegistry.registerDefaultCommands({
+            help: true,
+            eval_: false,
+            ping: true,
+            prefix: false,
+            commandState: false
+        });
+        commandRegistry.registerCommands([
             AboutCommand,
             InviteCommand,
-            ServersCommand
+            ServersCommand,
+
+            StatusCommand
         ]);
-        this.commandoClient.registry.registerCommands([StatusCommand]);
     }
 
     public async login(token: string): Promise<void> {
