@@ -20,7 +20,8 @@ class LisaDiscordCommandController {
         private readonly lisaStateController: LisaStateController,
         private readonly lisaStatusService: LisaStatusService,
         private readonly lisaTextService: LisaTextService
-    ) {}
+    ) {
+    }
 
     public performAction(
         message: CommandMessage,
@@ -43,18 +44,7 @@ class LisaDiscordCommandController {
             return sample(textDead)!;
         }
 
-        if (waterModifier !== 0) {
-            this.lisaStateController.setWater(
-                this.lisaStateController.getStateCopy().status.water +
-                    waterModifier
-            );
-        }
-        if (happinessModifier !== 0) {
-            this.lisaStateController.setHappiness(
-                this.lisaStateController.getStateCopy().status.happiness +
-                    happinessModifier
-            );
-        }
+        this.lisaStateController.modifyStatus(waterModifier, happinessModifier);
 
         return [sample(textSuccess)!, this.createStatusText()].join("\n");
     }

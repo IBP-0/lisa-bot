@@ -91,21 +91,17 @@ class LisaStateController {
         this.stateChanged(byUser);
     }
 
-    public setWater(water: number, byUser: string = USER_SYSTEM): void {
+    public modifyStatus(
+        waterModifier: number,
+        happinessModifier: number,
+        byUser: string = USER_SYSTEM
+    ): void {
         LisaStateController.logger.debug(
-            `'${byUser}' set water from ${this.state.status.water} to ${water}.`
+            `'${byUser}' modified status; water modifier ${waterModifier}, happiness modifier ${happinessModifier}.`
         );
 
-        this.state.status.water = water;
-        this.stateChanged(byUser);
-    }
-
-    public setHappiness(happiness: number, byUser: string = USER_SYSTEM): void {
-        LisaStateController.logger.debug(
-            `'${byUser}' set happiness from ${this.state.status.happiness} to ${happiness}.`
-        );
-
-        this.state.status.happiness = happiness;
+        this.state.status.water += waterModifier;
+        this.state.status.happiness += happinessModifier;
         this.stateChanged(byUser);
     }
 

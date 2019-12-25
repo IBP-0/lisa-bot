@@ -69,14 +69,10 @@ let LisaStateController = LisaStateController_1 = class LisaStateController {
         this.state.death = { time: new Date(), byUser, cause };
         this.stateChanged(byUser);
     }
-    setWater(water, byUser = LisaState_1.USER_SYSTEM) {
-        LisaStateController_1.logger.debug(`'${byUser}' set water from ${this.state.status.water} to ${water}.`);
-        this.state.status.water = water;
-        this.stateChanged(byUser);
-    }
-    setHappiness(happiness, byUser = LisaState_1.USER_SYSTEM) {
-        LisaStateController_1.logger.debug(`'${byUser}' set happiness from ${this.state.status.happiness} to ${happiness}.`);
-        this.state.status.happiness = happiness;
+    modifyStatus(waterModifier, happinessModifier, byUser = LisaState_1.USER_SYSTEM) {
+        LisaStateController_1.logger.debug(`'${byUser}' modified status; water modifier ${waterModifier}, happiness modifier ${happinessModifier}.`);
+        this.state.status.water += waterModifier;
+        this.state.status.happiness += happinessModifier;
         this.stateChanged(byUser);
     }
     stateChanged(byUser) {

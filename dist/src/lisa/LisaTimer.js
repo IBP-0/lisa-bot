@@ -27,12 +27,7 @@ let LisaTimer = LisaTimer_1 = class LisaTimer {
     }
     tick() {
         LisaTimer_1.logger.debug("Performing tick.");
-        const newWater = this.lisaStateController.getStateCopy().status.water +
-            LisaTimer_1.WATER_MODIFIER;
-        const newHappiness = this.lisaStateController.getStateCopy().status.happiness +
-            LisaTimer_1.HAPPINESS_MODIFIER;
-        this.lisaStateController.setWater(newWater, USER_TICK);
-        this.lisaStateController.setHappiness(newHappiness, USER_TICK);
+        this.lisaStateController.modifyStatus(LisaTimer_1.WATER_MODIFIER, LisaTimer_1.HAPPINESS_MODIFIER, USER_TICK);
     }
 };
 LisaTimer.logger = logger_1.rootLogger.child({

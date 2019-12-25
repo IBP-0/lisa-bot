@@ -33,7 +33,8 @@ class LisaDiscordEventController {
         private readonly lisaStateController: LisaStateController,
         private readonly lisaDiscordClient: LisaDiscordClient,
         private readonly lisaTextService: LisaTextService
-    ) {}
+    ) {
+    }
 
     public bindListeners(): void {
         this.lisaDiscordClient
@@ -60,11 +61,9 @@ class LisaDiscordEventController {
         LisaDiscordEventController.logger.silly(
             "A message was sent, increasing happiness."
         );
-        const newHappiness =
-            this.lisaStateController.getStateCopy().status.happiness +
-            LisaDiscordEventController.MESSAGE_HAPPINESS_MODIFIER;
-        this.lisaStateController.setHappiness(
-            newHappiness,
+        this.lisaStateController.modifyStatus(
+            0,
+            LisaDiscordEventController.MESSAGE_HAPPINESS_MODIFIER,
             USER_DISCORD_ACTIVITY
         );
     }

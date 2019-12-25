@@ -21,8 +21,7 @@ declare class LisaStateController {
     load(state: LisaState): void;
     replantLisa(byUser?: string): void;
     killLisa(cause: LisaDeathCause, byUser?: string): void;
-    setWater(water: number, byUser?: string): void;
-    setHappiness(happiness: number, byUser?: string): void;
+    modifyStatus(waterModifier: number, happinessModifier: number, byUser?: string): void;
     private stateChanged;
     private checkStats;
     private updateHighScoreIfRequired;
