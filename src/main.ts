@@ -1,7 +1,7 @@
 import { isNil } from "lodash";
 import { chevron } from "./chevron";
 import { LisaDiscordClient } from "./clients/discord/LisaDiscordClient";
-import { LisaDiscordController } from "./clients/discord/LisaDiscordController";
+import { LisaDiscordEventController } from "./clients/discord/LisaDiscordEventController";
 import { LisaStateController } from "./lisa/LisaStateController";
 import { LisaStorageController } from "./lisa/LisaStorageController";
 import { LisaTimer } from "./lisa/LisaTimer";
@@ -37,8 +37,8 @@ const startLisaDiscordClient = async (): Promise<void> => {
     const lisaDiscordClient: LisaDiscordClient = chevron.getInjectableInstance(
         LisaDiscordClient
     );
-    const lisaDiscordController: LisaDiscordController = chevron.getInjectableInstance(
-        LisaDiscordController
+    const lisaDiscordController: LisaDiscordEventController = chevron.getInjectableInstance(
+        LisaDiscordEventController
     );
 
     const discordToken = isProductionMode()
@@ -50,7 +50,8 @@ const startLisaDiscordClient = async (): Promise<void> => {
 
     lisaDiscordClient.init({
         commandPrefix: "$",
-        owner: "128985967875850240"
+        owner: "128985967875850240",
+        unknownCommandResponse: false
     });
     await lisaDiscordClient.login(discordToken);
 

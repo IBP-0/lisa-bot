@@ -1,7 +1,7 @@
 import { LisaStateController } from "../../lisa/LisaStateController";
 import { LisaTextService } from "../../lisa/service/LisaTextService";
 import { LisaDiscordClient } from "./LisaDiscordClient";
-declare class LisaDiscordController {
+declare class LisaDiscordEventController {
     private readonly lisaStateController;
     private readonly lisaDiscordClient;
     private readonly lisaTextService;
@@ -14,4 +14,4 @@ declare class LisaDiscordController {
     private onMessage;
     private onStateChange;
 }
-export { LisaDiscordController };
+export { LisaDiscordEventController };

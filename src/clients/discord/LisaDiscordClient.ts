@@ -1,15 +1,12 @@
 import { DefaultBootstrappings, Injectable } from "chevronjs";
 import { Message, PresenceData } from "discord.js";
-import {
-    CommandGroup,
-    CommandoClient,
-    CommandoClientOptions
-} from "discord.js-commando";
+import { CommandoClient, CommandoClientOptions } from "discord.js-commando";
 import { Observable } from "rxjs";
 import { chevron } from "../../chevron";
 import { AboutCommand } from "./commands/core/AboutCommand";
 import { InviteCommand } from "./commands/core/InviteCommand";
 import { ServersCommand } from "./commands/core/ServersCommand";
+import { BaaCommand } from "./commands/lisa/BaaCommand";
 import { StatusCommand } from "./commands/lisa/StatusCommand";
 
 const createUninitializedClientError = (): TypeError =>
@@ -59,7 +56,8 @@ class LisaDiscordClient {
             InviteCommand,
             ServersCommand,
 
-            StatusCommand
+            StatusCommand,
+            BaaCommand
         ]);
     }
 

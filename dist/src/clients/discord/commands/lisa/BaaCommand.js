@@ -3,19 +3,26 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_commando_1 = require("discord.js-commando");
 const chevron_1 = require("../../../../chevron");
 const LisaDiscordCommandController_1 = require("../../LisaDiscordCommandController");
-class StatusCommand extends discord_js_commando_1.Command {
+const GOAT_IDS = [
+    "169804264988868609",
+    "178470784984023040",
+    "143158243076734986",
+    "128985967875850240",
+    "273221196001181697"
+];
+class BaaCommand extends discord_js_commando_1.Command {
     constructor(client) {
         super(client, {
-            name: "status",
+            name: "baa",
             aliases: [],
             group: "lisa",
-            memberName: "status",
-            description: "Shows the status of Lisa."
+            memberName: "baa",
+            description: "Baa."
         });
         this.lisaDiscordCommandController = chevron_1.chevron.getInjectableInstance(LisaDiscordCommandController_1.LisaDiscordCommandController);
     }
     run(message) {
-        return message.say(this.lisaDiscordCommandController.createStatusText());
+        return message.say(this.lisaDiscordCommandController.performAction(message, 0, 30, GOAT_IDS, ["Baa", "Baa~", "Baaaaaaa ^w^", ":goat:"], ["Baa? a dead Lisa..."], ["You're not a goat uwu"]));
     }
 }
-exports.StatusCommand = StatusCommand;
+exports.BaaCommand = BaaCommand;

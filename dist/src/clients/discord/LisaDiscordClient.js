@@ -16,6 +16,7 @@ const chevron_1 = require("../../chevron");
 const AboutCommand_1 = require("./commands/core/AboutCommand");
 const InviteCommand_1 = require("./commands/core/InviteCommand");
 const ServersCommand_1 = require("./commands/core/ServersCommand");
+const BaaCommand_1 = require("./commands/lisa/BaaCommand");
 const StatusCommand_1 = require("./commands/lisa/StatusCommand");
 const createUninitializedClientError = () => new TypeError("Client has not been initialized.");
 let LisaDiscordClient = class LisaDiscordClient {
@@ -50,7 +51,8 @@ let LisaDiscordClient = class LisaDiscordClient {
             AboutCommand_1.AboutCommand,
             InviteCommand_1.InviteCommand,
             ServersCommand_1.ServersCommand,
-            StatusCommand_1.StatusCommand
+            StatusCommand_1.StatusCommand,
+            BaaCommand_1.BaaCommand
         ]);
     }
     async login(token) {

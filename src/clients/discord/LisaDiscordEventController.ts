@@ -21,9 +21,9 @@ const createPresence = (name: string): PresenceData => {
     bootstrapping: DefaultBootstrappings.CLASS,
     dependencies: [LisaStateController, LisaDiscordClient, LisaTextService]
 })
-class LisaDiscordController {
+class LisaDiscordEventController {
     private static readonly logger = rootLogger.child({
-        target: LisaDiscordController
+        target: LisaDiscordEventController
     });
     private static readonly PRESENCE_UPDATE_THROTTLE_TIMEOUT = 10000;
     private static readonly MESSAGE_THROTTLE_TIMEOUT = 1000;
@@ -40,14 +40,16 @@ class LisaDiscordController {
             .getMessageObservable()
             .pipe(
                 filter(message => !message.system && !message.author.bot),
-                throttleTime(LisaDiscordController.MESSAGE_THROTTLE_TIMEOUT)
+                throttleTime(
+                    LisaDiscordEventController.MESSAGE_THROTTLE_TIMEOUT
+                )
             )
             .subscribe(() => this.onMessage());
 
         this.lisaStateController.stateChangeSubject
             .pipe(
                 throttleTime(
-                    LisaDiscordController.PRESENCE_UPDATE_THROTTLE_TIMEOUT
+                    LisaDiscordEventController.PRESENCE_UPDATE_THROTTLE_TIMEOUT
                 )
             )
             .subscribe(() => this.onStateChange());
@@ -55,12 +57,12 @@ class LisaDiscordController {
     }
 
     private onMessage(): void {
-        LisaDiscordController.logger.silly(
+        LisaDiscordEventController.logger.silly(
             "A message was sent, increasing happiness."
         );
         const newHappiness =
             this.lisaStateController.getStateCopy().status.happiness +
-            LisaDiscordController.MESSAGE_HAPPINESS_MODIFIER;
+            LisaDiscordEventController.MESSAGE_HAPPINESS_MODIFIER;
         this.lisaStateController.setHappiness(
             newHappiness,
             USER_DISCORD_ACTIVITY
@@ -71,14 +73,16 @@ class LisaDiscordController {
         const statusLabel = this.lisaTextService.createStatusLabel(
             this.lisaStateController.getStateCopy()
         );
-        LisaDiscordController.logger.debug(
+        LisaDiscordEventController.logger.debug(
             `Updating presence to '${statusLabel}'...`
         );
         this.lisaDiscordClient
             .setPresence(createPresence(statusLabel))
-            .then(() => LisaDiscordController.logger.debug("Updated presence."))
+            .then(() =>
+                LisaDiscordEventController.logger.debug("Updated presence.")
+            )
             .catch(e =>
-                LisaDiscordController.logger.error(
+                LisaDiscordEventController.logger.error(
                     "Could not update presence.",
                     e
                 )
@@ -86,4 +90,4 @@ class LisaDiscordController {
     }
 }
 
-export { LisaDiscordController };
+export { LisaDiscordEventController };

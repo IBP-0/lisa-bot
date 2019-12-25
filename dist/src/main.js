@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const lodash_1 = require("lodash");
 const chevron_1 = require("./chevron");
 const LisaDiscordClient_1 = require("./clients/discord/LisaDiscordClient");
-const LisaDiscordController_1 = require("./clients/discord/LisaDiscordController");
+const LisaDiscordEventController_1 = require("./clients/discord/LisaDiscordEventController");
 const LisaStateController_1 = require("./lisa/LisaStateController");
 const LisaStorageController_1 = require("./lisa/LisaStorageController");
 const LisaTimer_1 = require("./lisa/LisaTimer");
@@ -28,7 +28,7 @@ const startLisaMainClient = async () => {
 };
 const startLisaDiscordClient = async () => {
     const lisaDiscordClient = chevron_1.chevron.getInjectableInstance(LisaDiscordClient_1.LisaDiscordClient);
-    const lisaDiscordController = chevron_1.chevron.getInjectableInstance(LisaDiscordController_1.LisaDiscordController);
+    const lisaDiscordController = chevron_1.chevron.getInjectableInstance(LisaDiscordEventController_1.LisaDiscordEventController);
     const discordToken = mode_1.isProductionMode()
         ? process.env.DISCORD_TOKEN
         : process.env.DISCORD_TOKEN_TEST;
@@ -37,7 +37,8 @@ const startLisaDiscordClient = async () => {
     }
     lisaDiscordClient.init({
         commandPrefix: "$",
-        owner: "128985967875850240"
+        owner: "128985967875850240",
+        unknownCommandResponse: false
     });
     await lisaDiscordClient.login(discordToken);
     lisaDiscordController.bindListeners();
