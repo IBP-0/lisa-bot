@@ -10,6 +10,7 @@ import { chevron } from "../../chevron";
 import { AboutCommand } from "./commands/core/AboutCommand";
 import { InviteCommand } from "./commands/core/InviteCommand";
 import { ServersCommand } from "./commands/core/ServersCommand";
+import { StatusCommand } from "./commands/lisa/StatusCommand";
 
 const createUninitializedClientError = (): TypeError =>
     new TypeError("Client has not been initialized.");
@@ -57,6 +58,7 @@ class LisaDiscordClient {
             InviteCommand,
             ServersCommand
         ]);
+        this.commandoClient.registry.registerCommands([StatusCommand]);
     }
 
     public async login(token: string): Promise<void> {

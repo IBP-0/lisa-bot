@@ -10,13 +10,33 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const chevronjs_1 = require("chevronjs");
+const moment = require("moment");
 const chevron_1 = require("../../chevron");
 const LisaStatusService_1 = require("./LisaStatusService");
 let LisaTextService = class LisaTextService {
     constructor(lisaStatusService) {
         this.lisaStatusService = lisaStatusService;
     }
-    determineStatusLabel(state) {
+    createStatusText(state) {
+        const statusLabel = `Lisa is ${this.createStatusLabel(state)}`;
+        const scoreText = this.createScoreText(state);
+        let text;
+        if (!this.lisaStatusService.isAlive(state)) {
+            const timeSinceDeathLabel = this.humanizeDuration(this.lisaStatusService.getTimeSinceDeath(state));
+            const lifetimeLabel = this.humanizeDuration(this.lisaStatusService.getLifetime(state));
+            text = [
+                `Lisa died ${timeSinceDeathLabel} ago, and was alive for ${lifetimeLabel}.`,
+                `She was killed by ${state.death.byUser} through ${state.death.cause}.`
+            ];
+        }
+        else {
+            const waterLevel = state.status.water.toFixed(2);
+            const happinessLevel = state.status.happiness.toFixed(2);
+            text = [`Water: ${waterLevel}% | Happiness: ${happinessLevel}%.`];
+        }
+        return [statusLabel, ...text, scoreText].join("\n");
+    }
+    createStatusLabel(state) {
         if (!this.lisaStatusService.isAlive(state)) {
             return "is dead.";
         }
@@ -28,6 +48,17 @@ let LisaTextService = class LisaTextService {
             return "doing fine.";
         }
         return "close to dying.";
+    }
+    createScoreText(state) {
+        const lifetimeLabel = this.humanizeDuration(this.lisaStatusService.getLifetime(state));
+        const highScoreLabel = this.humanizeDuration(state.highScore);
+        const currentLabel = this.lisaStatusService.isAlive(state)
+            ? "Current lifetime"
+            : "Lifetime";
+        return `${currentLabel}: ${lifetimeLabel} | Best lifetime: ${highScoreLabel}.`;
+    }
+    humanizeDuration(durationMs) {
+        return moment.duration(durationMs).humanize();
     }
 };
 LisaTextService = __decorate([

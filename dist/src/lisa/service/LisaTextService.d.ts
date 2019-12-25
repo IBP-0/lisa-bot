@@ -3,6 +3,9 @@ import { LisaStatusService } from "./LisaStatusService";
 declare class LisaTextService {
     private readonly lisaStatusService;
     constructor(lisaStatusService: LisaStatusService);
-    determineStatusLabel(state: LisaState): string;
+    createStatusText(state: LisaState): string;
+    createStatusLabel(state: LisaState): string;
+    private createScoreText;
+    private humanizeDuration;
 }
 export { LisaTextService };

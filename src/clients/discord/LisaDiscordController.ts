@@ -63,7 +63,7 @@ class LisaDiscordController {
     }
 
     private onStateChange(): void {
-        const statusLabel = this.lisaTextService.determineStatusLabel(
+        const statusLabel = this.lisaTextService.createStatusLabel(
             this.lisaStateController.getStateCopy()
         );
         LisaDiscordController.logger.debug(

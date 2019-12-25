@@ -47,7 +47,7 @@ let LisaDiscordController = LisaDiscordController_1 = class LisaDiscordControlle
         this.lisaStateController.setHappiness(newHappiness, "Discord activity");
     }
     onStateChange() {
-        const statusLabel = this.lisaTextService.determineStatusLabel(this.lisaStateController.getStateCopy());
+        const statusLabel = this.lisaTextService.createStatusLabel(this.lisaStateController.getStateCopy());
         LisaDiscordController_1.logger.debug(`Updating presence to '${statusLabel}'.`);
         this.lisaDiscordClient
             .setPresence(createPresence(statusLabel))
