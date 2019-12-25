@@ -15,6 +15,7 @@ const rxjs_1 = require("rxjs");
 const chevron_1 = require("../chevron");
 const logger_1 = require("../logger");
 const LisaStateController_1 = require("./LisaStateController");
+const USER_TICK = "Time";
 let LisaTimer = LisaTimer_1 = class LisaTimer {
     constructor(lisaStateController) {
         this.lisaStateController = lisaStateController;
@@ -25,11 +26,13 @@ let LisaTimer = LisaTimer_1 = class LisaTimer {
         LisaTimer_1.logger.info(`Started Lisa timer with an interval of ${LisaTimer_1.TIMEOUT}.`);
     }
     tick() {
-        LisaTimer_1.logger.debug(`Performing tick.`);
-        this.lisaStateController.setWater(this.lisaStateController.getStateCopy().status.water +
-            LisaTimer_1.WATER_MODIFIER);
-        this.lisaStateController.setHappiness(this.lisaStateController.getStateCopy().status.happiness +
-            LisaTimer_1.HAPPINESS_MODIFIER);
+        LisaTimer_1.logger.debug("Performing tick.");
+        const newWater = this.lisaStateController.getStateCopy().status.water +
+            LisaTimer_1.WATER_MODIFIER;
+        const newHappiness = this.lisaStateController.getStateCopy().status.happiness +
+            LisaTimer_1.HAPPINESS_MODIFIER;
+        this.lisaStateController.setWater(newWater, USER_TICK);
+        this.lisaStateController.setHappiness(newHappiness, USER_TICK);
     }
 };
 LisaTimer.logger = logger_1.rootLogger.child({

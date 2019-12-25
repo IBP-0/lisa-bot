@@ -17,6 +17,7 @@ const LisaStateController_1 = require("../../lisa/LisaStateController");
 const LisaTextService_1 = require("../../lisa/service/LisaTextService");
 const logger_1 = require("../../logger");
 const LisaDiscordClient_1 = require("./LisaDiscordClient");
+const USER_DISCORD_ACTIVITY = "Discord activity";
 const createPresence = (name) => {
     return {
         game: {
@@ -44,7 +45,7 @@ let LisaDiscordController = LisaDiscordController_1 = class LisaDiscordControlle
         LisaDiscordController_1.logger.silly("A message was sent, increasing happiness.");
         const newHappiness = this.lisaStateController.getStateCopy().status.happiness +
             LisaDiscordController_1.MESSAGE_HAPPINESS_MODIFIER;
-        this.lisaStateController.setHappiness(newHappiness, "Discord activity");
+        this.lisaStateController.setHappiness(newHappiness, USER_DISCORD_ACTIVITY);
     }
     onStateChange() {
         const statusLabel = this.lisaTextService.createStatusLabel(this.lisaStateController.getStateCopy());

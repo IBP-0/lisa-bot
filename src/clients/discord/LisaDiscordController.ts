@@ -7,6 +7,8 @@ import { LisaTextService } from "../../lisa/service/LisaTextService";
 import { rootLogger } from "../../logger";
 import { LisaDiscordClient } from "./LisaDiscordClient";
 
+const USER_DISCORD_ACTIVITY = "Discord activity";
+
 const createPresence = (name: string): PresenceData => {
     return {
         game: {
@@ -59,7 +61,10 @@ class LisaDiscordController {
         const newHappiness =
             this.lisaStateController.getStateCopy().status.happiness +
             LisaDiscordController.MESSAGE_HAPPINESS_MODIFIER;
-        this.lisaStateController.setHappiness(newHappiness, "Discord activity");
+        this.lisaStateController.setHappiness(
+            newHappiness,
+            USER_DISCORD_ACTIVITY
+        );
     }
 
     private onStateChange(): void {
@@ -67,7 +72,7 @@ class LisaDiscordController {
             this.lisaStateController.getStateCopy()
         );
         LisaDiscordController.logger.debug(
-            `Updating presence to '${statusLabel}'.`
+            `Updating presence to '${statusLabel}'...`
         );
         this.lisaDiscordClient
             .setPresence(createPresence(statusLabel))

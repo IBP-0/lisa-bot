@@ -5,6 +5,8 @@ import { rootLogger } from "../logger";
 import { LisaStateController } from "./LisaStateController";
 import Timer = NodeJS.Timer;
 
+const USER_TICK = "Time";
+
 @Injectable(chevron, {
     bootstrapping: DefaultBootstrappings.CLASS,
     dependencies: [LisaStateController]
@@ -32,15 +34,17 @@ class LisaTimer {
     }
 
     private tick(): void {
-        LisaTimer.logger.debug(`Performing tick.`);
-        this.lisaStateController.setWater(
+        LisaTimer.logger.debug("Performing tick.");
+
+        const newWater =
             this.lisaStateController.getStateCopy().status.water +
-                LisaTimer.WATER_MODIFIER
-        );
-        this.lisaStateController.setHappiness(
+            LisaTimer.WATER_MODIFIER;
+        const newHappiness =
             this.lisaStateController.getStateCopy().status.happiness +
-                LisaTimer.HAPPINESS_MODIFIER
-        );
+            LisaTimer.HAPPINESS_MODIFIER;
+
+        this.lisaStateController.setWater(newWater, USER_TICK);
+        this.lisaStateController.setHappiness(newHappiness, USER_TICK);
     }
 }
 
