@@ -30,7 +30,7 @@ class BaaCommand extends Command {
     run(message: CommandMessage): Promise<Message | Message[]> {
         return message.say(
             this.lisaDiscordCommandController.performAction(
-                message,
+                message.author,
                 0,
                 30,
                 GOAT_IDS,

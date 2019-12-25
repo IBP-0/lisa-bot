@@ -1,5 +1,5 @@
 import { DefaultBootstrappings, Injectable } from "chevronjs";
-import { CommandMessage } from "discord.js-commando";
+import { User } from "discord.js";
 import { sample } from "lodash";
 import { chevron } from "../../chevron";
 import { LisaStateController } from "../../lisa/LisaStateController";
@@ -24,7 +24,7 @@ class LisaDiscordCommandController {
     }
 
     public performAction(
-        message: CommandMessage,
+        author: User,
         waterModifier: number,
         happinessModifier: number,
         allowedIds: string[] | null,
@@ -32,10 +32,9 @@ class LisaDiscordCommandController {
         textDead: string[],
         textNotAllowed: string[] = []
     ): string {
-        if (allowedIds != null && !allowedIds.includes(message.author.id)) {
+        if (allowedIds != null && !allowedIds.includes(author.id)) {
             return sample(textNotAllowed)!;
         }
-
         if (
             !this.lisaStatusService.isAlive(
                 this.lisaStateController.getStateCopy()
@@ -44,7 +43,11 @@ class LisaDiscordCommandController {
             return sample(textDead)!;
         }
 
-        this.lisaStateController.modifyStatus(waterModifier, happinessModifier);
+        this.lisaStateController.modifyStatus(
+            waterModifier,
+            happinessModifier,
+            this.getFullUserName(author)
+        );
 
         return [sample(textSuccess)!, this.createStatusText()].join("\n");
     }
@@ -53,6 +56,10 @@ class LisaDiscordCommandController {
         return this.lisaTextService.createStatusText(
             this.lisaStateController.getStateCopy()
         );
+    }
+
+    private getFullUserName(user: User): string {
+        return `${user.username}#${user.discriminator}`;
     }
 }
 
