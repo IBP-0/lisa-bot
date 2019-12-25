@@ -17,9 +17,10 @@ const chevron_1 = require("../chevron");
 const logger_1 = require("../logger");
 const LisaState_1 = require("./LisaState");
 const LisaStatusService_1 = require("./service/LisaStatusService");
-const createNewLisaState = (createdByUser, highScore = 0) => {
+const moment = require("moment");
+const createNewLisaState = (createdByUser, bestLifetime = moment.duration(0)) => {
     return {
-        highScore,
+        bestLifetime,
         status: {
             water: LisaState_1.WATER_INITIAL,
             happiness: LisaState_1.HAPPINESS_INITIAL
@@ -60,7 +61,7 @@ let LisaStateController = LisaStateController_1 = class LisaStateController {
     }
     replantLisa(byUser = LisaState_1.USER_SYSTEM) {
         LisaStateController_1.logger.debug(`'${byUser}' replanted lisa.`);
-        this.state = createNewLisaState(byUser, this.state.highScore);
+        this.state = createNewLisaState(byUser, this.state.bestLifetime);
         this.stateChanged(byUser);
     }
     killLisa(cause, byUser = LisaState_1.USER_SYSTEM) {
@@ -110,9 +111,9 @@ let LisaStateController = LisaStateController_1 = class LisaStateController {
     }
     updateHighScoreIfRequired() {
         const lifetime = this.lisaStatusService.getLifetime(this.getStateCopy());
-        if (lifetime > this.state.highScore) {
-            LisaStateController_1.logger.debug(`Increasing high score from ${this.state.highScore} to ${lifetime}.`);
-            this.state.highScore = lifetime;
+        if (lifetime > this.state.bestLifetime) {
+            LisaStateController_1.logger.debug(`Increasing high score from ${this.state.bestLifetime} to ${lifetime}.`);
+            this.state.bestLifetime = lifetime;
         }
     }
 };

@@ -1,3 +1,5 @@
+import { Duration } from "moment";
+
 const WATER_INITIAL = 100;
 const WATER_MIN = 0.1;
 const WATER_MAX = 150;
@@ -34,13 +36,11 @@ interface LisaState {
     };
     life: LisaLife;
     death: LisaDeath;
-    highScore: number;
+    bestLifetime: Duration;
 }
 
 export {
     LisaState,
-    LisaLife,
-    LisaDeath,
     LisaDeathCause,
     WATER_INITIAL,
     WATER_MIN,

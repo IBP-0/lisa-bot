@@ -10,7 +10,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const chevronjs_1 = require("chevronjs");
-const moment = require("moment");
 const chevron_1 = require("../../chevron");
 const LisaStatusService_1 = require("./LisaStatusService");
 let LisaTextService = class LisaTextService {
@@ -22,8 +21,12 @@ let LisaTextService = class LisaTextService {
         const scoreText = this.createScoreText(state);
         let text;
         if (!this.lisaStatusService.isAlive(state)) {
-            const timeSinceDeathLabel = this.humanizeDuration(this.lisaStatusService.getTimeSinceDeath(state));
-            const lifetimeLabel = this.humanizeDuration(this.lisaStatusService.getLifetime(state));
+            const timeSinceDeathLabel = this.lisaStatusService
+                .getTimeSinceDeath(state)
+                .humanize();
+            const lifetimeLabel = this.lisaStatusService
+                .getLifetime(state)
+                .humanize();
             text = [
                 `Lisa died ${timeSinceDeathLabel} ago, and was alive for ${lifetimeLabel}.`,
                 `She was killed by ${state.death.byUser} through ${state.death.cause}.`
@@ -50,15 +53,14 @@ let LisaTextService = class LisaTextService {
         return "close to dying.";
     }
     createScoreText(state) {
-        const lifetimeLabel = this.humanizeDuration(this.lisaStatusService.getLifetime(state));
-        const highScoreLabel = this.humanizeDuration(state.highScore);
+        const lifetimeLabel = this.lisaStatusService
+            .getLifetime(state)
+            .humanize();
+        const highScoreLabel = state.bestLifetime.humanize();
         const currentLabel = this.lisaStatusService.isAlive(state)
             ? "Current lifetime"
             : "Lifetime";
         return `${currentLabel}: ${lifetimeLabel} | Best lifetime: ${highScoreLabel}.`;
-    }
-    humanizeDuration(durationMs) {
-        return moment.duration(durationMs).humanize();
     }
 };
 LisaTextService = __decorate([

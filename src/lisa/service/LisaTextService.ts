@@ -1,5 +1,4 @@
 import { DefaultBootstrappings, Injectable } from "chevronjs";
-import * as moment from "moment";
 import { chevron } from "../../chevron";
 import { LisaState } from "../LisaState";
 import { LisaStatusService } from "./LisaStatusService";
@@ -17,12 +16,12 @@ class LisaTextService {
         let text: string[];
 
         if (!this.lisaStatusService.isAlive(state)) {
-            const timeSinceDeathLabel = this.humanizeDuration(
-                this.lisaStatusService.getTimeSinceDeath(state)!
-            );
-            const lifetimeLabel = this.humanizeDuration(
-                this.lisaStatusService.getLifetime(state)
-            );
+            const timeSinceDeathLabel = this.lisaStatusService
+                .getTimeSinceDeath(state)!
+                .humanize();
+            const lifetimeLabel = this.lisaStatusService
+                .getLifetime(state)
+                .humanize();
 
             text = [
                 `Lisa died ${timeSinceDeathLabel} ago, and was alive for ${lifetimeLabel}.`,
@@ -55,19 +54,15 @@ class LisaTextService {
     }
 
     private createScoreText(state: LisaState): string {
-        const lifetimeLabel = this.humanizeDuration(
-            this.lisaStatusService.getLifetime(state)
-        );
-        const highScoreLabel = this.humanizeDuration(state.highScore);
+        const lifetimeLabel = this.lisaStatusService
+            .getLifetime(state)
+            .humanize();
+        const highScoreLabel = state.bestLifetime.humanize();
         const currentLabel = this.lisaStatusService.isAlive(state)
             ? "Current lifetime"
             : "Lifetime";
 
         return `${currentLabel}: ${lifetimeLabel} | Best lifetime: ${highScoreLabel}.`;
-    }
-
-    private humanizeDuration(durationMs: number): string {
-        return moment.duration(durationMs).humanize();
     }
 }
 

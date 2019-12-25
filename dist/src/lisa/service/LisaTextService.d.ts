@@ -6,6 +6,5 @@ declare class LisaTextService {
     createStatusText(state: LisaState): string;
     createStatusLabel(state: LisaState): string;
     private createScoreText;
-    private humanizeDuration;
 }
 export { LisaTextService };

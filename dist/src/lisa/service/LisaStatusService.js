@@ -11,6 +11,7 @@ const chevronjs_1 = require("chevronjs");
 const chevron_1 = require("../../chevron");
 const logger_1 = require("../../logger");
 const LisaState_1 = require("../LisaState");
+const moment = require("moment");
 let LisaStatusService = LisaStatusService_1 = class LisaStatusService {
     isAlive(state) {
         return state.death.time == null;
@@ -19,10 +20,10 @@ let LisaStatusService = LisaStatusService_1 = class LisaStatusService {
         const birth = state.life.time.getTime();
         if (!this.isAlive(state)) {
             const death = state.death.time.getTime();
-            return death - birth;
+            return moment.duration(death - birth);
         }
         const now = Date.now();
-        return now - birth;
+        return moment.duration(now - birth);
     }
     getTimeSinceDeath(state) {
         if (this.isAlive(state)) {
@@ -30,7 +31,7 @@ let LisaStatusService = LisaStatusService_1 = class LisaStatusService {
         }
         const death = state.death.time.getTime();
         const now = Date.now();
-        return now - death;
+        return moment.duration(death - now);
     }
     /**
      * Returns an relative index from 0 to 1 how well lisa is doing, where 1 is the best and 0 the worst.

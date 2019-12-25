@@ -1,6 +1,7 @@
 import { DefaultBootstrappings, Injectable } from "chevronjs";
 import { pathExists, readJSON, writeJSON } from "fs-extra";
 import { cloneDeep } from "lodash";
+import { duration } from "moment";
 import { chevron } from "../../chevron";
 import { LisaDeathCause, LisaState } from "../LisaState";
 
@@ -18,7 +19,7 @@ interface JsonLisaState {
         byUser: string | null;
         cause: LisaDeathCause | null;
     };
-    highScore: number;
+    bestLifetime: number;
 }
 
 @Injectable(chevron, { bootstrapping: DefaultBootstrappings.CLASS })
@@ -47,6 +48,7 @@ class LisaStorageService {
         if (state.death.time != null) {
             state.death.time = new Date(state.death.time);
         }
+        state.bestLifetime = duration(state.bestLifetime);
         return state;
     }
 
@@ -58,6 +60,7 @@ class LisaStorageService {
         if (storedState.death.time != null) {
             storedState.death.time = storedState.death.time.getTime();
         }
+        storedState.bestLifetime = state.bestLifetime.asMilliseconds();
         return storedState;
     }
 }

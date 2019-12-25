@@ -49,9 +49,7 @@ let LisaDiscordClient = class LisaDiscordClient {
             InviteCommand_1.InviteCommand,
             ServersCommand_1.ServersCommand
         ]);
-        this.commandoClient.registry.registerCommands([
-            StatusCommand_1.StatusCommand,
-        ]);
+        this.commandoClient.registry.registerCommands([StatusCommand_1.StatusCommand]);
     }
     async login(token) {
         if (this.commandoClient == null) {

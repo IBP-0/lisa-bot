@@ -1,4 +1,5 @@
 import { DefaultBootstrappings, Injectable } from "chevronjs";
+import { duration, Duration } from "moment";
 import { chevron } from "../../chevron";
 import { rootLogger } from "../../logger";
 import { HAPPINESS_INITIAL, LisaState, WATER_INITIAL } from "../LisaState";
@@ -13,26 +14,26 @@ class LisaStatusService {
         return state.death.time == null;
     }
 
-    public getLifetime(state: LisaState): number {
+    public getLifetime(state: LisaState): Duration {
         const birth = state.life.time.getTime();
 
         if (!this.isAlive(state)) {
             const death = state.death.time!.getTime();
-            return death - birth;
+            return duration(death - birth);
         }
 
         const now = Date.now();
-        return now - birth;
+        return duration(now - birth);
     }
 
-    public getTimeSinceDeath(state: LisaState): number | null {
+    public getTimeSinceDeath(state: LisaState): Duration | null {
         if (this.isAlive(state)) {
             return null;
         }
 
         const death = state.death.time!.getTime();
         const now = Date.now();
-        return now - death;
+        return duration(death - now);
     }
 
     /**

@@ -1,5 +1,6 @@
 import { DefaultBootstrappings, Injectable } from "chevronjs";
 import { cloneDeep } from "lodash";
+import { duration } from "moment";
 import { Subject } from "rxjs";
 import { chevron } from "../chevron";
 import { rootLogger } from "../logger";
@@ -18,10 +19,10 @@ import { LisaStatusService } from "./service/LisaStatusService";
 
 const createNewLisaState = (
     createdByUser: string,
-    highScore = 0
+    bestLifetime = duration(0)
 ): LisaState => {
     return {
-        highScore,
+        bestLifetime,
         status: {
             water: WATER_INITIAL,
             happiness: HAPPINESS_INITIAL
@@ -77,7 +78,7 @@ class LisaStateController {
     public replantLisa(byUser: string = USER_SYSTEM): void {
         LisaStateController.logger.debug(`'${byUser}' replanted lisa.`);
 
-        this.state = createNewLisaState(byUser, this.state.highScore);
+        this.state = createNewLisaState(byUser, this.state.bestLifetime);
         this.stateChanged(byUser);
     }
 
@@ -156,11 +157,11 @@ class LisaStateController {
         const lifetime = this.lisaStatusService.getLifetime(
             this.getStateCopy()
         );
-        if (lifetime > this.state.highScore) {
+        if (lifetime > this.state.bestLifetime) {
             LisaStateController.logger.debug(
-                `Increasing high score from ${this.state.highScore} to ${lifetime}.`
+                `Increasing high score from ${this.state.bestLifetime} to ${lifetime}.`
             );
-            this.state.highScore = lifetime;
+            this.state.bestLifetime = lifetime;
         }
     }
 }
