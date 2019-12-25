@@ -1,11 +1,14 @@
 import { DefaultBootstrappings, Injectable } from "chevronjs";
 import { chevron } from "../../chevron";
-import { HAPPINESS_MAX, LisaState, WATER_MAX } from "../LisaState";
-
-const FACTOR = (WATER_MAX + HAPPINESS_MAX) / 2;
+import { rootLogger } from "../../logger";
+import { HAPPINESS_INITIAL, LisaState, WATER_INITIAL } from "../LisaState";
 
 @Injectable(chevron, { bootstrapping: DefaultBootstrappings.CLASS })
 class LisaStatusService {
+    private static readonly logger = rootLogger.child({
+        target: LisaStatusService
+    });
+
     public isAlive(state: LisaState): boolean {
         return state.death.time == null;
     }
@@ -33,15 +36,24 @@ class LisaStatusService {
     }
 
     /**
-     * Returns an relative index how well lisa is doing.
+     * Returns an relative index from 0 to 1 how well lisa is doing, where 1 is the best and 0 the worst.
      *
      * @return relative index.
      */
-    public getRelativeIndex(state: LisaState): number {
-        const relWater = state.status.water / WATER_MAX;
-        const relHappiness = state.status.happiness / HAPPINESS_MAX;
+    public calculateRelativeIndex(state: LisaState): number {
+        let relativeWater = state.status.water / WATER_INITIAL;
+        if (relativeWater > 1) {
+            relativeWater = 1;
+        }
+        const relativeHappiness = state.status.happiness / HAPPINESS_INITIAL;
 
-        return relWater * relHappiness * FACTOR;
+        const relativeIndex = (relativeWater + relativeHappiness) / 2;
+        LisaStatusService.logger.debug(
+            `Calculated relative index ${relativeIndex.toFixed(2)} for water ${
+                state.status.water
+            } and happiness ${state.status.happiness}.`
+        );
+        return relativeIndex;
     }
 }
 

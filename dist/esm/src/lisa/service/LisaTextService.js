@@ -10,8 +10,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 import { DefaultBootstrappings, Injectable } from "chevronjs";
 import { chevron } from "../../chevron";
 import { LisaStatusService } from "./LisaStatusService";
-const RELATIVE_STATE_GOOD = 90;
-const RELATIVE_STATE_OK = 40;
 let LisaTextService = class LisaTextService {
     constructor(lisaStatusService) {
         this.lisaStatusService = lisaStatusService;
@@ -20,11 +18,11 @@ let LisaTextService = class LisaTextService {
         if (!this.lisaStatusService.isAlive(state)) {
             return "is dead.";
         }
-        const relativeState = this.lisaStatusService.getRelativeIndex(state);
-        if (relativeState > RELATIVE_STATE_GOOD) {
+        const relativeIndex = this.lisaStatusService.getRelativeIndex(state);
+        if (relativeIndex > 0.666) {
             return "doing great.";
         }
-        if (relativeState > RELATIVE_STATE_OK) {
+        else if (relativeIndex > 0.333) {
             return "doing fine.";
         }
         return "close to dying.";
