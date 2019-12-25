@@ -10,8 +10,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const chevronjs_1 = require("chevronjs");
 const fs_extra_1 = require("fs-extra");
 const lodash_1 = require("lodash");
+const moment_1 = require("moment");
 const chevron_1 = require("../../chevron");
-const moment = require("moment");
 let LisaStorageService = LisaStorageService_1 = class LisaStorageService {
     async hasStoredState() {
         return fs_extra_1.pathExists(LisaStorageService_1.STORAGE_PATH);
@@ -32,7 +32,7 @@ let LisaStorageService = LisaStorageService_1 = class LisaStorageService {
         if (state.death.time != null) {
             state.death.time = new Date(state.death.time);
         }
-        state.bestLifetime = moment.duration(state.bestLifetime);
+        state.bestLifetime = moment_1.duration(state.bestLifetime);
         return state;
     }
     toJson(state) {

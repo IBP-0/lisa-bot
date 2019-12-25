@@ -8,10 +8,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var LisaStatusService_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 const chevronjs_1 = require("chevronjs");
+const moment_1 = require("moment");
 const chevron_1 = require("../../chevron");
 const logger_1 = require("../../logger");
 const LisaState_1 = require("../LisaState");
-const moment = require("moment");
 let LisaStatusService = LisaStatusService_1 = class LisaStatusService {
     isAlive(state) {
         return state.death.time == null;
@@ -20,10 +20,10 @@ let LisaStatusService = LisaStatusService_1 = class LisaStatusService {
         const birth = state.life.time.getTime();
         if (!this.isAlive(state)) {
             const death = state.death.time.getTime();
-            return moment.duration(death - birth);
+            return moment_1.duration(death - birth);
         }
         const now = Date.now();
-        return moment.duration(now - birth);
+        return moment_1.duration(now - birth);
     }
     getTimeSinceDeath(state) {
         if (this.isAlive(state)) {
@@ -31,7 +31,7 @@ let LisaStatusService = LisaStatusService_1 = class LisaStatusService {
         }
         const death = state.death.time.getTime();
         const now = Date.now();
-        return moment.duration(death - now);
+        return moment_1.duration(death - now);
     }
     /**
      * Returns an relative index from 0 to 1 how well lisa is doing, where 1 is the best and 0 the worst.

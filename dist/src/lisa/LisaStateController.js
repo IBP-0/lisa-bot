@@ -12,13 +12,13 @@ var LisaStateController_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 const chevronjs_1 = require("chevronjs");
 const lodash_1 = require("lodash");
+const moment_1 = require("moment");
 const rxjs_1 = require("rxjs");
 const chevron_1 = require("../chevron");
 const logger_1 = require("../logger");
 const LisaState_1 = require("./LisaState");
 const LisaStatusService_1 = require("./service/LisaStatusService");
-const moment = require("moment");
-const createNewLisaState = (createdByUser, bestLifetime = moment.duration(0)) => {
+const createNewLisaState = (createdByUser, bestLifetime = moment_1.duration(0)) => {
     return {
         bestLifetime,
         status: {

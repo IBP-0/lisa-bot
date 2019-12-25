@@ -1,3 +1,2 @@
-import * as winston from "winston";
-declare const rootLogger: winston.Logger;
+declare const rootLogger: import("winston").Logger;
 export { rootLogger };

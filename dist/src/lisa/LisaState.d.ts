@@ -1,4 +1,4 @@
-import * as moment from "moment";
+import { Duration } from "moment";
 declare const WATER_INITIAL = 100;
 declare const WATER_MIN = 0.1;
 declare const WATER_MAX = 150;
@@ -29,6 +29,6 @@ interface LisaState {
     };
     life: LisaLife;
     death: LisaDeath;
-    bestLifetime: moment.Duration;
+    bestLifetime: Duration;
 }
 export { LisaState, LisaDeathCause, WATER_INITIAL, WATER_MIN, WATER_MAX, HAPPINESS_INITIAL, HAPPINESS_MIN, HAPPINESS_MAX, USER_SYSTEM };

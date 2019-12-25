@@ -1,22 +1,22 @@
-import * as winston from "winston";
+import { createLogger, format, transports } from "winston";
 import { isProductionMode } from "./mode";
 
-const logFormat = winston.format.combine(
-    winston.format.timestamp(),
-    winston.format.printf(
+const logFormat = format.combine(
+    format.timestamp(),
+    format.printf(
         ({ level, message, timestamp }) => `${timestamp} [${level}]: ${message}`
     )
 );
 
-const rootLogger = winston.createLogger({
+const rootLogger = createLogger({
     level: isProductionMode() ? "info" : "silly",
     format: logFormat,
     defaultMeta: { target: "root" },
-    transports: [new winston.transports.File({ filename: "log/lisa-bot.log" })]
+    transports: [new transports.File({ filename: "log/lisa-bot.log" })]
 });
 
 if (!isProductionMode()) {
-    rootLogger.add(new winston.transports.Console());
+    rootLogger.add(new transports.Console());
 }
 
 export { rootLogger };
