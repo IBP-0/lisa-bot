@@ -7,8 +7,6 @@ import { LisaTextService } from "../../lisa/service/LisaTextService";
 import { rootLogger } from "../../logger";
 import { LisaDiscordClient } from "./LisaDiscordClient";
 
-const USER_DISCORD_ACTIVITY = "Discord activity";
-
 const createPresence = (name: string): PresenceData => {
     return {
         game: {
@@ -28,6 +26,7 @@ class LisaDiscordEventController {
     private static readonly PRESENCE_UPDATE_THROTTLE_TIMEOUT = 10000;
     private static readonly MESSAGE_THROTTLE_TIMEOUT = 1000;
     private static readonly MESSAGE_HAPPINESS_MODIFIER = 0.25;
+    private static readonly USER_DISCORD_ACTIVITY = "Discord activity";
 
     constructor(
         private readonly lisaStateController: LisaStateController,
@@ -63,7 +62,7 @@ class LisaDiscordEventController {
         this.lisaStateController.modifyStatus(
             0,
             LisaDiscordEventController.MESSAGE_HAPPINESS_MODIFIER,
-            USER_DISCORD_ACTIVITY
+            LisaDiscordEventController.USER_DISCORD_ACTIVITY
         );
     }
 

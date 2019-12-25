@@ -5,8 +5,6 @@ import { rootLogger } from "../logger";
 import { LisaStateController } from "./LisaStateController";
 import Timer = NodeJS.Timer;
 
-const USER_TICK = "Time";
-
 @Injectable(chevron, {
     bootstrapping: DefaultBootstrappings.CLASS,
     dependencies: [LisaStateController]
@@ -19,6 +17,7 @@ class LisaTimer {
     private static readonly TIMEOUT = 60000;
     private static readonly WATER_MODIFIER = -0.5;
     private static readonly HAPPINESS_MODIFIER = -0.75;
+    private static readonly USER_TICK = "Time";
 
     private timer: Timer | null;
 
@@ -39,7 +38,7 @@ class LisaTimer {
         this.lisaStateController.modifyStatus(
             LisaTimer.WATER_MODIFIER,
             LisaTimer.HAPPINESS_MODIFIER,
-            USER_TICK
+            LisaTimer.USER_TICK
         );
     }
 }

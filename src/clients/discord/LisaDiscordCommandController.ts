@@ -20,8 +20,7 @@ class LisaDiscordCommandController {
         private readonly lisaStateController: LisaStateController,
         private readonly lisaStatusService: LisaStatusService,
         private readonly lisaTextService: LisaTextService
-    ) {
-    }
+    ) {}
 
     public performAction(
         author: User,

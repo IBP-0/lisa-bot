@@ -22,7 +22,7 @@ class BaaCommand extends discord_js_commando_1.Command {
         this.lisaDiscordCommandController = chevron_1.chevron.getInjectableInstance(LisaDiscordCommandController_1.LisaDiscordCommandController);
     }
     run(message) {
-        return message.say(this.lisaDiscordCommandController.performAction(message, 0, 30, GOAT_IDS, ["Baa", "Baa~", "Baaaaaaa ^w^", ":goat:"], ["Baa? a dead Lisa..."], ["You're not a goat uwu"]));
+        return message.say(this.lisaDiscordCommandController.performAction(message.author, 0, 30, GOAT_IDS, ["Baa", "Baa~", "Baaaaaaa ^w^", ":goat:"], ["Baa? a dead Lisa..."], ["You're not a goat uwu"]));
     }
 }
 exports.BaaCommand = BaaCommand;

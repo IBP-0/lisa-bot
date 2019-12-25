@@ -23,18 +23,21 @@ let LisaDiscordCommandController = LisaDiscordCommandController_1 = class LisaDi
         this.lisaStatusService = lisaStatusService;
         this.lisaTextService = lisaTextService;
     }
-    performAction(message, waterModifier, happinessModifier, allowedIds, textSuccess, textDead, textNotAllowed = []) {
-        if (allowedIds != null && !allowedIds.includes(message.author.id)) {
+    performAction(author, waterModifier, happinessModifier, allowedIds, textSuccess, textDead, textNotAllowed = []) {
+        if (allowedIds != null && !allowedIds.includes(author.id)) {
             return lodash_1.sample(textNotAllowed);
         }
         if (!this.lisaStatusService.isAlive(this.lisaStateController.getStateCopy())) {
             return lodash_1.sample(textDead);
         }
-        this.lisaStateController.modifyStatus(waterModifier, happinessModifier);
+        this.lisaStateController.modifyStatus(waterModifier, happinessModifier, this.getFullUserName(author));
         return [lodash_1.sample(textSuccess), this.createStatusText()].join("\n");
     }
     createStatusText() {
         return this.lisaTextService.createStatusText(this.lisaStateController.getStateCopy());
+    }
+    getFullUserName(user) {
+        return `${user.username}#${user.discriminator}`;
     }
 };
 LisaDiscordCommandController.logger = logger_1.rootLogger.child({

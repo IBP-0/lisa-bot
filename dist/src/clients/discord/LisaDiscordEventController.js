@@ -17,7 +17,6 @@ const LisaStateController_1 = require("../../lisa/LisaStateController");
 const LisaTextService_1 = require("../../lisa/service/LisaTextService");
 const logger_1 = require("../../logger");
 const LisaDiscordClient_1 = require("./LisaDiscordClient");
-const USER_DISCORD_ACTIVITY = "Discord activity";
 const createPresence = (name) => {
     return {
         game: {
@@ -43,7 +42,7 @@ let LisaDiscordEventController = LisaDiscordEventController_1 = class LisaDiscor
     }
     onMessage() {
         LisaDiscordEventController_1.logger.silly("A message was sent, increasing happiness.");
-        this.lisaStateController.modifyStatus(0, LisaDiscordEventController_1.MESSAGE_HAPPINESS_MODIFIER, USER_DISCORD_ACTIVITY);
+        this.lisaStateController.modifyStatus(0, LisaDiscordEventController_1.MESSAGE_HAPPINESS_MODIFIER, LisaDiscordEventController_1.USER_DISCORD_ACTIVITY);
     }
     onStateChange() {
         const statusLabel = this.lisaTextService.createStatusLabel(this.lisaStateController.getStateCopy());
@@ -60,6 +59,7 @@ LisaDiscordEventController.logger = logger_1.rootLogger.child({
 LisaDiscordEventController.PRESENCE_UPDATE_THROTTLE_TIMEOUT = 10000;
 LisaDiscordEventController.MESSAGE_THROTTLE_TIMEOUT = 1000;
 LisaDiscordEventController.MESSAGE_HAPPINESS_MODIFIER = 0.25;
+LisaDiscordEventController.USER_DISCORD_ACTIVITY = "Discord activity";
 LisaDiscordEventController = LisaDiscordEventController_1 = __decorate([
     chevronjs_1.Injectable(chevron_1.chevron, {
         bootstrapping: chevronjs_1.DefaultBootstrappings.CLASS,
