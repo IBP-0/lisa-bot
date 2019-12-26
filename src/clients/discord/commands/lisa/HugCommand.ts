@@ -3,16 +3,16 @@ import { Command, CommandoClient, CommandoMessage } from "discord.js-commando";
 import { chevron } from "../../../../chevron";
 import { LisaDiscordCommandController } from "../../LisaDiscordCommandController";
 
-class StatusCommand extends Command {
+class HugCommand extends Command {
     private readonly lisaDiscordCommandController: LisaDiscordCommandController;
 
     constructor(client: CommandoClient) {
         super(client, {
-            name: "status",
-            aliases: [],
+            name: "hug",
+            aliases: ["huggu"],
             group: "lisa",
-            memberName: "status",
-            description: "Shows the status of Lisa."
+            memberName: "hug",
+            description: "Hug Lisa."
         });
         this.lisaDiscordCommandController = chevron.getInjectableInstance(
             LisaDiscordCommandController
@@ -21,9 +21,16 @@ class StatusCommand extends Command {
 
     run(message: CommandoMessage): Promise<Message | Message[]> {
         return message.say(
-            this.lisaDiscordCommandController.createStatusText()
+            this.lisaDiscordCommandController.performAction(
+                message.author,
+                0,
+                20,
+                null,
+                ["_Is hugged_.", "_hug_"],
+                ["It's too late to hug poor Lisa..."]
+            )
         );
     }
 }
 
-export { StatusCommand };
+export { HugCommand };

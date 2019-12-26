@@ -7,7 +7,13 @@ import { AboutCommand } from "./commands/core/AboutCommand";
 import { InviteCommand } from "./commands/core/InviteCommand";
 import { ServersCommand } from "./commands/core/ServersCommand";
 import { BaaCommand } from "./commands/lisa/BaaCommand";
+import { HugCommand } from "./commands/lisa/HugCommand";
+import { JokeCommand } from "./commands/lisa/JokeCommand";
+import { MissyCommand } from "./commands/lisa/MissyCommand";
+import { NiklasCommand } from "./commands/lisa/NiklasCommand";
+import { PunchCommand } from "./commands/lisa/PunchCommand";
 import { StatusCommand } from "./commands/lisa/StatusCommand";
+import { WaterCommand } from "./commands/lisa/WaterCommand";
 
 const createUninitializedClientError = (): TypeError =>
     new TypeError("Client has not been initialized.");
@@ -58,7 +64,15 @@ class LisaDiscordClient {
             ServersCommand,
 
             StatusCommand,
-            BaaCommand
+
+            PunchCommand,
+            WaterCommand,
+            HugCommand,
+            JokeCommand,
+
+            BaaCommand,
+            MissyCommand,
+            NiklasCommand
         ]);
     }
 

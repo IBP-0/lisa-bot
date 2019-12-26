@@ -3,16 +3,16 @@ import { Command, CommandoClient, CommandoMessage } from "discord.js-commando";
 import { chevron } from "../../../../chevron";
 import { LisaDiscordCommandController } from "../../LisaDiscordCommandController";
 
-class StatusCommand extends Command {
+class WaterCommand extends Command {
     private readonly lisaDiscordCommandController: LisaDiscordCommandController;
 
     constructor(client: CommandoClient) {
         super(client, {
-            name: "status",
+            name: "water",
             aliases: [],
             group: "lisa",
-            memberName: "status",
-            description: "Shows the status of Lisa."
+            memberName: "water",
+            description: "Water Lisa."
         });
         this.lisaDiscordCommandController = chevron.getInjectableInstance(
             LisaDiscordCommandController
@@ -21,9 +21,21 @@ class StatusCommand extends Command {
 
     run(message: CommandoMessage): Promise<Message | Message[]> {
         return message.say(
-            this.lisaDiscordCommandController.createStatusText()
+            this.lisaDiscordCommandController.performAction(
+                message.author,
+                25,
+                0,
+                null,
+                [
+                    "_Is being watered_",
+                    "_Water splashes._",
+                    "_Watering noises._",
+                    "_You hear Lisa sucking up the water._"
+                ],
+                ["It's too late to water poor Lisa..."]
+            )
         );
     }
 }
 
-export { StatusCommand };
+export { WaterCommand };

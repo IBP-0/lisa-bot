@@ -1,5 +1,5 @@
 import { Message } from "discord.js";
-import { Command, CommandoMessage, CommandoClient } from "discord.js-commando";
+import { Command, CommandoClient, CommandoMessage } from "discord.js-commando";
 import { chevron } from "../../../../chevron";
 import { LisaDiscordCommandController } from "../../LisaDiscordCommandController";
 
@@ -20,7 +20,8 @@ class BaaCommand extends Command {
             aliases: [],
             group: "lisa",
             memberName: "baa",
-            description: "Baa."
+            description: "Baa.",
+            hidden: true
         });
         this.lisaDiscordCommandController = chevron.getInjectableInstance(
             LisaDiscordCommandController
