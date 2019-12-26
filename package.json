@@ -1,6 +1,7 @@
 {
     "name": "lisa-bot",
     "version": "7.2.1",
+    "private": true,
     "description": "A discord bot with miscellaneous features",
     "main": "./dist/src/main.js",
     "types": "./dist/src/main.d.ts",
@@ -26,8 +27,8 @@
     "homepage": "https://github.com/FelixRilling/lisa-bot",
     "author": {
         "name": "Felix Rilling",
-        "email": "contact@f-rilling.com",
-        "url": "https://f-rilling.com"
+        "email": "contact@rilling.dev",
+        "url": "https://rilling.dev"
     },
     "repository": "https://github.com/FelixRilling/lisa-bot",
     "license": "MIT",

@@ -1,6 +1,6 @@
 # Lisa
 
-A discord bot with miscellaneous features
+A discord bot with miscellaneous features.
 
 ## Introduction
 
@@ -16,9 +16,7 @@ go to <https://discordapp.com/oauth2/authorize?&client_id=269802184571486218&sco
 
 ## Setting up Lisa yourself
 
-After you cloned the repository, running `npm install` from your CLI should install all dependencies.
-
-Then, add your discord API token to the environment variables as `DISCORD_TOKEN`
-
+After you cloned the repository, running `npm ci --prod` from your CLI should install all dependencies.
+Then, add your discord API token to the environment variables as `DISCORD_TOKEN`.
 After you've done that, running `npm run serve` will start the bot.
 
