@@ -17,11 +17,13 @@ const AboutCommand_1 = require("./commands/core/AboutCommand");
 const InviteCommand_1 = require("./commands/core/InviteCommand");
 const ServersCommand_1 = require("./commands/core/ServersCommand");
 const BaaCommand_1 = require("./commands/lisa/BaaCommand");
+const BurnCommand_1 = require("./commands/lisa/BurnCommand");
 const HugCommand_1 = require("./commands/lisa/HugCommand");
 const JokeCommand_1 = require("./commands/lisa/JokeCommand");
 const MissyCommand_1 = require("./commands/lisa/MissyCommand");
 const NiklasCommand_1 = require("./commands/lisa/NiklasCommand");
 const PunchCommand_1 = require("./commands/lisa/PunchCommand");
+const ReplantCommand_1 = require("./commands/lisa/ReplantCommand");
 const StatusCommand_1 = require("./commands/lisa/StatusCommand");
 const WaterCommand_1 = require("./commands/lisa/WaterCommand");
 const createUninitializedClientError = () => new TypeError("Client has not been initialized.");
@@ -59,6 +61,8 @@ let LisaDiscordClient = class LisaDiscordClient {
             InviteCommand_1.InviteCommand,
             ServersCommand_1.ServersCommand,
             StatusCommand_1.StatusCommand,
+            ReplantCommand_1.ReplantCommand,
+            BurnCommand_1.BurnCommand,
             PunchCommand_1.PunchCommand,
             WaterCommand_1.WaterCommand,
             HugCommand_1.HugCommand,

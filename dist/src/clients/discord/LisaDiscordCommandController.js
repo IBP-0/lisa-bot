@@ -23,21 +23,45 @@ let LisaDiscordCommandController = LisaDiscordCommandController_1 = class LisaDi
         this.lisaStatusService = lisaStatusService;
         this.lisaTextService = lisaTextService;
     }
-    performAction(author, waterModifier, happinessModifier, allowedIds, textSuccess, textDead, textNotAllowed = []) {
-        if (allowedIds != null && !allowedIds.includes(author.id)) {
+    performAction(author, waterModifier, happinessModifier, allowedUserIds, textSuccess, textDead, textNotAllowed = []) {
+        if (!this.isUserAllowed(allowedUserIds, author)) {
             return lodash_1.sample(textNotAllowed);
         }
-        if (!this.lisaStatusService.isAlive(this.lisaStateController.getStateCopy())) {
+        if (!this.isAlive()) {
             return lodash_1.sample(textDead);
         }
         this.lisaStateController.modifyLisaStatus(waterModifier, happinessModifier, this.getFullUserName(author));
         return [lodash_1.sample(textSuccess), this.createStatusText()].join("\n");
+    }
+    performKill(author, cause, allowedUserIds, textSuccess, textAlreadyDead, textNotAllowed = []) {
+        if (!this.isUserAllowed(allowedUserIds, author)) {
+            return lodash_1.sample(textNotAllowed);
+        }
+        if (!this.isAlive()) {
+            return lodash_1.sample(textAlreadyDead);
+        }
+        this.lisaStateController.killLisa(cause, this.getFullUserName(author));
+        return lodash_1.sample(textSuccess);
+    }
+    performReplant(author, allowedUserIds, textWasAlive, textWasDead, textNotAllowed = []) {
+        if (!this.isUserAllowed(allowedUserIds, author)) {
+            return lodash_1.sample(textNotAllowed);
+        }
+        const wasAlive = this.isAlive();
+        this.lisaStateController.replantLisa(this.getFullUserName(author));
+        return lodash_1.sample(wasAlive ? textWasAlive : textWasDead);
     }
     createStatusText() {
         return this.lisaTextService.createStatusText(this.lisaStateController.getStateCopy());
     }
     getFullUserName(user) {
         return `${user.username}#${user.discriminator}`;
+    }
+    isAlive() {
+        return this.lisaStatusService.isAlive(this.lisaStateController.getStateCopy());
+    }
+    isUserAllowed(allowedUserIds, author) {
+        return allowedUserIds == null || allowedUserIds.includes(author.id);
     }
 };
 LisaDiscordCommandController.logger = logger_1.rootLogger.child({

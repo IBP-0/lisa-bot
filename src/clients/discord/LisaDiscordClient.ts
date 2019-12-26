@@ -7,11 +7,13 @@ import { AboutCommand } from "./commands/core/AboutCommand";
 import { InviteCommand } from "./commands/core/InviteCommand";
 import { ServersCommand } from "./commands/core/ServersCommand";
 import { BaaCommand } from "./commands/lisa/BaaCommand";
+import { BurnCommand } from "./commands/lisa/BurnCommand";
 import { HugCommand } from "./commands/lisa/HugCommand";
 import { JokeCommand } from "./commands/lisa/JokeCommand";
 import { MissyCommand } from "./commands/lisa/MissyCommand";
 import { NiklasCommand } from "./commands/lisa/NiklasCommand";
 import { PunchCommand } from "./commands/lisa/PunchCommand";
+import { ReplantCommand } from "./commands/lisa/ReplantCommand";
 import { StatusCommand } from "./commands/lisa/StatusCommand";
 import { WaterCommand } from "./commands/lisa/WaterCommand";
 
@@ -64,6 +66,8 @@ class LisaDiscordClient {
             ServersCommand,
 
             StatusCommand,
+            ReplantCommand,
+            BurnCommand,
 
             PunchCommand,
             WaterCommand,
