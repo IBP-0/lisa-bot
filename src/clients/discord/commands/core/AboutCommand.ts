@@ -6,11 +6,11 @@ const IMAGE_LINK =
     "rflrqqy/H9Cnsyji6/tumblr_static_88pgfgk82y4ok80ckowwwwow4.jpg";
 
 const ABOUT_MESSAGE = `Hello!
-I am Lisa, an indoor plant, inspired by Lisa from 'Life is Strange'.
+I am Lisa, an indoor plant inspired by Lisa from 'Life is Strange'.
 <http://dontnodentertainment.wikia.com/wiki/Lisa_the_Plant>
 ----------
 For more information, use \`$help\` or go to <https://github.com/FelixRilling/lisa-bot>.
-If you have questions or want to report a bug, message my creator: NobodyRocks#5051.`;
+If you have questions or want to report a bug, send me a mail at lisa-bot@rilling.dev.`;
 
 class AboutCommand extends Command {
     constructor(client: CommandoClient) {
