@@ -44,7 +44,9 @@ let LisaStatusService = LisaStatusService_1 = class LisaStatusService {
             relativeWater = 1;
         }
         const relativeHappiness = state.status.happiness / LisaState_1.HAPPINESS_INITIAL;
-        const relativeIndex = (relativeWater + relativeHappiness) / 2;
+        const relativeIndex = relativeWater < relativeHappiness
+            ? relativeWater
+            : relativeHappiness;
         LisaStatusService_1.logger.debug(`Calculated relative index ${relativeIndex.toFixed(2)} for water ${state.status.water} and happiness ${state.status.happiness}.`);
         return relativeIndex;
     }
