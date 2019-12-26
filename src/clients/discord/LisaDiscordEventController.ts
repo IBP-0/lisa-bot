@@ -9,7 +9,7 @@ import { LisaDiscordClient } from "./LisaDiscordClient";
 
 const createPresence = (name: string): PresenceData => {
     return {
-        game: {
+        activity: {
             name
         }
     };

@@ -17,7 +17,7 @@ let LisaTextService = class LisaTextService {
         this.lisaStatusService = lisaStatusService;
     }
     createStatusText(state) {
-        const statusLabel = `Lisa is ${this.createStatusLabel(state)}`;
+        const statusLabel = `Lisa is ${this.createStatusLabel(state)}.`;
         const scoreText = this.createScoreText(state);
         let text;
         if (!this.lisaStatusService.isAlive(state)) {
@@ -41,16 +41,16 @@ let LisaTextService = class LisaTextService {
     }
     createStatusLabel(state) {
         if (!this.lisaStatusService.isAlive(state)) {
-            return "is dead.";
+            return "is dead";
         }
         const relativeIndex = this.lisaStatusService.calculateRelativeIndex(state);
         if (relativeIndex > 0.666) {
-            return "doing great.";
+            return "doing great";
         }
         else if (relativeIndex > 0.333) {
-            return "doing fine.";
+            return "doing fine";
         }
-        return "close to dying.";
+        return "close to dying";
     }
     createScoreText(state) {
         const lifetimeLabel = this.lisaStatusService

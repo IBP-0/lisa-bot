@@ -1,5 +1,5 @@
 import { Message } from "discord.js";
-import { Command, CommandMessage, CommandoClient } from "discord.js-commando";
+import { Command, CommandoClient, CommandoMessage } from "discord.js-commando";
 
 const IMAGE_LINK =
     "http://static.tumblr.com/df323b732955715fe3fb5a506999afc7/" +
@@ -23,7 +23,7 @@ class AboutCommand extends Command {
         });
     }
 
-    run(message: CommandMessage): Promise<Message | Message[]> {
+    run(message: CommandoMessage): Promise<Message | Message[]> {
         return message.say(ABOUT_MESSAGE, { files: [IMAGE_LINK] });
     }
 }

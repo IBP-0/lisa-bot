@@ -1,5 +1,5 @@
 import { Message } from "discord.js";
-import { Command, CommandMessage, CommandoClient } from "discord.js-commando";
+import { Command, CommandoMessage, CommandoClient } from "discord.js-commando";
 import { chevron } from "../../../../chevron";
 import { LisaDiscordCommandController } from "../../LisaDiscordCommandController";
 
@@ -27,7 +27,7 @@ class BaaCommand extends Command {
         );
     }
 
-    run(message: CommandMessage): Promise<Message | Message[]> {
+    run(message: CommandoMessage): Promise<Message | Message[]> {
         return message.say(
             this.lisaDiscordCommandController.performAction(
                 message.author,

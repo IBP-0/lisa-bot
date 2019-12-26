@@ -46,10 +46,11 @@ class LisaDiscordClient {
          */
         commandRegistry.registerDefaultCommands({
             help: true,
-            eval_: false,
+            eval: false,
             ping: true,
             prefix: false,
-            commandState: false
+            commandState: false,
+            unknownCommand: false
         });
         commandRegistry.registerCommands([
             AboutCommand,
@@ -72,7 +73,7 @@ class LisaDiscordClient {
         if (this.commandoClient == null) {
             throw createUninitializedClientError();
         }
-        await this.commandoClient.user.setPresence(data);
+        await this.commandoClient.user!.setPresence(data);
     }
 
     public getMessageObservable(): Observable<Message> {

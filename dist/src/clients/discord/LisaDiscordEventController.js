@@ -19,7 +19,7 @@ const logger_1 = require("../../logger");
 const LisaDiscordClient_1 = require("./LisaDiscordClient");
 const createPresence = (name) => {
     return {
-        game: {
+        activity: {
             name
         }
     };
@@ -45,7 +45,7 @@ let LisaDiscordEventController = LisaDiscordEventController_1 = class LisaDiscor
         this.lisaStateController.modifyLisaStatus(0, LisaDiscordEventController_1.MESSAGE_HAPPINESS_MODIFIER, LisaDiscordEventController_1.USER_DISCORD_ACTIVITY);
     }
     onStateChange() {
-        const statusLabel = this.lisaTextService.createStatusLabel(this.lisaStateController.getStateCopy());
+        const statusLabel = `${this.lisaTextService.createStatusLabel(this.lisaStateController.getStateCopy())}.`;
         LisaDiscordEventController_1.logger.debug(`Updating presence to '${statusLabel}'...`);
         this.lisaDiscordClient
             .setPresence(createPresence(statusLabel))

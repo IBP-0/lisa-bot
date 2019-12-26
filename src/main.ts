@@ -50,8 +50,7 @@ const startLisaDiscordClient = async (): Promise<void> => {
 
     lisaDiscordClient.init({
         commandPrefix: "$",
-        owner: "128985967875850240",
-        unknownCommandResponse: false
+        owner: "128985967875850240"
     });
     await lisaDiscordClient.login(discordToken);
 

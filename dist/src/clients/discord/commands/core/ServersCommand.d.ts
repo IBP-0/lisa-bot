@@ -1,8 +1,8 @@
 import { Message } from "discord.js";
-import { Command, CommandMessage, CommandoClient } from "discord.js-commando";
+import { Command, CommandoMessage, CommandoClient } from "discord.js-commando";
 declare class ServersCommand extends Command {
     constructor(client: CommandoClient);
-    run(message: CommandMessage): Promise<Message | Message[]>;
+    run(message: CommandoMessage): Promise<Message | Message[]>;
     private getServers;
 }
 export { ServersCommand };

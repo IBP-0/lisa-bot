@@ -42,10 +42,11 @@ let LisaDiscordClient = class LisaDiscordClient {
          */
         commandRegistry.registerDefaultCommands({
             help: true,
-            eval_: false,
+            eval: false,
             ping: true,
             prefix: false,
-            commandState: false
+            commandState: false,
+            unknownCommand: false
         });
         commandRegistry.registerCommands([
             AboutCommand_1.AboutCommand,

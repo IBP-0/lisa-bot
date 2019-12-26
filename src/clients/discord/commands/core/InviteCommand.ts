@@ -1,5 +1,5 @@
 import { Message } from "discord.js";
-import { Command, CommandMessage, CommandoClient } from "discord.js-commando";
+import { Command, CommandoMessage, CommandoClient } from "discord.js-commando";
 
 const INVITE_MESSAGE = `I'm always happy to join new servers!
 If you want me to join your server, follow this link:
@@ -16,7 +16,7 @@ class InviteCommand extends Command {
         });
     }
 
-    run(message: CommandMessage): Promise<Message | Message[]> {
+    run(message: CommandoMessage): Promise<Message | Message[]> {
         return message.say(INVITE_MESSAGE);
     }
 }
