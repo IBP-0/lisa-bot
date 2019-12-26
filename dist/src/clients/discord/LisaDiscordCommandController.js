@@ -30,7 +30,7 @@ let LisaDiscordCommandController = LisaDiscordCommandController_1 = class LisaDi
         if (!this.lisaStatusService.isAlive(this.lisaStateController.getStateCopy())) {
             return lodash_1.sample(textDead);
         }
-        this.lisaStateController.modifyStatus(waterModifier, happinessModifier, this.getFullUserName(author));
+        this.lisaStateController.modifyLisaStatus(waterModifier, happinessModifier, this.getFullUserName(author));
         return [lodash_1.sample(textSuccess), this.createStatusText()].join("\n");
     }
     createStatusText() {

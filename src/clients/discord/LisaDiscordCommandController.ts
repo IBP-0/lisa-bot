@@ -42,7 +42,7 @@ class LisaDiscordCommandController {
             return sample(textDead)!;
         }
 
-        this.lisaStateController.modifyStatus(
+        this.lisaStateController.modifyLisaStatus(
             waterModifier,
             happinessModifier,
             this.getFullUserName(author)

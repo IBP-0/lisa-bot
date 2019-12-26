@@ -59,7 +59,7 @@ class LisaDiscordEventController {
         LisaDiscordEventController.logger.silly(
             "A message was sent, increasing happiness."
         );
-        this.lisaStateController.modifyStatus(
+        this.lisaStateController.modifyLisaStatus(
             0,
             LisaDiscordEventController.MESSAGE_HAPPINESS_MODIFIER,
             LisaDiscordEventController.USER_DISCORD_ACTIVITY

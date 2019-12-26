@@ -42,7 +42,7 @@ let LisaDiscordEventController = LisaDiscordEventController_1 = class LisaDiscor
     }
     onMessage() {
         LisaDiscordEventController_1.logger.silly("A message was sent, increasing happiness.");
-        this.lisaStateController.modifyStatus(0, LisaDiscordEventController_1.MESSAGE_HAPPINESS_MODIFIER, LisaDiscordEventController_1.USER_DISCORD_ACTIVITY);
+        this.lisaStateController.modifyLisaStatus(0, LisaDiscordEventController_1.MESSAGE_HAPPINESS_MODIFIER, LisaDiscordEventController_1.USER_DISCORD_ACTIVITY);
     }
     onStateChange() {
         const statusLabel = this.lisaTextService.createStatusLabel(this.lisaStateController.getStateCopy());

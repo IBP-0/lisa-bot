@@ -26,7 +26,7 @@ let LisaTimer = LisaTimer_1 = class LisaTimer {
     }
     tick() {
         LisaTimer_1.logger.debug("Performing tick.");
-        this.lisaStateController.modifyStatus(LisaTimer_1.WATER_MODIFIER, LisaTimer_1.HAPPINESS_MODIFIER, LisaTimer_1.USER_TICK);
+        this.lisaStateController.modifyLisaStatus(LisaTimer_1.WATER_MODIFIER, LisaTimer_1.HAPPINESS_MODIFIER, LisaTimer_1.USER_TICK);
     }
 };
 LisaTimer.logger = logger_1.rootLogger.child({

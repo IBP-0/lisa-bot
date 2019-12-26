@@ -21,9 +21,12 @@ declare class LisaStateController {
     load(state: LisaState): void;
     replantLisa(byUser?: string): void;
     killLisa(cause: LisaDeathCause, byUser?: string): void;
-    modifyStatus(waterModifier: number, happinessModifier: number, byUser?: string): void;
-    private stateChanged;
+    modifyLisaStatus(waterModifier: number, happinessModifier: number, byUser?: string): void;
+    private performReplant;
+    private performKill;
+    private performModifyStatus;
     private checkStats;
     private updateHighScoreIfRequired;
+    private stateChanged;
 }
 export { LisaStateController };

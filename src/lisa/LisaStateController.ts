@@ -72,26 +72,25 @@ class LisaStateController {
      */
     public load(state: LisaState): void {
         this.state = state;
-        this.stateChanged(USER_SYSTEM);
+        this.stateChanged();
     }
 
     public replantLisa(byUser: string = USER_SYSTEM): void {
         LisaStateController.logger.debug(`'${byUser}' replanted lisa.`);
 
-        this.state = createNewLisaState(byUser, this.state.bestLifetime);
-        this.stateChanged(byUser);
+        this.performReplant(byUser);
+        this.stateChanged();
     }
 
     public killLisa(cause: LisaDeathCause, byUser: string = USER_SYSTEM): void {
         LisaStateController.logger.debug(
             `'${byUser}' killed lisa by ${cause}.`
         );
+        this.performKill(byUser, cause);
 
-        this.state.death = { time: new Date(), byUser, cause };
-        this.stateChanged(byUser);
+        this.stateChanged();
     }
-
-    public modifyStatus(
+    public modifyLisaStatus(
         waterModifier: number,
         happinessModifier: number,
         byUser: string = USER_SYSTEM
@@ -99,24 +98,35 @@ class LisaStateController {
         LisaStateController.logger.debug(
             `'${byUser}' modified status; water modifier ${waterModifier}, happiness modifier ${happinessModifier}.`
         );
+        this.performModifyStatus(waterModifier, happinessModifier, byUser);
 
-        this.state.status.water += waterModifier;
-        this.state.status.happiness += happinessModifier;
-        this.stateChanged(byUser);
+        this.stateChanged();
     }
 
-    private stateChanged(byUser: string): void {
-        LisaStateController.logger.silly("Lisa state changed.");
-        if (this.lisaStatusService.isAlive(this.getStateCopy())) {
-            // Check stats if alive
-            this.checkStats(byUser);
-            // Check again to see if Lisa was killed through the update.
-            if (!this.lisaStatusService.isAlive(this.getStateCopy())) {
-                this.updateHighScoreIfRequired();
-            }
-        }
+    private performReplant(byUser: string): void {
+        this.state = createNewLisaState(byUser, this.state.bestLifetime);
+    }
 
-        this.stateChangeSubject.next();
+    private performKill(byUser: string, cause: LisaDeathCause): void {
+        this.state.death = { time: new Date(), byUser, cause };
+
+        if (!this.lisaStatusService.isAlive(this.getStateCopy())) {
+            this.updateHighScoreIfRequired();
+        }
+    }
+
+    private performModifyStatus(
+        waterModifier: number,
+        happinessModifier: number,
+        byUser: string
+    ): void {
+        this.state.status.water += waterModifier;
+        this.state.status.happiness += happinessModifier;
+
+        if (this.lisaStatusService.isAlive(this.getStateCopy())) {
+            // Check changed stats
+            this.checkStats(byUser);
+        }
     }
 
     private checkStats(byUser: string): void {
@@ -159,6 +169,12 @@ class LisaStateController {
             );
             this.state.bestLifetime = lifetime;
         }
+    }
+
+    private stateChanged(): void {
+        LisaStateController.logger.silly("Lisa state changed.");
+
+        this.stateChangeSubject.next();
     }
 }
 

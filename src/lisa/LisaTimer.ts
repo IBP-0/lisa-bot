@@ -35,7 +35,7 @@ class LisaTimer {
     private tick(): void {
         LisaTimer.logger.debug("Performing tick.");
 
-        this.lisaStateController.modifyStatus(
+        this.lisaStateController.modifyLisaStatus(
             LisaTimer.WATER_MODIFIER,
             LisaTimer.HAPPINESS_MODIFIER,
             LisaTimer.USER_TICK
