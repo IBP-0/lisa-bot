@@ -67,9 +67,9 @@ class LisaDiscordEventController {
     }
 
     private onStateChange(): void {
-        const statusLabel = this.lisaTextService.createStatusLabel(
+        const statusLabel = `${this.lisaTextService.createStatusLabel(
             this.lisaStateController.getStateCopy()
-        );
+        )}.`;
         LisaDiscordEventController.logger.debug(
             `Updating presence to '${statusLabel}'...`
         );
