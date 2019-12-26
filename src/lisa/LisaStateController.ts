@@ -66,7 +66,7 @@ class LisaStateController {
     }
 
     /**
-     * Only used for loading od persisted data, do not use for regular state changes.
+     * Only used for loading persisted data, do not use for regular state changes.
      *
      * @param state State to load.
      */
@@ -90,6 +90,7 @@ class LisaStateController {
 
         this.stateChanged();
     }
+
     public modifyLisaStatus(
         waterModifier: number,
         happinessModifier: number,

@@ -6,17 +6,12 @@ import { LisaDeathCause } from "../../lisa/LisaState";
 import { LisaStateController } from "../../lisa/LisaStateController";
 import { LisaStatusService } from "../../lisa/service/LisaStatusService";
 import { LisaTextService } from "../../lisa/service/LisaTextService";
-import { rootLogger } from "../../logger";
 
 @Injectable(chevron, {
     bootstrapping: DefaultBootstrappings.CLASS,
     dependencies: [LisaStateController, LisaStatusService, LisaTextService]
 })
 class LisaDiscordCommandController {
-    private static readonly logger = rootLogger.child({
-        target: LisaDiscordCommandController
-    });
-
     constructor(
         private readonly lisaStateController: LisaStateController,
         private readonly lisaStatusService: LisaStatusService,

@@ -14,7 +14,7 @@ declare class LisaStateController {
      */
     getStateCopy(): LisaState;
     /**
-     * Only used for loading od persisted data, do not use for regular state changes.
+     * Only used for loading persisted data, do not use for regular state changes.
      *
      * @param state State to load.
      */

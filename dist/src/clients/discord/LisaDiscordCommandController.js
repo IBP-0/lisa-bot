@@ -8,7 +8,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var LisaDiscordCommandController_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 const chevronjs_1 = require("chevronjs");
 const lodash_1 = require("lodash");
@@ -16,8 +15,7 @@ const chevron_1 = require("../../chevron");
 const LisaStateController_1 = require("../../lisa/LisaStateController");
 const LisaStatusService_1 = require("../../lisa/service/LisaStatusService");
 const LisaTextService_1 = require("../../lisa/service/LisaTextService");
-const logger_1 = require("../../logger");
-let LisaDiscordCommandController = LisaDiscordCommandController_1 = class LisaDiscordCommandController {
+let LisaDiscordCommandController = class LisaDiscordCommandController {
     constructor(lisaStateController, lisaStatusService, lisaTextService) {
         this.lisaStateController = lisaStateController;
         this.lisaStatusService = lisaStatusService;
@@ -64,10 +62,7 @@ let LisaDiscordCommandController = LisaDiscordCommandController_1 = class LisaDi
         return allowedUserIds == null || allowedUserIds.includes(author.id);
     }
 };
-LisaDiscordCommandController.logger = logger_1.rootLogger.child({
-    target: LisaDiscordCommandController_1
-});
-LisaDiscordCommandController = LisaDiscordCommandController_1 = __decorate([
+LisaDiscordCommandController = __decorate([
     chevronjs_1.Injectable(chevron_1.chevron, {
         bootstrapping: chevronjs_1.DefaultBootstrappings.CLASS,
         dependencies: [LisaStateController_1.LisaStateController, LisaStatusService_1.LisaStatusService, LisaTextService_1.LisaTextService]

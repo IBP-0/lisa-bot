@@ -7,7 +7,6 @@ declare class LisaDiscordCommandController {
     private readonly lisaStateController;
     private readonly lisaStatusService;
     private readonly lisaTextService;
-    private static readonly logger;
     constructor(lisaStateController: LisaStateController, lisaStatusService: LisaStatusService, lisaTextService: LisaTextService);
     performAction(author: User, waterModifier: number, happinessModifier: number, allowedUserIds: string[] | null, textSuccess: string[], textDead: string[], textNotAllowed?: string[]): string;
     performKill(author: User, cause: LisaDeathCause, allowedUserIds: string[] | null, textSuccess: string[], textAlreadyDead: string[], textNotAllowed?: string[]): string;

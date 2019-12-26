@@ -51,7 +51,7 @@ let LisaStateController = LisaStateController_1 = class LisaStateController {
         return lodash_1.cloneDeep(this.state);
     }
     /**
-     * Only used for loading od persisted data, do not use for regular state changes.
+     * Only used for loading persisted data, do not use for regular state changes.
      *
      * @param state State to load.
      */
