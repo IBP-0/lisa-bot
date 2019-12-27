@@ -1,7 +1,7 @@
 import { DefaultBootstrappings, Injectable } from "chevronjs";
 import { cloneDeep } from "lodash";
 import { duration } from "moment";
-import { Subject } from "rxjs";
+import { interval, Subject } from "rxjs";
 import { chevron } from "../chevron";
 import { rootLogger } from "../logger";
 import {
@@ -48,12 +48,18 @@ class LisaStateController {
         target: LisaStateController
     });
 
+    private static readonly BEST_LIFETIME_CHECK_TIMEOUT = 5000;
+
     public readonly stateChangeSubject: Subject<void>;
     private state: LisaState;
 
     constructor(private readonly lisaStatusService: LisaStatusService) {
         this.state = createNewLisaState(USER_SYSTEM);
         this.stateChangeSubject = new Subject<void>();
+
+        interval(
+            LisaStateController.BEST_LIFETIME_CHECK_TIMEOUT
+        ).subscribe(() => this.updateBestLifetimeIfRequired());
     }
 
     /**
@@ -93,7 +99,7 @@ class LisaStateController {
         LisaStateController.logger.debug(
             `'${byUser}' killed lisa by ${cause}.`
         );
-        this.performKill(byUser, cause);
+        this.performKill(cause, byUser);
 
         this.stateChanged();
     }
@@ -122,9 +128,8 @@ class LisaStateController {
         this.state = createNewLisaState(byUser, this.state.bestLifetime);
     }
 
-    private performKill(byUser: string, cause: LisaDeathCause): void {
+    private performKill(cause: LisaDeathCause, byUser: string): void {
         this.state.death = { time: new Date(), byUser, cause };
-        this.updateBestLifetimeIfRequired();
     }
 
     private performModifyStatus(
@@ -135,7 +140,6 @@ class LisaStateController {
         this.state.status.water += waterModifier;
         this.state.status.happiness += happinessModifier;
 
-        this.updateBestLifetimeIfRequired();
         this.checkStats(byUser);
     }
 
@@ -145,13 +149,13 @@ class LisaStateController {
                 `Water level ${this.state.status.water} is above limit of ${WATER_MAX} -> ${LisaDeathCause.DROWNING}.`
             );
 
-            this.killLisa(LisaDeathCause.DROWNING, byUser);
+            this.performKill(LisaDeathCause.DROWNING, byUser);
         } else if (this.state.status.water < WATER_MIN) {
             LisaStateController.logger.silly(
                 `Water level ${this.state.status.water} is below limit of ${WATER_MIN} -> ${LisaDeathCause.DEHYDRATION}.`
             );
 
-            this.killLisa(LisaDeathCause.DEHYDRATION, byUser);
+            this.performKill(LisaDeathCause.DEHYDRATION, byUser);
         }
 
         if (this.state.status.happiness > HAPPINESS_MAX) {
@@ -165,8 +169,14 @@ class LisaStateController {
                 `Happiness level ${this.state.status.happiness} is below limit of ${HAPPINESS_MIN} -> ${LisaDeathCause.SADNESS}.`
             );
 
-            this.killLisa(LisaDeathCause.SADNESS, byUser);
+            this.performKill(LisaDeathCause.SADNESS, byUser);
         }
+    }
+
+    private stateChanged(): void {
+        LisaStateController.logger.silly("Lisa state changed.");
+
+        this.stateChangeSubject.next();
     }
 
     private updateBestLifetimeIfRequired(): void {
@@ -179,12 +189,6 @@ class LisaStateController {
             );
             this.state.bestLifetime = lifetime;
         }
-    }
-
-    private stateChanged(): void {
-        LisaStateController.logger.silly("Lisa state changed.");
-
-        this.stateChangeSubject.next();
     }
 }
 
