@@ -65,12 +65,20 @@ let LisaStateController = LisaStateController_1 = class LisaStateController {
         this.stateChanged();
     }
     killLisa(cause, byUser = LisaState_1.USER_SYSTEM) {
+        if (!this.lisaStatusService.isAlive(this.getStateCopy())) {
+            LisaStateController_1.logger.silly("Lisa is already dead, skip kill.");
+            return;
+        }
         LisaStateController_1.logger.debug(`'${byUser}' killed lisa by ${cause}.`);
         this.performKill(byUser, cause);
         this.stateChanged();
     }
     modifyLisaStatus(waterModifier, happinessModifier, byUser = LisaState_1.USER_SYSTEM) {
-        LisaStateController_1.logger.debug(`'${byUser}' modified status; water modifier ${waterModifier}, happiness modifier ${happinessModifier}.`);
+        if (!this.lisaStatusService.isAlive(this.getStateCopy())) {
+            LisaStateController_1.logger.silly("Lisa is dead, skip status change.");
+            return;
+        }
+        LisaStateController_1.logger.silly(`'${byUser}' modified status; water modifier ${waterModifier}, happiness modifier ${happinessModifier}.`);
         this.performModifyStatus(waterModifier, happinessModifier, byUser);
         this.stateChanged();
     }
@@ -79,40 +87,36 @@ let LisaStateController = LisaStateController_1 = class LisaStateController {
     }
     performKill(byUser, cause) {
         this.state.death = { time: new Date(), byUser, cause };
-        if (!this.lisaStatusService.isAlive(this.getStateCopy())) {
-            this.updateHighScoreIfRequired();
-        }
+        this.updateBestLifetimeIfRequired();
     }
     performModifyStatus(waterModifier, happinessModifier, byUser) {
         this.state.status.water += waterModifier;
         this.state.status.happiness += happinessModifier;
-        if (this.lisaStatusService.isAlive(this.getStateCopy())) {
-            // Check changed stats
-            this.checkStats(byUser);
-        }
+        this.updateBestLifetimeIfRequired();
+        this.checkStats(byUser);
     }
     checkStats(byUser) {
         if (this.state.status.water > LisaState_1.WATER_MAX) {
-            LisaStateController_1.logger.debug(`Water level ${this.state.status.water} is above limit of ${LisaState_1.WATER_MAX} -> ${LisaState_1.LisaDeathCause.DROWNING}.`);
+            LisaStateController_1.logger.silly(`Water level ${this.state.status.water} is above limit of ${LisaState_1.WATER_MAX} -> ${LisaState_1.LisaDeathCause.DROWNING}.`);
             this.killLisa(LisaState_1.LisaDeathCause.DROWNING, byUser);
         }
         else if (this.state.status.water < LisaState_1.WATER_MIN) {
-            LisaStateController_1.logger.debug(`Water level ${this.state.status.water} is below limit of ${LisaState_1.WATER_MIN} -> ${LisaState_1.LisaDeathCause.DEHYDRATION}.`);
+            LisaStateController_1.logger.silly(`Water level ${this.state.status.water} is below limit of ${LisaState_1.WATER_MIN} -> ${LisaState_1.LisaDeathCause.DEHYDRATION}.`);
             this.killLisa(LisaState_1.LisaDeathCause.DEHYDRATION, byUser);
         }
         if (this.state.status.happiness > LisaState_1.HAPPINESS_MAX) {
-            LisaStateController_1.logger.debug(`Happiness level ${this.state.status.happiness} is above limit of ${LisaState_1.HAPPINESS_MAX} -> reducing to limit.`);
+            LisaStateController_1.logger.silly(`Happiness level ${this.state.status.happiness} is above limit of ${LisaState_1.HAPPINESS_MAX} -> reducing to limit.`);
             this.state.status.happiness = LisaState_1.HAPPINESS_MAX;
         }
         else if (this.state.status.happiness < LisaState_1.HAPPINESS_MIN) {
-            LisaStateController_1.logger.debug(`Happiness level ${this.state.status.happiness} is below limit of ${LisaState_1.HAPPINESS_MIN} -> ${LisaState_1.LisaDeathCause.SADNESS}.`);
+            LisaStateController_1.logger.silly(`Happiness level ${this.state.status.happiness} is below limit of ${LisaState_1.HAPPINESS_MIN} -> ${LisaState_1.LisaDeathCause.SADNESS}.`);
             this.killLisa(LisaState_1.LisaDeathCause.SADNESS, byUser);
         }
     }
-    updateHighScoreIfRequired() {
+    updateBestLifetimeIfRequired() {
         const lifetime = this.lisaStatusService.getLifetime(this.getStateCopy());
         if (lifetime > this.state.bestLifetime) {
-            LisaStateController_1.logger.debug(`Increasing high score from ${this.state.bestLifetime} to ${lifetime}.`);
+            LisaStateController_1.logger.silly(`Increasing high score from ${this.state.bestLifetime} to ${lifetime}.`);
             this.state.bestLifetime = lifetime;
         }
     }

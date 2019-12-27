@@ -24,20 +24,14 @@ let LisaTextService = class LisaTextService {
             const timeSinceDeathLabel = this.lisaStatusService
                 .getTimeSinceDeath(state)
                 .humanize();
-            const lifetimeLabel = this.lisaStatusService
-                .getLifetime(state)
-                .humanize();
-            text = [
-                `Lisa died ${timeSinceDeathLabel} ago, and was alive for ${lifetimeLabel}.`,
-                `She was killed by ${state.death.byUser} through ${state.death.cause}.`
-            ];
+            text = `Lisa died ${timeSinceDeathLabel} ago, she was killed by ${state.death.byUser} through ${state.death.cause}.`;
         }
         else {
             const waterLevel = state.status.water.toFixed(2);
             const happinessLevel = state.status.happiness.toFixed(2);
-            text = [`Water: ${waterLevel}% | Happiness: ${happinessLevel}%.`];
+            text = `Water: ${waterLevel}% | Happiness: ${happinessLevel}%.`;
         }
-        return [statusLabel, ...text, scoreText].join("\n");
+        return [statusLabel, text, scoreText].join("\n");
     }
     createStatusLabel(state) {
         if (!this.lisaStatusService.isAlive(state)) {

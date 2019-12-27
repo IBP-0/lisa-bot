@@ -83,6 +83,13 @@ class LisaStateController {
     }
 
     public killLisa(cause: LisaDeathCause, byUser: string = USER_SYSTEM): void {
+        if (!this.lisaStatusService.isAlive(this.getStateCopy())) {
+            LisaStateController.logger.silly(
+                "Lisa is already dead, skip kill."
+            );
+            return;
+        }
+
         LisaStateController.logger.debug(
             `'${byUser}' killed lisa by ${cause}.`
         );
@@ -96,7 +103,14 @@ class LisaStateController {
         happinessModifier: number,
         byUser: string = USER_SYSTEM
     ): void {
-        LisaStateController.logger.debug(
+        if (!this.lisaStatusService.isAlive(this.getStateCopy())) {
+            LisaStateController.logger.silly(
+                "Lisa is dead, skip status change."
+            );
+            return;
+        }
+
+        LisaStateController.logger.silly(
             `'${byUser}' modified status; water modifier ${waterModifier}, happiness modifier ${happinessModifier}.`
         );
         this.performModifyStatus(waterModifier, happinessModifier, byUser);
@@ -110,10 +124,7 @@ class LisaStateController {
 
     private performKill(byUser: string, cause: LisaDeathCause): void {
         this.state.death = { time: new Date(), byUser, cause };
-
-        if (!this.lisaStatusService.isAlive(this.getStateCopy())) {
-            this.updateHighScoreIfRequired();
-        }
+        this.updateBestLifetimeIfRequired();
     }
 
     private performModifyStatus(
@@ -124,21 +135,19 @@ class LisaStateController {
         this.state.status.water += waterModifier;
         this.state.status.happiness += happinessModifier;
 
-        if (this.lisaStatusService.isAlive(this.getStateCopy())) {
-            // Check changed stats
-            this.checkStats(byUser);
-        }
+        this.updateBestLifetimeIfRequired();
+        this.checkStats(byUser);
     }
 
     private checkStats(byUser: string): void {
         if (this.state.status.water > WATER_MAX) {
-            LisaStateController.logger.debug(
+            LisaStateController.logger.silly(
                 `Water level ${this.state.status.water} is above limit of ${WATER_MAX} -> ${LisaDeathCause.DROWNING}.`
             );
 
             this.killLisa(LisaDeathCause.DROWNING, byUser);
         } else if (this.state.status.water < WATER_MIN) {
-            LisaStateController.logger.debug(
+            LisaStateController.logger.silly(
                 `Water level ${this.state.status.water} is below limit of ${WATER_MIN} -> ${LisaDeathCause.DEHYDRATION}.`
             );
 
@@ -146,13 +155,13 @@ class LisaStateController {
         }
 
         if (this.state.status.happiness > HAPPINESS_MAX) {
-            LisaStateController.logger.debug(
+            LisaStateController.logger.silly(
                 `Happiness level ${this.state.status.happiness} is above limit of ${HAPPINESS_MAX} -> reducing to limit.`
             );
 
             this.state.status.happiness = HAPPINESS_MAX;
         } else if (this.state.status.happiness < HAPPINESS_MIN) {
-            LisaStateController.logger.debug(
+            LisaStateController.logger.silly(
                 `Happiness level ${this.state.status.happiness} is below limit of ${HAPPINESS_MIN} -> ${LisaDeathCause.SADNESS}.`
             );
 
@@ -160,12 +169,12 @@ class LisaStateController {
         }
     }
 
-    private updateHighScoreIfRequired(): void {
+    private updateBestLifetimeIfRequired(): void {
         const lifetime = this.lisaStatusService.getLifetime(
             this.getStateCopy()
         );
         if (lifetime > this.state.bestLifetime) {
-            LisaStateController.logger.debug(
+            LisaStateController.logger.silly(
                 `Increasing high score from ${this.state.bestLifetime} to ${lifetime}.`
             );
             this.state.bestLifetime = lifetime;

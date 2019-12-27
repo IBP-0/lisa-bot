@@ -26,7 +26,7 @@ declare class LisaStateController {
     private performKill;
     private performModifyStatus;
     private checkStats;
-    private updateHighScoreIfRequired;
+    private updateBestLifetimeIfRequired;
     private stateChanged;
 }
 export { LisaStateController };
