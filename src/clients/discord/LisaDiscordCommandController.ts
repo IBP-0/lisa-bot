@@ -60,7 +60,7 @@ class LisaDiscordCommandController {
 
         this.lisaStateController.killLisa(cause, this.getFullUserName(author));
 
-        return sample(textSuccess)!;
+        return [sample(textSuccess)!, this.createStatusText()].join("\n");
     }
 
     performReplant(
