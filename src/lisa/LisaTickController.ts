@@ -8,9 +8,9 @@ import Timer = NodeJS.Timer;
 @Injectable(chevron, {
     dependencies: [LisaStateController]
 })
-class LisaTimer {
+class LisaTickController {
     private static readonly logger = rootLogger.child({
-        target: LisaTimer
+        target: LisaTickController
     });
 
     private static readonly TIMEOUT = 60000;
@@ -25,21 +25,21 @@ class LisaTimer {
     }
 
     public start(): void {
-        interval(LisaTimer.TIMEOUT).subscribe(() => this.tick());
-        LisaTimer.logger.info(
-            `Started Lisa timer with an interval of ${LisaTimer.TIMEOUT}.`
+        interval(LisaTickController.TIMEOUT).subscribe(() => this.tick());
+        LisaTickController.logger.info(
+            `Started Lisa timer with an interval of ${LisaTickController.TIMEOUT}.`
         );
     }
 
     private tick(): void {
-        LisaTimer.logger.debug("Performing tick.");
+        LisaTickController.logger.debug("Performing tick.");
 
         this.lisaStateController.modifyLisaStatus(
-            LisaTimer.WATER_MODIFIER,
-            LisaTimer.HAPPINESS_MODIFIER,
-            LisaTimer.USER_TICK
+            LisaTickController.WATER_MODIFIER,
+            LisaTickController.HAPPINESS_MODIFIER,
+            LisaTickController.USER_TICK
         );
     }
 }
 
-export { LisaTimer };
+export { LisaTickController };

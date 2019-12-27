@@ -4,7 +4,7 @@ import { LisaDiscordClient } from "./clients/discord/LisaDiscordClient";
 import { LisaDiscordEventController } from "./clients/discord/LisaDiscordEventController";
 import { LisaStateController } from "./lisa/LisaStateController";
 import { LisaStorageController } from "./lisa/LisaStorageController";
-import { LisaTimer } from "./lisa/LisaTimer";
+import { LisaTickController } from "./lisa/LisaTickController";
 import { LisaStorageService } from "./lisa/service/LisaStorageService";
 import { rootLogger } from "./logger";
 import { isProductionMode } from "./mode";
@@ -21,7 +21,7 @@ const startLisaMainClient = async (): Promise<void> => {
     const lisaStorageController: LisaStorageController = chevron.getInjectableInstance(
         LisaStorageController
     );
-    const lisaTimer: LisaTimer = chevron.getInjectableInstance(LisaTimer);
+    const lisaTimer: LisaTickController = chevron.getInjectableInstance(LisaTickController);
 
     if (await lisaStorageService.hasStoredState()) {
         logger.info("Found stored Lisa state, loading it.");
