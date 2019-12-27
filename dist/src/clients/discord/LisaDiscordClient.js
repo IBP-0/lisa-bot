@@ -97,7 +97,6 @@ let LisaDiscordClient = class LisaDiscordClient {
 };
 LisaDiscordClient = __decorate([
     chevronjs_1.Injectable(chevron_1.chevron, {
-        bootstrapping: chevronjs_1.DefaultBootstrappings.CLASS,
         dependencies: []
     }),
     __metadata("design:paramtypes", [])

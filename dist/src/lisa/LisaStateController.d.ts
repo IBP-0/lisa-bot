@@ -4,9 +4,12 @@ import { LisaStatusService } from "./service/LisaStatusService";
 declare class LisaStateController {
     private readonly lisaStatusService;
     private static readonly logger;
+    private static readonly USER_SYSTEM;
+    private static readonly BEST_LIFETIME_CHECK_TIMEOUT;
     readonly stateChangeSubject: Subject<void>;
     private state;
     constructor(lisaStatusService: LisaStatusService);
+    private static createNewLisaState;
     /**
      * Gets a copy of the state to process e.g. when creating text for the current status.
      *
@@ -26,7 +29,7 @@ declare class LisaStateController {
     private performKill;
     private performModifyStatus;
     private checkStats;
-    private updateBestLifetimeIfRequired;
     private stateChanged;
+    private updateBestLifetimeIfRequired;
 }
 export { LisaStateController };

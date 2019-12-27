@@ -1,4 +1,4 @@
-import { DefaultBootstrappings, Injectable } from "chevronjs";
+import { Injectable } from "chevronjs";
 import { Message, PresenceData } from "discord.js";
 import { CommandoClient, CommandoClientOptions } from "discord.js-commando";
 import { Observable } from "rxjs";
@@ -21,7 +21,6 @@ const createUninitializedClientError = (): TypeError =>
     new TypeError("Client has not been initialized.");
 
 @Injectable(chevron, {
-    bootstrapping: DefaultBootstrappings.CLASS,
     dependencies: []
 })
 class LisaDiscordClient {

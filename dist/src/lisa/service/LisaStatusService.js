@@ -55,6 +55,6 @@ LisaStatusService.logger = logger_1.rootLogger.child({
     target: LisaStatusService_1
 });
 LisaStatusService = LisaStatusService_1 = __decorate([
-    chevronjs_1.Injectable(chevron_1.chevron, { bootstrapping: chevronjs_1.DefaultBootstrappings.CLASS })
+    chevronjs_1.Injectable(chevron_1.chevron)
 ], LisaStatusService);
 exports.LisaStatusService = LisaStatusService;

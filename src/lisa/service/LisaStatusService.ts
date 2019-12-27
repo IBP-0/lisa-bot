@@ -1,10 +1,10 @@
-import { DefaultBootstrappings, Injectable } from "chevronjs";
+import { Injectable } from "chevronjs";
 import { duration, Duration } from "moment";
 import { chevron } from "../../chevron";
 import { rootLogger } from "../../logger";
 import { HAPPINESS_INITIAL, LisaState, WATER_INITIAL } from "../LisaState";
 
-@Injectable(chevron, { bootstrapping: DefaultBootstrappings.CLASS })
+@Injectable(chevron)
 class LisaStatusService {
     private static readonly logger = rootLogger.child({
         target: LisaStatusService

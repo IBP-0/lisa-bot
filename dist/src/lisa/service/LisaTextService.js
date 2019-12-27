@@ -59,7 +59,6 @@ let LisaTextService = class LisaTextService {
 };
 LisaTextService = __decorate([
     chevronjs_1.Injectable(chevron_1.chevron, {
-        bootstrapping: chevronjs_1.DefaultBootstrappings.CLASS,
         dependencies: [LisaStatusService_1.LisaStatusService]
     }),
     __metadata("design:paramtypes", [LisaStatusService_1.LisaStatusService])

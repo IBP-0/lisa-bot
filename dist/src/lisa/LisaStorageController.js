@@ -38,7 +38,6 @@ LisaStorageController.logger = logger_1.rootLogger.child({
 });
 LisaStorageController = LisaStorageController_1 = __decorate([
     chevronjs_1.Injectable(chevron_1.chevron, {
-        bootstrapping: chevronjs_1.DefaultBootstrappings.CLASS,
         dependencies: [LisaStateController_1.LisaStateController, LisaStorageService_1.LisaStorageService]
     }),
     __metadata("design:paramtypes", [LisaStateController_1.LisaStateController,

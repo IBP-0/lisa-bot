@@ -1,4 +1,4 @@
-import { DefaultBootstrappings, Injectable } from "chevronjs";
+import { Injectable } from "chevronjs";
 import { pathExists, readJSON, writeJSON } from "fs-extra";
 import { cloneDeep } from "lodash";
 import { duration } from "moment";
@@ -22,7 +22,7 @@ interface JsonLisaState {
     bestLifetime: number;
 }
 
-@Injectable(chevron, { bootstrapping: DefaultBootstrappings.CLASS })
+@Injectable(chevron)
 class LisaStorageService {
     public static readonly STORAGE_PATH = "data/lisaState.json";
 

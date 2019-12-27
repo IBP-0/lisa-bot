@@ -1,4 +1,4 @@
-import { DefaultBootstrappings, Injectable } from "chevronjs";
+import { Injectable } from "chevronjs";
 import { User } from "discord.js";
 import { sample } from "lodash";
 import { chevron } from "../../chevron";
@@ -8,7 +8,6 @@ import { LisaStatusService } from "../../lisa/service/LisaStatusService";
 import { LisaTextService } from "../../lisa/service/LisaTextService";
 
 @Injectable(chevron, {
-    bootstrapping: DefaultBootstrappings.CLASS,
     dependencies: [LisaStateController, LisaStatusService, LisaTextService]
 })
 class LisaDiscordCommandController {

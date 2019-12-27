@@ -12,11 +12,8 @@ const HAPPINESS_MIN = 0.1;
 exports.HAPPINESS_MIN = HAPPINESS_MIN;
 const HAPPINESS_MAX = 100;
 exports.HAPPINESS_MAX = HAPPINESS_MAX;
-const USER_SYSTEM = "System";
-exports.USER_SYSTEM = USER_SYSTEM;
 var LisaDeathCause;
 (function (LisaDeathCause) {
-    LisaDeathCause["UNKNOWN"] = "something unknown";
     LisaDeathCause["DROWNING"] = "drowning";
     LisaDeathCause["DEHYDRATION"] = "dehydration";
     LisaDeathCause["SADNESS"] = "sadness";

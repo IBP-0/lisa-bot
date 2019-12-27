@@ -1,4 +1,4 @@
-import { DefaultBootstrappings, Injectable } from "chevronjs";
+import { Injectable } from "chevronjs";
 import { interval } from "rxjs";
 import { chevron } from "../chevron";
 import { rootLogger } from "../logger";
@@ -6,7 +6,6 @@ import { LisaStateController } from "./LisaStateController";
 import Timer = NodeJS.Timer;
 
 @Injectable(chevron, {
-    bootstrapping: DefaultBootstrappings.CLASS,
     dependencies: [LisaStateController]
 })
 class LisaTimer {

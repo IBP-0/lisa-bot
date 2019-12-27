@@ -1,4 +1,4 @@
-import { DefaultBootstrappings, Injectable } from "chevronjs";
+import { Injectable } from "chevronjs";
 import { cloneDeep } from "lodash";
 import { Duration, duration } from "moment";
 import { interval, Subject } from "rxjs";
@@ -17,7 +17,6 @@ import {
 import { LisaStatusService } from "./service/LisaStatusService";
 
 @Injectable(chevron, {
-    bootstrapping: DefaultBootstrappings.CLASS,
     dependencies: [LisaStatusService]
 })
 class LisaStateController {
@@ -42,6 +41,28 @@ class LisaStateController {
         interval(
             LisaStateController.BEST_LIFETIME_CHECK_TIMEOUT
         ).subscribe(() => this.updateBestLifetimeIfRequired());
+    }
+
+    private static createNewLisaState(
+        createdByUser: string,
+        bestLifetime: Duration
+    ): LisaState {
+        return {
+            bestLifetime,
+            status: {
+                water: WATER_INITIAL,
+                happiness: HAPPINESS_INITIAL
+            },
+            life: {
+                time: new Date(),
+                byUser: createdByUser
+            },
+            death: {
+                time: null,
+                byUser: null,
+                cause: null
+            }
+        };
     }
 
     /**
@@ -177,28 +198,6 @@ class LisaStateController {
             );
             this.state.bestLifetime = lifetime;
         }
-    }
-
-    private static createNewLisaState(
-        createdByUser: string,
-        bestLifetime: Duration
-    ): LisaState {
-        return {
-            bestLifetime,
-            status: {
-                water: WATER_INITIAL,
-                happiness: HAPPINESS_INITIAL
-            },
-            life: {
-                time: new Date(),
-                byUser: createdByUser
-            },
-            death: {
-                time: null,
-                byUser: null,
-                cause: null
-            }
-        };
     }
 }
 

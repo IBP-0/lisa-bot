@@ -1,4 +1,4 @@
-import { DefaultBootstrappings, Injectable } from "chevronjs";
+import { Injectable } from "chevronjs";
 import { PresenceData } from "discord.js";
 import { filter, throttleTime } from "rxjs/operators";
 import { chevron } from "../../chevron";
@@ -16,7 +16,6 @@ const createPresence = (name: string): PresenceData => {
 };
 
 @Injectable(chevron, {
-    bootstrapping: DefaultBootstrappings.CLASS,
     dependencies: [LisaStateController, LisaDiscordClient, LisaTextService]
 })
 class LisaDiscordEventController {

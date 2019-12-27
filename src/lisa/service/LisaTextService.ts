@@ -1,10 +1,9 @@
-import { DefaultBootstrappings, Injectable } from "chevronjs";
+import { Injectable } from "chevronjs";
 import { chevron } from "../../chevron";
 import { LisaState } from "../LisaState";
 import { LisaStatusService } from "./LisaStatusService";
 
 @Injectable(chevron, {
-    bootstrapping: DefaultBootstrappings.CLASS,
     dependencies: [LisaStatusService]
 })
 class LisaTextService {

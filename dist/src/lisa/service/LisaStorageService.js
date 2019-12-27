@@ -49,6 +49,6 @@ let LisaStorageService = LisaStorageService_1 = class LisaStorageService {
 };
 LisaStorageService.STORAGE_PATH = "data/lisaState.json";
 LisaStorageService = LisaStorageService_1 = __decorate([
-    chevronjs_1.Injectable(chevron_1.chevron, { bootstrapping: chevronjs_1.DefaultBootstrappings.CLASS })
+    chevronjs_1.Injectable(chevron_1.chevron)
 ], LisaStorageService);
 exports.LisaStorageService = LisaStorageService;

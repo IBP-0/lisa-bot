@@ -38,7 +38,6 @@ LisaTimer.HAPPINESS_MODIFIER = -0.75;
 LisaTimer.USER_TICK = "Time";
 LisaTimer = LisaTimer_1 = __decorate([
     chevronjs_1.Injectable(chevron_1.chevron, {
-        bootstrapping: chevronjs_1.DefaultBootstrappings.CLASS,
         dependencies: [LisaStateController_1.LisaStateController]
     }),
     __metadata("design:paramtypes", [LisaStateController_1.LisaStateController])

@@ -62,7 +62,6 @@ LisaDiscordEventController.MESSAGE_HAPPINESS_MODIFIER = 0.25;
 LisaDiscordEventController.USER_DISCORD_ACTIVITY = "Discord activity";
 LisaDiscordEventController = LisaDiscordEventController_1 = __decorate([
     chevronjs_1.Injectable(chevron_1.chevron, {
-        bootstrapping: chevronjs_1.DefaultBootstrappings.CLASS,
         dependencies: [LisaStateController_1.LisaStateController, LisaDiscordClient_1.LisaDiscordClient, LisaTextService_1.LisaTextService]
     }),
     __metadata("design:paramtypes", [LisaStateController_1.LisaStateController,

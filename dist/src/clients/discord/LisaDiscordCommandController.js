@@ -39,7 +39,7 @@ let LisaDiscordCommandController = class LisaDiscordCommandController {
             return lodash_1.sample(textAlreadyDead);
         }
         this.lisaStateController.killLisa(cause, this.getFullUserName(author));
-        return lodash_1.sample(textSuccess);
+        return [lodash_1.sample(textSuccess), this.createStatusText()].join("\n");
     }
     performReplant(author, allowedUserIds, textWasAlive, textWasDead, textNotAllowed = []) {
         if (!this.isUserAllowed(allowedUserIds, author)) {
@@ -64,7 +64,6 @@ let LisaDiscordCommandController = class LisaDiscordCommandController {
 };
 LisaDiscordCommandController = __decorate([
     chevronjs_1.Injectable(chevron_1.chevron, {
-        bootstrapping: chevronjs_1.DefaultBootstrappings.CLASS,
         dependencies: [LisaStateController_1.LisaStateController, LisaStatusService_1.LisaStatusService, LisaTextService_1.LisaTextService]
     }),
     __metadata("design:paramtypes", [LisaStateController_1.LisaStateController,
