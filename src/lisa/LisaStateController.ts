@@ -1,6 +1,6 @@
 import { DefaultBootstrappings, Injectable } from "chevronjs";
 import { cloneDeep } from "lodash";
-import { duration } from "moment";
+import { Duration, duration } from "moment";
 import { interval, Subject } from "rxjs";
 import { chevron } from "../chevron";
 import { rootLogger } from "../logger";
@@ -10,34 +10,11 @@ import {
     HAPPINESS_MIN,
     LisaDeathCause,
     LisaState,
-    USER_SYSTEM,
     WATER_INITIAL,
     WATER_MAX,
     WATER_MIN
 } from "./LisaState";
 import { LisaStatusService } from "./service/LisaStatusService";
-
-const createNewLisaState = (
-    createdByUser: string,
-    bestLifetime = duration(0)
-): LisaState => {
-    return {
-        bestLifetime,
-        status: {
-            water: WATER_INITIAL,
-            happiness: HAPPINESS_INITIAL
-        },
-        life: {
-            time: new Date(),
-            byUser: createdByUser
-        },
-        death: {
-            time: null,
-            byUser: null,
-            cause: null
-        }
-    };
-};
 
 @Injectable(chevron, {
     bootstrapping: DefaultBootstrappings.CLASS,
@@ -48,13 +25,18 @@ class LisaStateController {
         target: LisaStateController
     });
 
+    private static readonly USER_SYSTEM = "System";
+
     private static readonly BEST_LIFETIME_CHECK_TIMEOUT = 5000;
 
     public readonly stateChangeSubject: Subject<void>;
     private state: LisaState;
 
     constructor(private readonly lisaStatusService: LisaStatusService) {
-        this.state = createNewLisaState(USER_SYSTEM);
+        this.state = LisaStateController.createNewLisaState(
+            LisaStateController.USER_SYSTEM,
+            duration(0)
+        );
         this.stateChangeSubject = new Subject<void>();
 
         interval(
@@ -81,14 +63,17 @@ class LisaStateController {
         this.stateChanged();
     }
 
-    public replantLisa(byUser: string = USER_SYSTEM): void {
+    public replantLisa(byUser: string = LisaStateController.USER_SYSTEM): void {
         LisaStateController.logger.debug(`'${byUser}' replanted lisa.`);
 
         this.performReplant(byUser);
         this.stateChanged();
     }
 
-    public killLisa(cause: LisaDeathCause, byUser: string = USER_SYSTEM): void {
+    public killLisa(
+        cause: LisaDeathCause,
+        byUser: string = LisaStateController.USER_SYSTEM
+    ): void {
         if (!this.lisaStatusService.isAlive(this.getStateCopy())) {
             LisaStateController.logger.silly(
                 "Lisa is already dead, skip kill."
@@ -107,7 +92,7 @@ class LisaStateController {
     public modifyLisaStatus(
         waterModifier: number,
         happinessModifier: number,
-        byUser: string = USER_SYSTEM
+        byUser: string = LisaStateController.USER_SYSTEM
     ): void {
         if (!this.lisaStatusService.isAlive(this.getStateCopy())) {
             LisaStateController.logger.silly(
@@ -125,7 +110,10 @@ class LisaStateController {
     }
 
     private performReplant(byUser: string): void {
-        this.state = createNewLisaState(byUser, this.state.bestLifetime);
+        this.state = LisaStateController.createNewLisaState(
+            byUser,
+            this.state.bestLifetime
+        );
     }
 
     private performKill(cause: LisaDeathCause, byUser: string): void {
@@ -189,6 +177,28 @@ class LisaStateController {
             );
             this.state.bestLifetime = lifetime;
         }
+    }
+
+    private static createNewLisaState(
+        createdByUser: string,
+        bestLifetime: Duration
+    ): LisaState {
+        return {
+            bestLifetime,
+            status: {
+                water: WATER_INITIAL,
+                happiness: HAPPINESS_INITIAL
+            },
+            life: {
+                time: new Date(),
+                byUser: createdByUser
+            },
+            death: {
+                time: null,
+                byUser: null,
+                cause: null
+            }
+        };
     }
 }
 

@@ -8,10 +8,7 @@ const HAPPINESS_INITIAL = 100;
 const HAPPINESS_MIN = 0.1;
 const HAPPINESS_MAX = 100;
 
-const USER_SYSTEM = "System";
-
 enum LisaDeathCause {
-    UNKNOWN = "something unknown",
     DROWNING = "drowning",
     DEHYDRATION = "dehydration",
     SADNESS = "sadness",
@@ -47,6 +44,5 @@ export {
     WATER_MAX,
     HAPPINESS_INITIAL,
     HAPPINESS_MIN,
-    HAPPINESS_MAX,
-    USER_SYSTEM
+    HAPPINESS_MAX
 };
