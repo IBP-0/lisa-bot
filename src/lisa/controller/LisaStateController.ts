@@ -2,8 +2,8 @@ import { Injectable } from "chevronjs";
 import { cloneDeep } from "lodash";
 import { Duration, duration } from "moment";
 import { interval, Subject } from "rxjs";
-import { chevron } from "../chevron";
-import { rootLogger } from "../logger";
+import { chevron } from "../../chevron";
+import { rootLogger } from "../../logger";
 import {
     HAPPINESS_INITIAL,
     HAPPINESS_MAX,
@@ -13,8 +13,8 @@ import {
     WATER_INITIAL,
     WATER_MAX,
     WATER_MIN
-} from "./LisaState";
-import { LisaStatusService } from "./service/LisaStatusService";
+} from "../LisaState";
+import { LisaStatusService } from "../service/LisaStatusService";
 
 @Injectable(chevron, {
     dependencies: [LisaStatusService]

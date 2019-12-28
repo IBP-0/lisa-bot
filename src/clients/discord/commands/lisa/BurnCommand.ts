@@ -2,7 +2,7 @@ import { Message } from "discord.js";
 import { Command, CommandoClient, CommandoMessage } from "discord.js-commando";
 import { chevron } from "../../../../chevron";
 import { LisaDeathCause } from "../../../../lisa/LisaState";
-import { LisaDiscordCommandController } from "../../LisaDiscordCommandController";
+import { LisaDiscordCommandController } from "../../controller/LisaDiscordCommandController";
 
 class BurnCommand extends Command {
     private readonly lisaDiscordCommandController: LisaDiscordCommandController;

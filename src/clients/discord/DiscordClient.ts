@@ -23,7 +23,7 @@ const createUninitializedClientError = (): TypeError =>
 @Injectable(chevron, {
     dependencies: []
 })
-class LisaDiscordClient {
+class DiscordClient {
     private commandoClient: CommandoClient | null;
 
     constructor() {
@@ -105,4 +105,4 @@ class LisaDiscordClient {
     }
 }
 
-export { LisaDiscordClient };
+export { DiscordClient };

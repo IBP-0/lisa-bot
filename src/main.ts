@@ -1,10 +1,10 @@
 import { isNil } from "lodash";
 import { chevron } from "./chevron";
-import { LisaDiscordClient } from "./clients/discord/LisaDiscordClient";
-import { LisaDiscordEventController } from "./clients/discord/LisaDiscordEventController";
-import { LisaStateController } from "./lisa/LisaStateController";
-import { LisaStorageController } from "./lisa/LisaStorageController";
-import { LisaTickController } from "./lisa/LisaTickController";
+import { DiscordClient } from "./clients/discord/LisaDiscordClient";
+import { LisaDiscordEventController } from "./clients/discord/controller/LisaDiscordEventController";
+import { LisaStateController } from "./lisa/controller/LisaStateController";
+import { LisaStorageController } from "./lisa/controller/LisaStorageController";
+import { LisaTickController } from "./lisa/controller/LisaTickController";
 import { LisaStorageService } from "./lisa/service/LisaStorageService";
 import { rootLogger } from "./logger";
 import { isProductionMode } from "./mode";
@@ -21,7 +21,9 @@ const startLisaMainClient = async (): Promise<void> => {
     const lisaStorageController: LisaStorageController = chevron.getInjectableInstance(
         LisaStorageController
     );
-    const lisaTimer: LisaTickController = chevron.getInjectableInstance(LisaTickController);
+    const lisaTimer: LisaTickController = chevron.getInjectableInstance(
+        LisaTickController
+    );
 
     if (await lisaStorageService.hasStoredState()) {
         logger.info("Found stored Lisa state, loading it.");
@@ -34,8 +36,8 @@ const startLisaMainClient = async (): Promise<void> => {
     lisaTimer.start();
 };
 const startLisaDiscordClient = async (): Promise<void> => {
-    const lisaDiscordClient: LisaDiscordClient = chevron.getInjectableInstance(
-        LisaDiscordClient
+    const lisaDiscordClient: DiscordClient = chevron.getInjectableInstance(
+        DiscordClient
     );
     const lisaDiscordController: LisaDiscordEventController = chevron.getInjectableInstance(
         LisaDiscordEventController

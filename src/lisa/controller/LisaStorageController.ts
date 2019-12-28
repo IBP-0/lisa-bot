@@ -1,9 +1,9 @@
 import { Injectable } from "chevronjs";
 import { throttleTime } from "rxjs/operators";
-import { chevron } from "../chevron";
-import { rootLogger } from "../logger";
+import { chevron } from "../../chevron";
+import { rootLogger } from "../../logger";
 import { LisaStateController } from "./LisaStateController";
-import { LisaStorageService } from "./service/LisaStorageService";
+import { LisaStorageService } from "../service/LisaStorageService";
 
 @Injectable(chevron, {
     dependencies: [LisaStateController, LisaStorageService]

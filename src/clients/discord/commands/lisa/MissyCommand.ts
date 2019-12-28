@@ -1,7 +1,7 @@
 import { Message } from "discord.js";
 import { Command, CommandoClient, CommandoMessage } from "discord.js-commando";
 import { chevron } from "../../../../chevron";
-import { LisaDiscordCommandController } from "../../LisaDiscordCommandController";
+import { LisaDiscordCommandController } from "../../controller/LisaDiscordCommandController";
 
 const MISSY_ID = ["273221196001181697"];
 

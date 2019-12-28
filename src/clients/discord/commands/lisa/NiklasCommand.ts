@@ -1,7 +1,7 @@
 import { Message } from "discord.js";
 import { Command, CommandoClient, CommandoMessage } from "discord.js-commando";
 import { chevron } from "../../../../chevron";
-import { LisaDiscordCommandController } from "../../LisaDiscordCommandController";
+import { LisaDiscordCommandController } from "../../controller/LisaDiscordCommandController";
 
 const NIKLAS_ID = ["178470784984023040"];
 

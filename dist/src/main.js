@@ -6,7 +6,7 @@ const LisaDiscordClient_1 = require("./clients/discord/LisaDiscordClient");
 const LisaDiscordEventController_1 = require("./clients/discord/LisaDiscordEventController");
 const LisaStateController_1 = require("./lisa/LisaStateController");
 const LisaStorageController_1 = require("./lisa/LisaStorageController");
-const LisaTimer_1 = require("./lisa/LisaTimer");
+const LisaTickController_1 = require("./lisa/LisaTickController");
 const LisaStorageService_1 = require("./lisa/service/LisaStorageService");
 const logger_1 = require("./logger");
 const mode_1 = require("./mode");
@@ -15,7 +15,7 @@ const startLisaMainClient = async () => {
     const lisaStateController = chevron_1.chevron.getInjectableInstance(LisaStateController_1.LisaStateController);
     const lisaStorageService = chevron_1.chevron.getInjectableInstance(LisaStorageService_1.LisaStorageService);
     const lisaStorageController = chevron_1.chevron.getInjectableInstance(LisaStorageController_1.LisaStorageController);
-    const lisaTimer = chevron_1.chevron.getInjectableInstance(LisaTimer_1.LisaTimer);
+    const lisaTimer = chevron_1.chevron.getInjectableInstance(LisaTickController_1.LisaTickController);
     if (await lisaStorageService.hasStoredState()) {
         logger.info("Found stored Lisa state, loading it.");
         lisaStateController.load(await lisaStorageService.loadStoredState());

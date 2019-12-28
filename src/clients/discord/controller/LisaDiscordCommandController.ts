@@ -1,11 +1,11 @@
 import { Injectable } from "chevronjs";
 import { User } from "discord.js";
 import { sample } from "lodash";
-import { chevron } from "../../chevron";
-import { LisaDeathCause } from "../../lisa/LisaState";
-import { LisaStateController } from "../../lisa/LisaStateController";
-import { LisaStatusService } from "../../lisa/service/LisaStatusService";
-import { LisaTextService } from "../../lisa/service/LisaTextService";
+import { chevron } from "../../../chevron";
+import { LisaDeathCause } from "../../../lisa/LisaState";
+import { LisaStateController } from "../../../lisa/controller/LisaStateController";
+import { LisaStatusService } from "../../../lisa/service/LisaStatusService";
+import { LisaTextService } from "../../../lisa/service/LisaTextService";
 
 @Injectable(chevron, {
     dependencies: [LisaStateController, LisaStatusService, LisaTextService]

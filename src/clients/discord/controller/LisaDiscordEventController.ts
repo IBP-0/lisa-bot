@@ -1,11 +1,11 @@
 import { Injectable } from "chevronjs";
 import { PresenceData } from "discord.js";
 import { filter, throttleTime } from "rxjs/operators";
-import { chevron } from "../../chevron";
-import { LisaStateController } from "../../lisa/LisaStateController";
-import { LisaTextService } from "../../lisa/service/LisaTextService";
-import { rootLogger } from "../../logger";
-import { LisaDiscordClient } from "./LisaDiscordClient";
+import { chevron } from "../../../chevron";
+import { LisaStateController } from "../../../lisa/controller/LisaStateController";
+import { LisaTextService } from "../../../lisa/service/LisaTextService";
+import { rootLogger } from "../../../logger";
+import { DiscordClient } from "../DiscordClient";
 
 const createPresence = (name: string): PresenceData => {
     return {
@@ -16,7 +16,7 @@ const createPresence = (name: string): PresenceData => {
 };
 
 @Injectable(chevron, {
-    dependencies: [LisaStateController, LisaDiscordClient, LisaTextService]
+    dependencies: [LisaStateController, DiscordClient, LisaTextService]
 })
 class LisaDiscordEventController {
     private static readonly logger = rootLogger.child({
@@ -29,7 +29,7 @@ class LisaDiscordEventController {
 
     constructor(
         private readonly lisaStateController: LisaStateController,
-        private readonly lisaDiscordClient: LisaDiscordClient,
+        private readonly lisaDiscordClient: DiscordClient,
         private readonly lisaTextService: LisaTextService
     ) {}
 
