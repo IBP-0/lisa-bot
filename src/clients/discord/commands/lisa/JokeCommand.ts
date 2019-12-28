@@ -1,7 +1,7 @@
 import { Message } from "discord.js";
 import { Command, CommandoClient, CommandoMessage } from "discord.js-commando";
 import { chevron } from "../../../../chevron";
-import { LisaDiscordCommandController } from "../../controller/LisaDiscordCommandController";
+import { DiscordCommandController } from "../../controller/DiscordCommandController";
 
 const HIGH_QUALITY_JOKES = [
     "Why do trees have so many friends? They branch out.",
@@ -27,7 +27,7 @@ const HIGH_QUALITY_JOKES = [
 ];
 
 class JokeCommand extends Command {
-    private readonly lisaDiscordCommandController: LisaDiscordCommandController;
+    private readonly lisaDiscordCommandController: DiscordCommandController;
 
     constructor(client: CommandoClient) {
         super(client, {
@@ -38,7 +38,7 @@ class JokeCommand extends Command {
             description: "Tell Lisa a joke."
         });
         this.lisaDiscordCommandController = chevron.getInjectableInstance(
-            LisaDiscordCommandController
+            DiscordCommandController
         );
     }
 

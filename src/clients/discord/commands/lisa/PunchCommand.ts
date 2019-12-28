@@ -1,10 +1,10 @@
 import { Message } from "discord.js";
 import { Command, CommandoClient, CommandoMessage } from "discord.js-commando";
 import { chevron } from "../../../../chevron";
-import { LisaDiscordCommandController } from "../../controller/LisaDiscordCommandController";
+import { DiscordCommandController } from "../../controller/DiscordCommandController";
 
 class PunchCommand extends Command {
-    private readonly lisaDiscordCommandController: LisaDiscordCommandController;
+    private readonly lisaDiscordCommandController: DiscordCommandController;
 
     constructor(client: CommandoClient) {
         super(client, {
@@ -15,7 +15,7 @@ class PunchCommand extends Command {
             description: "Punch Lisa."
         });
         this.lisaDiscordCommandController = chevron.getInjectableInstance(
-            LisaDiscordCommandController
+            DiscordCommandController
         );
     }
 

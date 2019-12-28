@@ -2,11 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const lodash_1 = require("lodash");
 const chevron_1 = require("./chevron");
-const LisaDiscordClient_1 = require("./clients/discord/LisaDiscordClient");
-const LisaDiscordEventController_1 = require("./clients/discord/LisaDiscordEventController");
-const LisaStateController_1 = require("./lisa/LisaStateController");
-const LisaStorageController_1 = require("./lisa/LisaStorageController");
-const LisaTickController_1 = require("./lisa/LisaTickController");
+const DiscordEventController_1 = require("./clients/discord/controller/DiscordEventController");
+const DiscordClient_1 = require("./clients/discord/DiscordClient");
+const LisaStateController_1 = require("./lisa/controller/LisaStateController");
+const LisaStorageController_1 = require("./lisa/controller/LisaStorageController");
+const LisaTickController_1 = require("./lisa/controller/LisaTickController");
 const LisaStorageService_1 = require("./lisa/service/LisaStorageService");
 const logger_1 = require("./logger");
 const mode_1 = require("./mode");
@@ -27,8 +27,8 @@ const startLisaMainClient = async () => {
     lisaTimer.start();
 };
 const startLisaDiscordClient = async () => {
-    const lisaDiscordClient = chevron_1.chevron.getInjectableInstance(LisaDiscordClient_1.LisaDiscordClient);
-    const lisaDiscordController = chevron_1.chevron.getInjectableInstance(LisaDiscordEventController_1.LisaDiscordEventController);
+    const lisaDiscordClient = chevron_1.chevron.getInjectableInstance(DiscordClient_1.DiscordClient);
+    const lisaDiscordController = chevron_1.chevron.getInjectableInstance(DiscordEventController_1.DiscordEventController);
     const discordToken = mode_1.isProductionMode()
         ? process.env.DISCORD_TOKEN
         : process.env.DISCORD_TOKEN_TEST;

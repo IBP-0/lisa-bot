@@ -1,12 +1,12 @@
 import { Message } from "discord.js";
 import { Command, CommandoClient, CommandoMessage } from "discord.js-commando";
 import { chevron } from "../../../../chevron";
-import { LisaDiscordCommandController } from "../../controller/LisaDiscordCommandController";
+import { DiscordCommandController } from "../../controller/DiscordCommandController";
 
 const MISSY_ID = ["273221196001181697"];
 
 class MissyCommand extends Command {
-    private readonly lisaDiscordCommandController: LisaDiscordCommandController;
+    private readonly lisaDiscordCommandController: DiscordCommandController;
 
     constructor(client: CommandoClient) {
         super(client, {
@@ -18,7 +18,7 @@ class MissyCommand extends Command {
             hidden: true
         });
         this.lisaDiscordCommandController = chevron.getInjectableInstance(
-            LisaDiscordCommandController
+            DiscordCommandController
         );
     }
 

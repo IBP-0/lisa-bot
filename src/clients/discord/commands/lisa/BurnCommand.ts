@@ -2,10 +2,10 @@ import { Message } from "discord.js";
 import { Command, CommandoClient, CommandoMessage } from "discord.js-commando";
 import { chevron } from "../../../../chevron";
 import { LisaDeathCause } from "../../../../lisa/LisaState";
-import { LisaDiscordCommandController } from "../../controller/LisaDiscordCommandController";
+import { DiscordCommandController } from "../../controller/DiscordCommandController";
 
 class BurnCommand extends Command {
-    private readonly lisaDiscordCommandController: LisaDiscordCommandController;
+    private readonly lisaDiscordCommandController: DiscordCommandController;
 
     constructor(client: CommandoClient) {
         super(client, {
@@ -16,7 +16,7 @@ class BurnCommand extends Command {
             description: "Burn Lisa (you monster)."
         });
         this.lisaDiscordCommandController = chevron.getInjectableInstance(
-            LisaDiscordCommandController
+            DiscordCommandController
         );
     }
 

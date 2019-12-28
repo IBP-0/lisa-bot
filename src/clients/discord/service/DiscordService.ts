@@ -3,7 +3,7 @@ import { User } from "discord.js";
 import { chevron } from "../../../chevron";
 
 @Injectable(chevron)
-class LisaDiscordService {
+class DiscordService {
     public getFullUserName(user: User): string {
         return `${user.username}#${user.discriminator}`;
     }
@@ -16,4 +16,4 @@ class LisaDiscordService {
     }
 }
 
-export { LisaDiscordService };
+export { DiscordService };

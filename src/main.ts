@@ -1,7 +1,7 @@
 import { isNil } from "lodash";
 import { chevron } from "./chevron";
-import { DiscordClient } from "./clients/discord/LisaDiscordClient";
-import { LisaDiscordEventController } from "./clients/discord/controller/LisaDiscordEventController";
+import { DiscordEventController } from "./clients/discord/controller/DiscordEventController";
+import { DiscordClient } from "./clients/discord/DiscordClient";
 import { LisaStateController } from "./lisa/controller/LisaStateController";
 import { LisaStorageController } from "./lisa/controller/LisaStorageController";
 import { LisaTickController } from "./lisa/controller/LisaTickController";
@@ -39,8 +39,8 @@ const startLisaDiscordClient = async (): Promise<void> => {
     const lisaDiscordClient: DiscordClient = chevron.getInjectableInstance(
         DiscordClient
     );
-    const lisaDiscordController: LisaDiscordEventController = chevron.getInjectableInstance(
-        LisaDiscordEventController
+    const lisaDiscordController: DiscordEventController = chevron.getInjectableInstance(
+        DiscordEventController
     );
 
     const discordToken = isProductionMode()

@@ -6,19 +6,23 @@ import { LisaStateController } from "../../../lisa/controller/LisaStateControlle
 import { LisaDeathCause } from "../../../lisa/LisaState";
 import { LisaStatusService } from "../../../lisa/service/LisaStatusService";
 import { LisaTextService } from "../../../lisa/service/LisaTextService";
-import { LisaDiscordService } from "../service/LisaDiscordService";
+import { DiscordService } from "../service/DiscordService";
 
 @Injectable(chevron, {
-    dependencies: [LisaStateController, LisaStatusService, LisaTextService,LisaDiscordService]
+    dependencies: [
+        LisaStateController,
+        LisaStatusService,
+        LisaTextService,
+        DiscordService
+    ]
 })
-class LisaDiscordCommandController {
+class DiscordCommandController {
     constructor(
         private readonly lisaStateController: LisaStateController,
         private readonly lisaStatusService: LisaStatusService,
         private readonly lisaTextService: LisaTextService,
-        private readonly lisaDiscordService: LisaDiscordService,
-    ) {
-    }
+        private readonly lisaDiscordService: DiscordService
+    ) {}
 
     public performAction(
         author: User,
@@ -60,7 +64,10 @@ class LisaDiscordCommandController {
             return sample(textAlreadyDead)!;
         }
 
-        this.lisaStateController.killLisa(cause, this.lisaDiscordService.getFullUserName(author));
+        this.lisaStateController.killLisa(
+            cause,
+            this.lisaDiscordService.getFullUserName(author)
+        );
 
         return [sample(textSuccess)!, this.createStatusText()].join("\n");
     }
@@ -77,7 +84,9 @@ class LisaDiscordCommandController {
         }
 
         const wasAlive = this.isAlive();
-        this.lisaStateController.replantLisa(this.lisaDiscordService.getFullUserName(author));
+        this.lisaStateController.replantLisa(
+            this.lisaDiscordService.getFullUserName(author)
+        );
 
         return sample(wasAlive ? textWasAlive : textWasDead)!;
     }
@@ -95,4 +104,4 @@ class LisaDiscordCommandController {
     }
 }
 
-export { LisaDiscordCommandController };
+export { DiscordCommandController };
