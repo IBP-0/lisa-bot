@@ -2,20 +2,23 @@ import { Injectable } from "chevronjs";
 import { User } from "discord.js";
 import { sample } from "lodash";
 import { chevron } from "../../../chevron";
-import { LisaDeathCause } from "../../../lisa/LisaState";
 import { LisaStateController } from "../../../lisa/controller/LisaStateController";
+import { LisaDeathCause } from "../../../lisa/LisaState";
 import { LisaStatusService } from "../../../lisa/service/LisaStatusService";
 import { LisaTextService } from "../../../lisa/service/LisaTextService";
+import { LisaDiscordService } from "../service/LisaDiscordService";
 
 @Injectable(chevron, {
-    dependencies: [LisaStateController, LisaStatusService, LisaTextService]
+    dependencies: [LisaStateController, LisaStatusService, LisaTextService,LisaDiscordService]
 })
 class LisaDiscordCommandController {
     constructor(
         private readonly lisaStateController: LisaStateController,
         private readonly lisaStatusService: LisaStatusService,
-        private readonly lisaTextService: LisaTextService
-    ) {}
+        private readonly lisaTextService: LisaTextService,
+        private readonly lisaDiscordService: LisaDiscordService,
+    ) {
+    }
 
     public performAction(
         author: User,
@@ -26,7 +29,7 @@ class LisaDiscordCommandController {
         textDead: string[],
         textNotAllowed: string[] = []
     ): string {
-        if (!this.isUserAllowed(allowedUserIds, author)) {
+        if (!this.lisaDiscordService.isUserAllowed(allowedUserIds, author)) {
             return sample(textNotAllowed)!;
         }
         if (!this.isAlive()) {
@@ -36,7 +39,7 @@ class LisaDiscordCommandController {
         this.lisaStateController.modifyLisaStatus(
             waterModifier,
             happinessModifier,
-            this.getFullUserName(author)
+            this.lisaDiscordService.getFullUserName(author)
         );
 
         return [sample(textSuccess)!, this.createStatusText()].join("\n");
@@ -50,14 +53,14 @@ class LisaDiscordCommandController {
         textAlreadyDead: string[],
         textNotAllowed: string[] = []
     ): string {
-        if (!this.isUserAllowed(allowedUserIds, author)) {
+        if (!this.lisaDiscordService.isUserAllowed(allowedUserIds, author)) {
             return sample(textNotAllowed)!;
         }
         if (!this.isAlive()) {
             return sample(textAlreadyDead)!;
         }
 
-        this.lisaStateController.killLisa(cause, this.getFullUserName(author));
+        this.lisaStateController.killLisa(cause, this.lisaDiscordService.getFullUserName(author));
 
         return [sample(textSuccess)!, this.createStatusText()].join("\n");
     }
@@ -69,12 +72,12 @@ class LisaDiscordCommandController {
         textWasDead: string[],
         textNotAllowed: string[] = []
     ): string {
-        if (!this.isUserAllowed(allowedUserIds, author)) {
+        if (!this.lisaDiscordService.isUserAllowed(allowedUserIds, author)) {
             return sample(textNotAllowed)!;
         }
 
         const wasAlive = this.isAlive();
-        this.lisaStateController.replantLisa(this.getFullUserName(author));
+        this.lisaStateController.replantLisa(this.lisaDiscordService.getFullUserName(author));
 
         return sample(wasAlive ? textWasAlive : textWasDead)!;
     }
@@ -85,21 +88,10 @@ class LisaDiscordCommandController {
         );
     }
 
-    private getFullUserName(user: User): string {
-        return `${user.username}#${user.discriminator}`;
-    }
-
     private isAlive(): boolean {
         return this.lisaStatusService.isAlive(
             this.lisaStateController.getStateCopy()
         );
-    }
-
-    private isUserAllowed(
-        allowedUserIds: string[] | null,
-        author: User
-    ): boolean {
-        return allowedUserIds == null || allowedUserIds.includes(author.id);
     }
 }
 
