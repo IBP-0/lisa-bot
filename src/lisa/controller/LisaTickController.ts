@@ -18,10 +18,8 @@ class LisaTickController {
     private static readonly HAPPINESS_MODIFIER = -0.75;
     private static readonly USER_TICK = "Time";
 
-    private timer: Timer | null;
-
     constructor(private readonly lisaStateController: LisaStateController) {
-        this.timer = null;
+
     }
 
     public start(): void {
