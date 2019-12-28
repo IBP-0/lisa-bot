@@ -5,7 +5,6 @@ import { DiscordClient } from "./clients/discord/DiscordClient";
 import { LisaStateController } from "./lisa/controller/LisaStateController";
 import { LisaStorageController } from "./lisa/controller/LisaStorageController";
 import { LisaTickController } from "./lisa/controller/LisaTickController";
-import { LisaStateStorageService } from "./lisa/service/LisaStateStorageService";
 import { rootLogger } from "./logger";
 import { isProductionMode } from "./mode";
 
@@ -15,9 +14,6 @@ const startLisaMainClient = async (): Promise<void> => {
     const lisaStateController: LisaStateController = chevron.getInjectableInstance(
         LisaStateController
     );
-    const lisaStateStorageService: LisaStateStorageService = chevron.getInjectableInstance(
-        LisaStateStorageService
-    );
     const lisaStorageController: LisaStorageController = chevron.getInjectableInstance(
         LisaStorageController
     );
@@ -25,9 +21,9 @@ const startLisaMainClient = async (): Promise<void> => {
         LisaTickController
     );
 
-    if (await lisaStateStorageService.hasStoredState()) {
+    if (await lisaStorageController.hasStoredState()) {
         logger.info("Found stored Lisa state, loading it.");
-        lisaStateController.load(await lisaStateStorageService.loadStoredState());
+        lisaStateController.load(await lisaStorageController.loadStoredState());
     } else {
         logger.info("No stored state found, skipping loading.");
     }

@@ -3,7 +3,6 @@ import { cloneDeep } from "lodash";
 import { duration } from "moment";
 import { chevron } from "../../chevron";
 import { LisaDeathCause, LisaState } from "../LisaState";
-import { JsonStorageService } from "./JsonStorageService";
 
 interface JsonLisaState {
     status: {
@@ -22,38 +21,9 @@ interface JsonLisaState {
     bestLifetime: number;
 }
 
-@Injectable(chevron, { dependencies: [JsonStorageService] })
+@Injectable(chevron)
 class LisaStateStorageService {
-    private static readonly STORAGE_PATH= "data/storage.json";
-    private static readonly STORAGE_KEY= "lisaState";
-
-    constructor(private readonly jsonStorageService: JsonStorageService) {}
-
-    public async hasStoredState(): Promise<boolean> {
-        return this.jsonStorageService.hasStorageKey(
-            LisaStateStorageService.STORAGE_PATH,
-            LisaStateStorageService.STORAGE_KEY
-        );
-    }
-
-    public async loadStoredState(): Promise<LisaState> {
-        const storedState = await this.jsonStorageService.load(
-            LisaStateStorageService.STORAGE_PATH,
-            LisaStateStorageService.STORAGE_KEY
-        );
-        return this.fromStorable(storedState);
-    }
-
-    public async storeState(state: LisaState): Promise<void> {
-        const jsonLisaState = this.toStorable(state);
-        return await this.jsonStorageService.store(
-            LisaStateStorageService.STORAGE_PATH,
-            LisaStateStorageService.STORAGE_KEY,
-            jsonLisaState
-        );
-    }
-
-    private fromStorable(jsonState: JsonLisaState): LisaState {
+    public fromStorable(jsonState: JsonLisaState): LisaState {
         const state: any = cloneDeep(jsonState);
         if (state.life.time != null) {
             state.life.time = new Date(state.life.time);
@@ -65,7 +35,7 @@ class LisaStateStorageService {
         return state;
     }
 
-    private toStorable(state: LisaState): JsonLisaState {
+    public toStorable(state: LisaState): JsonLisaState {
         const storedState: any = cloneDeep(state);
         if (storedState.life.time != null) {
             storedState.life.time = storedState.life.time.getTime();
