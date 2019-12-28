@@ -12,21 +12,23 @@ var LisaTickController_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 const chevronjs_1 = require("chevronjs");
 const rxjs_1 = require("rxjs");
+const operators_1 = require("rxjs/operators");
 const chevron_1 = require("../../chevron");
 const logger_1 = require("../../logger");
-const LisaStateController_1 = require("./LisaStateController");
 let LisaTickController = LisaTickController_1 = class LisaTickController {
-    constructor(lisaStateController) {
-        this.lisaStateController = lisaStateController;
-        this.timer = null;
+    constructor() {
+        this.tickObservable = this.createTickObservable();
+        LisaTickController_1.logger.debug(`Started Lisa timer with an interval of ${LisaTickController_1.TIMEOUT}.`);
     }
-    start() {
-        rxjs_1.interval(LisaTickController_1.TIMEOUT).subscribe(() => this.tick());
-        LisaTickController_1.logger.info(`Started Lisa timer with an interval of ${LisaTickController_1.TIMEOUT}.`);
-    }
-    tick() {
-        LisaTickController_1.logger.debug("Performing tick.");
-        this.lisaStateController.modifyLisaStatus(LisaTickController_1.WATER_MODIFIER, LisaTickController_1.HAPPINESS_MODIFIER, LisaTickController_1.USER_TICK);
+    createTickObservable() {
+        return rxjs_1.interval(LisaTickController_1.TIMEOUT).pipe(operators_1.map(() => {
+            LisaTickController_1.logger.debug("Running tick.");
+            return {
+                waterModifier: LisaTickController_1.WATER_MODIFIER,
+                happinessModifier: LisaTickController_1.HAPPINESS_MODIFIER,
+                byUser: LisaTickController_1.USER_TICK
+            };
+        }));
     }
 };
 LisaTickController.logger = logger_1.rootLogger.child({
@@ -37,9 +39,7 @@ LisaTickController.WATER_MODIFIER = -0.5;
 LisaTickController.HAPPINESS_MODIFIER = -0.75;
 LisaTickController.USER_TICK = "Time";
 LisaTickController = LisaTickController_1 = __decorate([
-    chevronjs_1.Injectable(chevron_1.chevron, {
-        dependencies: [LisaStateController_1.LisaStateController]
-    }),
-    __metadata("design:paramtypes", [LisaStateController_1.LisaStateController])
+    chevronjs_1.Injectable(chevron_1.chevron),
+    __metadata("design:paramtypes", [])
 ], LisaTickController);
 exports.LisaTickController = LisaTickController;

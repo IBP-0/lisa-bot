@@ -1,14 +1,17 @@
-import { LisaStateController } from "./LisaStateController";
+import { Observable } from "rxjs";
+interface TickData {
+    waterModifier: number;
+    happinessModifier: number;
+    byUser: string;
+}
 declare class LisaTickController {
-    private readonly lisaStateController;
     private static readonly logger;
     private static readonly TIMEOUT;
     private static readonly WATER_MODIFIER;
     private static readonly HAPPINESS_MODIFIER;
     private static readonly USER_TICK;
-    private timer;
-    constructor(lisaStateController: LisaStateController);
-    start(): void;
-    private tick;
+    readonly tickObservable: Observable<TickData>;
+    constructor();
+    private createTickObservable;
 }
 export { LisaTickController };

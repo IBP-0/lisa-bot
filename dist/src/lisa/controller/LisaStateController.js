@@ -56,7 +56,7 @@ let LisaStateController = LisaStateController_1 = class LisaStateController {
      *
      * @param state State to load.
      */
-    load(state) {
+    loadState(state) {
         this.state = state;
         this.stateChanged();
     }

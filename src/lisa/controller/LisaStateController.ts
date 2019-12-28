@@ -78,7 +78,7 @@ class LisaStateController {
      *
      * @param state State to load.
      */
-    public load(state: LisaState): void {
+    public loadState(state: LisaState): void {
         this.state = state;
         this.stateChanged();
     }

@@ -1,13 +1,16 @@
 import { Injectable } from "chevronjs";
-import { interval } from "rxjs";
+import { interval, Observable } from "rxjs";
+import { map } from "rxjs/operators";
 import { chevron } from "../../chevron";
 import { rootLogger } from "../../logger";
-import { LisaStateController } from "./LisaStateController";
-import Timer = NodeJS.Timer;
 
-@Injectable(chevron, {
-    dependencies: [LisaStateController]
-})
+interface TickData {
+    waterModifier: number;
+    happinessModifier: number;
+    byUser: string;
+}
+
+@Injectable(chevron)
 class LisaTickController {
     private static readonly logger = rootLogger.child({
         target: LisaTickController
@@ -18,24 +21,25 @@ class LisaTickController {
     private static readonly HAPPINESS_MODIFIER = -0.75;
     private static readonly USER_TICK = "Time";
 
-    constructor(private readonly lisaStateController: LisaStateController) {
+    public readonly tickObservable: Observable<TickData>;
 
-    }
-
-    public start(): void {
-        interval(LisaTickController.TIMEOUT).subscribe(() => this.tick());
-        LisaTickController.logger.info(
+    constructor() {
+        this.tickObservable = this.createTickObservable();
+        LisaTickController.logger.debug(
             `Started Lisa timer with an interval of ${LisaTickController.TIMEOUT}.`
         );
     }
 
-    private tick(): void {
-        LisaTickController.logger.debug("Performing tick.");
-
-        this.lisaStateController.modifyLisaStatus(
-            LisaTickController.WATER_MODIFIER,
-            LisaTickController.HAPPINESS_MODIFIER,
-            LisaTickController.USER_TICK
+    private createTickObservable(): Observable<TickData> {
+        return interval(LisaTickController.TIMEOUT).pipe(
+            map(() => {
+                LisaTickController.logger.debug("Running tick.");
+                return {
+                    waterModifier: LisaTickController.WATER_MODIFIER,
+                    happinessModifier: LisaTickController.HAPPINESS_MODIFIER,
+                    byUser: LisaTickController.USER_TICK
+                };
+            })
         );
     }
 }

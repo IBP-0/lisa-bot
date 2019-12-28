@@ -21,7 +21,7 @@ declare class LisaStateController {
      *
      * @param state State to load.
      */
-    load(state: LisaState): void;
+    loadState(state: LisaState): void;
     replantLisa(byUser?: string): void;
     killLisa(cause: LisaDeathCause, byUser?: string): void;
     modifyLisaStatus(waterModifier: number, happinessModifier: number, byUser?: string): void;

@@ -14,24 +14,33 @@ const startLisaMainClient = async (): Promise<void> => {
     const lisaStateController: LisaStateController = chevron.getInjectableInstance(
         LisaStateController
     );
+
     const lisaStorageController: LisaStateStorageController = chevron.getInjectableInstance(
         LisaStateStorageController
     );
-    const lisaTimer: LisaTickController = chevron.getInjectableInstance(
-        LisaTickController
-    );
-
     if (await lisaStorageController.hasStoredState()) {
         logger.info("Found stored Lisa state, loading it.");
-        lisaStateController.load(await lisaStorageController.loadStoredState());
+        lisaStateController.loadState(
+            await lisaStorageController.loadStoredState()
+        );
     } else {
         logger.info("No stored state found, skipping loading.");
     }
-
     lisaStorageController.bindStateChangeSubscription(
         lisaStateController.stateChangeSubject
     );
-    lisaTimer.start();
+
+    const lisaTimer: LisaTickController = chevron.getInjectableInstance(
+        LisaTickController
+    );
+    lisaTimer.tickObservable.subscribe(
+        ({ waterModifier, happinessModifier, byUser }) =>
+            lisaStateController.modifyLisaStatus(
+                waterModifier,
+                happinessModifier,
+                byUser
+            )
+    );
 };
 const startLisaDiscordClient = async (): Promise<void> => {
     const lisaDiscordClient: DiscordClient = chevron.getInjectableInstance(
