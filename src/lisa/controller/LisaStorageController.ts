@@ -2,11 +2,11 @@ import { Injectable } from "chevronjs";
 import { throttleTime } from "rxjs/operators";
 import { chevron } from "../../chevron";
 import { rootLogger } from "../../logger";
-import { LisaStorageService } from "../service/LisaStorageService";
+import { LisaStateStorageService } from "../service/LisaStateStorageService";
 import { LisaStateController } from "./LisaStateController";
 
 @Injectable(chevron, {
-    dependencies: [LisaStateController, LisaStorageService]
+    dependencies: [LisaStateController, LisaStateStorageService]
 })
 class LisaStorageController {
     private static readonly STORAGE_THROTTLE_TIMEOUT = 10000;
@@ -17,7 +17,7 @@ class LisaStorageController {
 
     constructor(
         private readonly lisaStateController: LisaStateController,
-        private readonly lisaStorageService: LisaStorageService
+        private readonly lisaStateStorageService: LisaStateStorageService
     ) {}
 
     public bindListeners(): void {
@@ -27,7 +27,7 @@ class LisaStorageController {
     }
 
     private storeState(): void {
-        this.lisaStorageService
+        this.lisaStateStorageService
             .storeState(this.lisaStateController.getStateCopy())
             .catch(e =>
                 LisaStorageController.logger.error("Could not save state!", e)

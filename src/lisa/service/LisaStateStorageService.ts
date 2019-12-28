@@ -1,9 +1,9 @@
 import { Injectable } from "chevronjs";
-import { pathExists, readJSON, writeJSON } from "fs-extra";
 import { cloneDeep } from "lodash";
 import { duration } from "moment";
 import { chevron } from "../../chevron";
 import { LisaDeathCause, LisaState } from "../LisaState";
+import { JsonStorageService } from "./JsonStorageService";
 
 interface JsonLisaState {
     status: {
@@ -22,25 +22,38 @@ interface JsonLisaState {
     bestLifetime: number;
 }
 
-@Injectable(chevron)
-class LisaStorageService {
-    public static readonly STORAGE_PATH = "data/lisaState.json";
+@Injectable(chevron, { dependencies: [JsonStorageService] })
+class LisaStateStorageService {
+    private static readonly STORAGE_PATH= "data/storage.json";
+    private static readonly STORAGE_KEY= "lisaState";
+
+    constructor(private readonly jsonStorageService: JsonStorageService) {}
 
     public async hasStoredState(): Promise<boolean> {
-        return pathExists(LisaStorageService.STORAGE_PATH);
+        return this.jsonStorageService.hasStorageKey(
+            LisaStateStorageService.STORAGE_PATH,
+            LisaStateStorageService.STORAGE_KEY
+        );
     }
 
     public async loadStoredState(): Promise<LisaState> {
-        const storedState = await readJSON(LisaStorageService.STORAGE_PATH);
-        return this.fromJson(storedState);
+        const storedState = await this.jsonStorageService.load(
+            LisaStateStorageService.STORAGE_PATH,
+            LisaStateStorageService.STORAGE_KEY
+        );
+        return this.fromStorable(storedState);
     }
 
     public async storeState(state: LisaState): Promise<void> {
-        const jsonLisaState = this.toJson(state);
-        return await writeJSON(LisaStorageService.STORAGE_PATH, jsonLisaState);
+        const jsonLisaState = this.toStorable(state);
+        return await this.jsonStorageService.store(
+            LisaStateStorageService.STORAGE_PATH,
+            LisaStateStorageService.STORAGE_KEY,
+            jsonLisaState
+        );
     }
 
-    private fromJson(jsonState: JsonLisaState): LisaState {
+    private fromStorable(jsonState: JsonLisaState): LisaState {
         const state: any = cloneDeep(jsonState);
         if (state.life.time != null) {
             state.life.time = new Date(state.life.time);
@@ -52,7 +65,7 @@ class LisaStorageService {
         return state;
     }
 
-    private toJson(state: LisaState): JsonLisaState {
+    private toStorable(state: LisaState): JsonLisaState {
         const storedState: any = cloneDeep(state);
         if (storedState.life.time != null) {
             storedState.life.time = storedState.life.time.getTime();
@@ -65,4 +78,4 @@ class LisaStorageService {
     }
 }
 
-export { LisaStorageService };
+export { LisaStateStorageService };
