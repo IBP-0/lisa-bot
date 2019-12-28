@@ -3,7 +3,7 @@ import { chevron } from "./chevron";
 import { DiscordEventController } from "./clients/discord/controller/DiscordEventController";
 import { DiscordClient } from "./clients/discord/DiscordClient";
 import { LisaStateController } from "./lisa/controller/LisaStateController";
-import { LisaStorageController } from "./lisa/controller/LisaStorageController";
+import { LisaStateStorageController } from "./lisa/controller/LisaStateStorageController";
 import { LisaTickController } from "./lisa/controller/LisaTickController";
 import { rootLogger } from "./logger";
 import { isProductionMode } from "./mode";
@@ -14,8 +14,8 @@ const startLisaMainClient = async (): Promise<void> => {
     const lisaStateController: LisaStateController = chevron.getInjectableInstance(
         LisaStateController
     );
-    const lisaStorageController: LisaStorageController = chevron.getInjectableInstance(
-        LisaStorageController
+    const lisaStorageController: LisaStateStorageController = chevron.getInjectableInstance(
+        LisaStateStorageController
     );
     const lisaTimer: LisaTickController = chevron.getInjectableInstance(
         LisaTickController
@@ -28,7 +28,9 @@ const startLisaMainClient = async (): Promise<void> => {
         logger.info("No stored state found, skipping loading.");
     }
 
-    lisaStorageController.bindListeners();
+    lisaStorageController.bindStateChangeSubscription(
+        lisaStateController.stateChangeSubject
+    );
     lisaTimer.start();
 };
 const startLisaDiscordClient = async (): Promise<void> => {

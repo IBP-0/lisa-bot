@@ -5,25 +5,23 @@ const chevron_1 = require("./chevron");
 const DiscordEventController_1 = require("./clients/discord/controller/DiscordEventController");
 const DiscordClient_1 = require("./clients/discord/DiscordClient");
 const LisaStateController_1 = require("./lisa/controller/LisaStateController");
-const LisaStorageController_1 = require("./lisa/controller/LisaStorageController");
+const LisaStateStorageController_1 = require("./lisa/controller/LisaStateStorageController");
 const LisaTickController_1 = require("./lisa/controller/LisaTickController");
-const LisaStorageService_1 = require("./lisa/service/LisaStorageService");
 const logger_1 = require("./logger");
 const mode_1 = require("./mode");
 const logger = logger_1.rootLogger.child({ target: "main" });
 const startLisaMainClient = async () => {
     const lisaStateController = chevron_1.chevron.getInjectableInstance(LisaStateController_1.LisaStateController);
-    const lisaStorageService = chevron_1.chevron.getInjectableInstance(LisaStorageService_1.LisaStorageService);
-    const lisaStorageController = chevron_1.chevron.getInjectableInstance(LisaStorageController_1.LisaStorageController);
+    const lisaStorageController = chevron_1.chevron.getInjectableInstance(LisaStateStorageController_1.LisaStateStorageController);
     const lisaTimer = chevron_1.chevron.getInjectableInstance(LisaTickController_1.LisaTickController);
-    if (await lisaStorageService.hasStoredState()) {
+    if (await lisaStorageController.hasStoredState()) {
         logger.info("Found stored Lisa state, loading it.");
-        lisaStateController.load(await lisaStorageService.loadStoredState());
+        lisaStateController.load(await lisaStorageController.loadStoredState());
     }
     else {
         logger.info("No stored state found, skipping loading.");
     }
-    lisaStorageController.bindListeners();
+    lisaStorageController.bindStateChangeSubscription(lisaStateController.stateChangeSubject);
     lisaTimer.start();
 };
 const startLisaDiscordClient = async () => {

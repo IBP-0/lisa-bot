@@ -3,6 +3,7 @@ import { PresenceData } from "discord.js";
 import { filter, throttleTime } from "rxjs/operators";
 import { chevron } from "../../../chevron";
 import { LisaStateController } from "../../../lisa/controller/LisaStateController";
+import { LisaState } from "../../../lisa/LisaState";
 import { LisaTextService } from "../../../lisa/service/LisaTextService";
 import { rootLogger } from "../../../logger";
 import { DiscordClient } from "../DiscordClient";
@@ -48,8 +49,8 @@ class DiscordEventController {
                     DiscordEventController.PRESENCE_UPDATE_THROTTLE_TIMEOUT
                 )
             )
-            .subscribe(() => this.onStateChange());
-        this.onStateChange();
+            .subscribe(state => this.onStateChange(state));
+        this.onStateChange(this.lisaStateController.getStateCopy());
     }
 
     private onMessage(): void {
@@ -63,10 +64,8 @@ class DiscordEventController {
         );
     }
 
-    private onStateChange(): void {
-        const statusLabel = `${this.lisaTextService.createStatusLabel(
-            this.lisaStateController.getStateCopy()
-        )}.`;
+    private onStateChange(state: LisaState): void {
+        const statusLabel = `${this.lisaTextService.createStatusLabel(state)}.`;
         DiscordEventController.logger.debug(
             `Updating presence to '${statusLabel}'...`
         );

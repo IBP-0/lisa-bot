@@ -1,43 +1,41 @@
 import { Injectable } from "chevronjs";
+import { Subject } from "rxjs";
 import { throttleTime } from "rxjs/operators";
 import { chevron } from "../../chevron";
 import { rootLogger } from "../../logger";
 import { LisaState } from "../LisaState";
 import { JsonStorageService } from "../service/JsonStorageService";
 import { LisaStateStorageService } from "../service/LisaStateStorageService";
-import { LisaStateController } from "./LisaStateController";
 
 @Injectable(chevron, {
-    dependencies: [
-        LisaStateController,
-        JsonStorageService,
-        LisaStateStorageService
-    ]
+    dependencies: [JsonStorageService, LisaStateStorageService]
 })
-class LisaStorageController {
+class LisaStateStorageController {
     private static readonly STORAGE_THROTTLE_TIMEOUT = 10000;
-
     private static readonly STORAGE_PATH = "data/storage.json";
     private static readonly STORAGE_KEY = "lisaState";
 
     private static readonly logger = rootLogger.child({
-        target: LisaStorageController
+        target: LisaStateStorageController
     });
 
     constructor(
-        private readonly lisaStateController: LisaStateController,
         private readonly jsonStorageService: JsonStorageService,
         private readonly lisaStateStorageService: LisaStateStorageService
     ) {}
 
-    public bindListeners(): void {
-        this.lisaStateController.stateChangeSubject
-            .pipe(throttleTime(LisaStorageController.STORAGE_THROTTLE_TIMEOUT))
-            .subscribe(() => {
-                this.storeState(
-                    this.lisaStateController.getStateCopy()
-                ).catch(e =>
-                    LisaStorageController.logger.error(
+    public bindStateChangeSubscription(
+        stateChangeSubject: Subject<LisaState>
+    ): void {
+        stateChangeSubject
+            .pipe(
+                throttleTime(
+                    LisaStateStorageController.STORAGE_THROTTLE_TIMEOUT
+                )
+            )
+            .subscribe(state => {
+                this.storeState(state).catch(e =>
+                    LisaStateStorageController.logger.error(
                         "Could not save state!",
                         e
                     )
@@ -47,15 +45,15 @@ class LisaStorageController {
 
     public async hasStoredState(): Promise<boolean> {
         return this.jsonStorageService.hasStorageKey(
-            LisaStorageController.STORAGE_PATH,
-            LisaStorageController.STORAGE_KEY
+            LisaStateStorageController.STORAGE_PATH,
+            LisaStateStorageController.STORAGE_KEY
         );
     }
 
     public async loadStoredState(): Promise<LisaState> {
         const storedState = await this.jsonStorageService.load(
-            LisaStorageController.STORAGE_PATH,
-            LisaStorageController.STORAGE_KEY
+            LisaStateStorageController.STORAGE_PATH,
+            LisaStateStorageController.STORAGE_KEY
         );
         return this.lisaStateStorageService.fromStorable(storedState);
     }
@@ -63,11 +61,11 @@ class LisaStorageController {
     public async storeState(state: LisaState): Promise<void> {
         const jsonLisaState = this.lisaStateStorageService.toStorable(state);
         return await this.jsonStorageService.store(
-            LisaStorageController.STORAGE_PATH,
-            LisaStorageController.STORAGE_KEY,
+            LisaStateStorageController.STORAGE_PATH,
+            LisaStateStorageController.STORAGE_KEY,
             jsonLisaState
         );
     }
 }
 
-export { LisaStorageController };
+export { LisaStateStorageController };

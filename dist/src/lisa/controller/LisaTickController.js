@@ -8,38 +8,38 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var LisaTimer_1;
+var LisaTickController_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 const chevronjs_1 = require("chevronjs");
 const rxjs_1 = require("rxjs");
-const chevron_1 = require("../chevron");
-const logger_1 = require("../logger");
+const chevron_1 = require("../../chevron");
+const logger_1 = require("../../logger");
 const LisaStateController_1 = require("./LisaStateController");
-let LisaTimer = LisaTimer_1 = class LisaTimer {
+let LisaTickController = LisaTickController_1 = class LisaTickController {
     constructor(lisaStateController) {
         this.lisaStateController = lisaStateController;
         this.timer = null;
     }
     start() {
-        rxjs_1.interval(LisaTimer_1.TIMEOUT).subscribe(() => this.tick());
-        LisaTimer_1.logger.info(`Started Lisa timer with an interval of ${LisaTimer_1.TIMEOUT}.`);
+        rxjs_1.interval(LisaTickController_1.TIMEOUT).subscribe(() => this.tick());
+        LisaTickController_1.logger.info(`Started Lisa timer with an interval of ${LisaTickController_1.TIMEOUT}.`);
     }
     tick() {
-        LisaTimer_1.logger.debug("Performing tick.");
-        this.lisaStateController.modifyLisaStatus(LisaTimer_1.WATER_MODIFIER, LisaTimer_1.HAPPINESS_MODIFIER, LisaTimer_1.USER_TICK);
+        LisaTickController_1.logger.debug("Performing tick.");
+        this.lisaStateController.modifyLisaStatus(LisaTickController_1.WATER_MODIFIER, LisaTickController_1.HAPPINESS_MODIFIER, LisaTickController_1.USER_TICK);
     }
 };
-LisaTimer.logger = logger_1.rootLogger.child({
-    target: LisaTimer_1
+LisaTickController.logger = logger_1.rootLogger.child({
+    target: LisaTickController_1
 });
-LisaTimer.TIMEOUT = 60000;
-LisaTimer.WATER_MODIFIER = -0.5;
-LisaTimer.HAPPINESS_MODIFIER = -0.75;
-LisaTimer.USER_TICK = "Time";
-LisaTimer = LisaTimer_1 = __decorate([
+LisaTickController.TIMEOUT = 60000;
+LisaTickController.WATER_MODIFIER = -0.5;
+LisaTickController.HAPPINESS_MODIFIER = -0.75;
+LisaTickController.USER_TICK = "Time";
+LisaTickController = LisaTickController_1 = __decorate([
     chevronjs_1.Injectable(chevron_1.chevron, {
         dependencies: [LisaStateController_1.LisaStateController]
     }),
     __metadata("design:paramtypes", [LisaStateController_1.LisaStateController])
-], LisaTimer);
-exports.LisaTimer = LisaTimer;
+], LisaTickController);
+exports.LisaTickController = LisaTickController;

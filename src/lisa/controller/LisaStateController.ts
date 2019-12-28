@@ -25,10 +25,9 @@ class LisaStateController {
     });
 
     private static readonly USER_SYSTEM = "System";
-
     private static readonly BEST_LIFETIME_CHECK_TIMEOUT = 5000;
 
-    public readonly stateChangeSubject: Subject<void>;
+    public readonly stateChangeSubject: Subject<LisaState>;
     private state: LisaState;
 
     constructor(private readonly lisaStatusService: LisaStatusService) {
@@ -36,7 +35,7 @@ class LisaStateController {
             LisaStateController.USER_SYSTEM,
             duration(0)
         );
-        this.stateChangeSubject = new Subject<void>();
+        this.stateChangeSubject = new Subject<LisaState>();
 
         interval(
             LisaStateController.BEST_LIFETIME_CHECK_TIMEOUT
@@ -185,7 +184,7 @@ class LisaStateController {
     private stateChanged(): void {
         LisaStateController.logger.silly("Lisa state changed.");
 
-        this.stateChangeSubject.next();
+        this.stateChangeSubject.next(this.getStateCopy());
     }
 
     private updateBestLifetimeIfRequired(): void {

@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_commando_1 = require("discord.js-commando");
 const chevron_1 = require("../../../../chevron");
-const LisaDiscordCommandController_1 = require("../../LisaDiscordCommandController");
+const DiscordCommandController_1 = require("../../controller/DiscordCommandController");
 const HIGH_QUALITY_JOKES = [
     "Why do trees have so many friends? They branch out.",
     "A photographer was great at botany because he knew photo synthesis.",
@@ -34,7 +34,7 @@ class JokeCommand extends discord_js_commando_1.Command {
             memberName: "joke",
             description: "Tell Lisa a joke."
         });
-        this.lisaDiscordCommandController = chevron_1.chevron.getInjectableInstance(LisaDiscordCommandController_1.LisaDiscordCommandController);
+        this.lisaDiscordCommandController = chevron_1.chevron.getInjectableInstance(DiscordCommandController_1.DiscordCommandController);
     }
     run(message) {
         const goodJoke = Math.random() > 0.5;

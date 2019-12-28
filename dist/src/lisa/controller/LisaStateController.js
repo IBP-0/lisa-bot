@@ -14,10 +14,10 @@ const chevronjs_1 = require("chevronjs");
 const lodash_1 = require("lodash");
 const moment_1 = require("moment");
 const rxjs_1 = require("rxjs");
-const chevron_1 = require("../chevron");
-const logger_1 = require("../logger");
-const LisaState_1 = require("./LisaState");
-const LisaStatusService_1 = require("./service/LisaStatusService");
+const chevron_1 = require("../../chevron");
+const logger_1 = require("../../logger");
+const LisaState_1 = require("../LisaState");
+const LisaStatusService_1 = require("../service/LisaStatusService");
 let LisaStateController = LisaStateController_1 = class LisaStateController {
     constructor(lisaStatusService) {
         this.lisaStatusService = lisaStatusService;
@@ -114,7 +114,7 @@ let LisaStateController = LisaStateController_1 = class LisaStateController {
     }
     stateChanged() {
         LisaStateController_1.logger.silly("Lisa state changed.");
-        this.stateChangeSubject.next();
+        this.stateChangeSubject.next(this.getStateCopy());
     }
     updateBestLifetimeIfRequired() {
         const lifetime = this.lisaStatusService.getLifetime(this.getStateCopy());

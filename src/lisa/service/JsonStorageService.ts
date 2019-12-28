@@ -8,10 +8,6 @@ interface Storage<T = any> {
 
 @Injectable(chevron)
 class JsonStorageService {
-    private async hasStorage(path: string): Promise<boolean> {
-        return pathExists(path);
-    }
-
     public async hasStorageKey(path: string, key: string): Promise<boolean> {
         return (await this.load(path, key)) != null;
     }
@@ -35,6 +31,10 @@ class JsonStorageService {
         const object = await this.loadAll(path);
         object[key] = data;
         return await writeJSON(path, object);
+    }
+
+    private async hasStorage(path: string): Promise<boolean> {
+        return pathExists(path);
     }
 
     private async loadAll(path: string): Promise<Storage> {

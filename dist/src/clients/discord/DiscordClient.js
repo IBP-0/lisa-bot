@@ -27,7 +27,7 @@ const ReplantCommand_1 = require("./commands/lisa/ReplantCommand");
 const StatusCommand_1 = require("./commands/lisa/StatusCommand");
 const WaterCommand_1 = require("./commands/lisa/WaterCommand");
 const createUninitializedClientError = () => new TypeError("Client has not been initialized.");
-let LisaDiscordClient = class LisaDiscordClient {
+let DiscordClient = class DiscordClient {
     constructor() {
         this.commandoClient = null;
     }
@@ -95,10 +95,10 @@ let LisaDiscordClient = class LisaDiscordClient {
         });
     }
 };
-LisaDiscordClient = __decorate([
+DiscordClient = __decorate([
     chevronjs_1.Injectable(chevron_1.chevron, {
         dependencies: []
     }),
     __metadata("design:paramtypes", [])
-], LisaDiscordClient);
-exports.LisaDiscordClient = LisaDiscordClient;
+], DiscordClient);
+exports.DiscordClient = DiscordClient;

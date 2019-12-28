@@ -1,7 +1,7 @@
 import { Message, PresenceData } from "discord.js";
 import { CommandoClientOptions } from "discord.js-commando";
 import { Observable } from "rxjs";
-declare class LisaDiscordClient {
+declare class DiscordClient {
     private commandoClient;
     constructor();
     init(options: CommandoClientOptions): void;
@@ -9,4 +9,4 @@ declare class LisaDiscordClient {
     setPresence(data: PresenceData): Promise<void>;
     getMessageObservable(): Observable<Message>;
 }
-export { LisaDiscordClient };
+export { DiscordClient };

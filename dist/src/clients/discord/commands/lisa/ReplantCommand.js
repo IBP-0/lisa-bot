@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_commando_1 = require("discord.js-commando");
 const chevron_1 = require("../../../../chevron");
-const LisaDiscordCommandController_1 = require("../../LisaDiscordCommandController");
+const DiscordCommandController_1 = require("../../controller/DiscordCommandController");
 class ReplantCommand extends discord_js_commando_1.Command {
     constructor(client) {
         super(client, {
@@ -12,7 +12,7 @@ class ReplantCommand extends discord_js_commando_1.Command {
             memberName: "replant",
             description: "Replant Lisa."
         });
-        this.lisaDiscordCommandController = chevron_1.chevron.getInjectableInstance(LisaDiscordCommandController_1.LisaDiscordCommandController);
+        this.lisaDiscordCommandController = chevron_1.chevron.getInjectableInstance(DiscordCommandController_1.DiscordCommandController);
     }
     run(message) {
         return message.say(this.lisaDiscordCommandController.performReplant(message.author, null, [

@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_commando_1 = require("discord.js-commando");
 const chevron_1 = require("../../../../chevron");
 const LisaState_1 = require("../../../../lisa/LisaState");
-const LisaDiscordCommandController_1 = require("../../LisaDiscordCommandController");
+const DiscordCommandController_1 = require("../../controller/DiscordCommandController");
 class BurnCommand extends discord_js_commando_1.Command {
     constructor(client) {
         super(client, {
@@ -13,7 +13,7 @@ class BurnCommand extends discord_js_commando_1.Command {
             memberName: "burn",
             description: "Burn Lisa (you monster)."
         });
-        this.lisaDiscordCommandController = chevron_1.chevron.getInjectableInstance(LisaDiscordCommandController_1.LisaDiscordCommandController);
+        this.lisaDiscordCommandController = chevron_1.chevron.getInjectableInstance(DiscordCommandController_1.DiscordCommandController);
     }
     run(message) {
         return message.say(this.lisaDiscordCommandController.performKill(message.author, LisaState_1.LisaDeathCause.FIRE, null, [
