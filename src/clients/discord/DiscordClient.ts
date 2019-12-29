@@ -20,9 +20,7 @@ import { WaterCommand } from "./commands/lisa/WaterCommand";
 const createUninitializedClientError = (): TypeError =>
     new TypeError("Client has not been initialized.");
 
-@Injectable(chevron, {
-    dependencies: []
-})
+@Injectable(chevron)
 class DiscordClient {
     private commandoClient: CommandoClient | null;
 

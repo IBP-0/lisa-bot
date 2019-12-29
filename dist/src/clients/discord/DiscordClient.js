@@ -96,9 +96,7 @@ let DiscordClient = class DiscordClient {
     }
 };
 DiscordClient = __decorate([
-    chevronjs_1.Injectable(chevron_1.chevron, {
-        dependencies: []
-    }),
+    chevronjs_1.Injectable(chevron_1.chevron),
     __metadata("design:paramtypes", [])
 ], DiscordClient);
 exports.DiscordClient = DiscordClient;
