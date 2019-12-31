@@ -26,12 +26,8 @@ const PunchCommand_1 = require("./commands/lisa/PunchCommand");
 const ReplantCommand_1 = require("./commands/lisa/ReplantCommand");
 const StatusCommand_1 = require("./commands/lisa/StatusCommand");
 const WaterCommand_1 = require("./commands/lisa/WaterCommand");
-const createUninitializedClientError = () => new TypeError("Client has not been initialized.");
 let DiscordClient = class DiscordClient {
-    constructor() {
-        this.commandoClient = null;
-    }
-    init(options) {
+    constructor(options) {
         this.commandoClient = new discord_js_commando_1.CommandoClient(options);
         const commandRegistry = this.commandoClient.registry;
         /*
@@ -73,21 +69,12 @@ let DiscordClient = class DiscordClient {
         ]);
     }
     async login(token) {
-        if (this.commandoClient == null) {
-            throw createUninitializedClientError();
-        }
         await this.commandoClient.login(token);
     }
     async setPresence(data) {
-        if (this.commandoClient == null) {
-            throw createUninitializedClientError();
-        }
         await this.commandoClient.user.setPresence(data);
     }
     getMessageObservable() {
-        if (this.commandoClient == null) {
-            throw createUninitializedClientError();
-        }
         return new rxjs_1.Observable(subscriber => {
             this.commandoClient.on("message", message => {
                 subscriber.next(message);
@@ -96,7 +83,7 @@ let DiscordClient = class DiscordClient {
     }
 };
 DiscordClient = __decorate([
-    chevronjs_1.Injectable(chevron_1.chevron),
-    __metadata("design:paramtypes", [])
+    chevronjs_1.Injectable(chevron_1.chevron, { dependencies: ["discordOptions"] }),
+    __metadata("design:paramtypes", [Object])
 ], DiscordClient);
 exports.DiscordClient = DiscordClient;

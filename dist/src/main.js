@@ -25,19 +25,19 @@ const startLisaMainClient = async () => {
     lisaTimer.tickObservable.subscribe(({ waterModifier, happinessModifier, byUser }) => lisaStateController.modifyLisaStatus(waterModifier, happinessModifier, byUser));
 };
 const startLisaDiscordClient = async () => {
+    chevron_1.chevron.registerInjectable({
+        commandPrefix: "$",
+        owner: "128985967875850240"
+    }, { name: "discordOptions" });
     const lisaDiscordClient = chevron_1.chevron.getInjectableInstance(DiscordClient_1.DiscordClient);
-    const lisaDiscordController = chevron_1.chevron.getInjectableInstance(DiscordEventController_1.DiscordEventController);
     const discordToken = mode_1.isProductionMode()
         ? process.env.DISCORD_TOKEN
         : process.env.DISCORD_TOKEN_TEST;
     if (lodash_1.isNil(discordToken)) {
         throw new Error("No token set.");
     }
-    lisaDiscordClient.init({
-        commandPrefix: "$",
-        owner: "128985967875850240"
-    });
     await lisaDiscordClient.login(discordToken);
+    const lisaDiscordController = chevron_1.chevron.getInjectableInstance(DiscordEventController_1.DiscordEventController);
     lisaDiscordController.bindListeners();
 };
 logger.info("Starting Lisa main client...");

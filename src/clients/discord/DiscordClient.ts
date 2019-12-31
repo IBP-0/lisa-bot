@@ -17,18 +17,11 @@ import { ReplantCommand } from "./commands/lisa/ReplantCommand";
 import { StatusCommand } from "./commands/lisa/StatusCommand";
 import { WaterCommand } from "./commands/lisa/WaterCommand";
 
-const createUninitializedClientError = (): TypeError =>
-    new TypeError("Client has not been initialized.");
-
-@Injectable(chevron)
+@Injectable(chevron, { dependencies: ["discordOptions"] })
 class DiscordClient {
-    private commandoClient: CommandoClient | null;
+    private readonly commandoClient: CommandoClient;
 
-    constructor() {
-        this.commandoClient = null;
-    }
-
-    public init(options: CommandoClientOptions): void {
+    constructor(options: CommandoClientOptions) {
         this.commandoClient = new CommandoClient(options);
 
         const commandRegistry = this.commandoClient.registry;
@@ -78,25 +71,16 @@ class DiscordClient {
     }
 
     public async login(token: string): Promise<void> {
-        if (this.commandoClient == null) {
-            throw createUninitializedClientError();
-        }
         await this.commandoClient.login(token);
     }
 
     public async setPresence(data: PresenceData): Promise<void> {
-        if (this.commandoClient == null) {
-            throw createUninitializedClientError();
-        }
         await this.commandoClient.user!.setPresence(data);
     }
 
     public getMessageObservable(): Observable<Message> {
-        if (this.commandoClient == null) {
-            throw createUninitializedClientError();
-        }
         return new Observable(subscriber => {
-            this.commandoClient!.on("message", message => {
+            this.commandoClient.on("message", message => {
                 subscriber.next(message);
             });
         });

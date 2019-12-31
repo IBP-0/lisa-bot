@@ -43,13 +43,17 @@ const startLisaMainClient = async (): Promise<void> => {
     );
 };
 const startLisaDiscordClient = async (): Promise<void> => {
+    chevron.registerInjectable(
+        {
+            commandPrefix: "$",
+            owner: "128985967875850240"
+        },
+        { name: "discordOptions" }
+    );
+
     const lisaDiscordClient: DiscordClient = chevron.getInjectableInstance(
         DiscordClient
     );
-    const lisaDiscordController: DiscordEventController = chevron.getInjectableInstance(
-        DiscordEventController
-    );
-
     const discordToken = isProductionMode()
         ? process.env.DISCORD_TOKEN
         : process.env.DISCORD_TOKEN_TEST;
@@ -57,12 +61,11 @@ const startLisaDiscordClient = async (): Promise<void> => {
         throw new Error("No token set.");
     }
 
-    lisaDiscordClient.init({
-        commandPrefix: "$",
-        owner: "128985967875850240"
-    });
     await lisaDiscordClient.login(discordToken);
 
+    const lisaDiscordController: DiscordEventController = chevron.getInjectableInstance(
+        DiscordEventController
+    );
     lisaDiscordController.bindListeners();
 };
 
