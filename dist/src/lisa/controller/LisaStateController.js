@@ -61,25 +61,25 @@ let LisaStateController = LisaStateController_1 = class LisaStateController {
         this.stateChanged();
     }
     replantLisa(byUser = LisaStateController_1.USER_SYSTEM) {
-        LisaStateController_1.logger.debug(`'${byUser}' replanted lisa.`);
+        LisaStateController_1.logger.info(`'${byUser}' replanted lisa.`);
         this.performReplant(byUser);
         this.stateChanged();
     }
     killLisa(cause, byUser = LisaStateController_1.USER_SYSTEM) {
         if (!this.lisaStatusService.isAlive(this.getStateCopy())) {
-            LisaStateController_1.logger.silly("Lisa is already dead, skip kill.");
+            LisaStateController_1.logger.debug("Lisa is already dead, skip kill.");
             return;
         }
-        LisaStateController_1.logger.debug(`'${byUser}' killed lisa by ${cause}.`);
+        LisaStateController_1.logger.info(`'${byUser}' killed lisa by ${cause}.`);
         this.performKill(cause, byUser);
         this.stateChanged();
     }
     modifyLisaStatus(waterModifier, happinessModifier, byUser = LisaStateController_1.USER_SYSTEM) {
         if (!this.lisaStatusService.isAlive(this.getStateCopy())) {
-            LisaStateController_1.logger.silly("Lisa is dead, skip status change.");
+            LisaStateController_1.logger.debug("Lisa is dead, skip status change.");
             return;
         }
-        LisaStateController_1.logger.silly(`'${byUser}' modified status; water modifier ${waterModifier}, happiness modifier ${happinessModifier}.`);
+        LisaStateController_1.logger.info(`'${byUser}' modified status; water modifier ${waterModifier}, happiness modifier ${happinessModifier}.`);
         this.performModifyStatus(waterModifier, happinessModifier, byUser);
         this.stateChanged();
     }

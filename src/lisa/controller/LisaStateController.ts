@@ -84,7 +84,7 @@ class LisaStateController {
     }
 
     public replantLisa(byUser: string = LisaStateController.USER_SYSTEM): void {
-        LisaStateController.logger.debug(`'${byUser}' replanted lisa.`);
+        LisaStateController.logger.info(`'${byUser}' replanted lisa.`);
 
         this.performReplant(byUser);
         this.stateChanged();
@@ -95,15 +95,13 @@ class LisaStateController {
         byUser: string = LisaStateController.USER_SYSTEM
     ): void {
         if (!this.lisaStatusService.isAlive(this.getStateCopy())) {
-            LisaStateController.logger.silly(
+            LisaStateController.logger.debug(
                 "Lisa is already dead, skip kill."
             );
             return;
         }
 
-        LisaStateController.logger.debug(
-            `'${byUser}' killed lisa by ${cause}.`
-        );
+        LisaStateController.logger.info(`'${byUser}' killed lisa by ${cause}.`);
         this.performKill(cause, byUser);
 
         this.stateChanged();
@@ -115,13 +113,13 @@ class LisaStateController {
         byUser: string = LisaStateController.USER_SYSTEM
     ): void {
         if (!this.lisaStatusService.isAlive(this.getStateCopy())) {
-            LisaStateController.logger.silly(
+            LisaStateController.logger.debug(
                 "Lisa is dead, skip status change."
             );
             return;
         }
 
-        LisaStateController.logger.silly(
+        LisaStateController.logger.info(
             `'${byUser}' modified status; water modifier ${waterModifier}, happiness modifier ${happinessModifier}.`
         );
         this.performModifyStatus(waterModifier, happinessModifier, byUser);
