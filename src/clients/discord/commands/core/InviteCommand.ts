@@ -1,9 +1,5 @@
-import { Message } from "discord.js";
+import { Message, Permissions } from "discord.js";
 import { Command, CommandoClient, CommandoMessage } from "discord.js-commando";
-
-const INVITE_MESSAGE = `I'm always happy to join new servers!
-If you want me to join your server, follow this link:
-<https://discordapp.com/oauth2/authorize?&client_id=263671526279086092&scope=bot>`;
 
 class InviteCommand extends Command {
     constructor(client: CommandoClient) {
@@ -16,8 +12,15 @@ class InviteCommand extends Command {
         });
     }
 
-    run(message: CommandoMessage): Promise<Message | Message[]> {
-        return message.say(INVITE_MESSAGE);
+    async run(message: CommandoMessage): Promise<Message | Message[]> {
+        const invite = await this.client.generateInvite([
+            Permissions.FLAGS.SEND_MESSAGES,
+            Permissions.FLAGS.EMBED_LINKS,
+            Permissions.FLAGS.ATTACH_FILES
+        ]);
+        return message.say(`I'm always happy to join new servers!
+If you want me to join your server, follow this link:
+${invite}`);
     }
 }
 
