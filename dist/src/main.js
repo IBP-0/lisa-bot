@@ -8,7 +8,6 @@ const LisaStateController_1 = require("./lisa/controller/LisaStateController");
 const LisaStateStorageController_1 = require("./lisa/controller/LisaStateStorageController");
 const LisaTickController_1 = require("./lisa/controller/LisaTickController");
 const logger_1 = require("./logger");
-const mode_1 = require("./mode");
 const logger = logger_1.rootLogger.child({ target: "main" });
 const startLisaMainClient = async () => {
     const lisaStateController = chevron_1.chevron.getInjectableInstance(LisaStateController_1.LisaStateController);
@@ -30,11 +29,9 @@ const startLisaDiscordClient = async () => {
         owner: "128985967875850240"
     }, { name: "discordOptions" });
     const lisaDiscordClient = chevron_1.chevron.getInjectableInstance(DiscordClient_1.DiscordClient);
-    const discordToken = mode_1.isProductionMode()
-        ? process.env.DISCORD_TOKEN
-        : process.env.DISCORD_TOKEN_TEST;
+    const discordToken = process.env.DISCORD_TOKEN;
     if (lodash_1.isNil(discordToken)) {
-        throw new Error("No token set.");
+        throw new Error("No secret set.");
     }
     await lisaDiscordClient.login(discordToken);
     const lisaDiscordController = chevron_1.chevron.getInjectableInstance(DiscordEventController_1.DiscordEventController);

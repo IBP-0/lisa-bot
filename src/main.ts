@@ -6,7 +6,6 @@ import { LisaStateController } from "./lisa/controller/LisaStateController";
 import { LisaStateStorageController } from "./lisa/controller/LisaStateStorageController";
 import { LisaTickController } from "./lisa/controller/LisaTickController";
 import { rootLogger } from "./logger";
-import { isProductionMode } from "./mode";
 
 const logger = rootLogger.child({ target: "main" });
 
@@ -54,11 +53,9 @@ const startLisaDiscordClient = async (): Promise<void> => {
     const lisaDiscordClient: DiscordClient = chevron.getInjectableInstance(
         DiscordClient
     );
-    const discordToken = isProductionMode()
-        ? process.env.DISCORD_TOKEN
-        : process.env.DISCORD_TOKEN_TEST;
+    const discordToken = process.env.DISCORD_TOKEN;
     if (isNil(discordToken)) {
-        throw new Error("No token set.");
+        throw new Error("No secret set.");
     }
 
     await lisaDiscordClient.login(discordToken);

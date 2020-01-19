@@ -7,7 +7,8 @@ import { LisaStatusService } from "./LisaStatusService";
     dependencies: [LisaStatusService]
 })
 class LisaTextService {
-    constructor(private readonly lisaStatusService: LisaStatusService) {}
+    constructor(private readonly lisaStatusService: LisaStatusService) {
+    }
 
     public createStatusText(state: LisaState): string {
         const statusLabel = `Lisa is ${this.createStatusLabel(state)}.`;
