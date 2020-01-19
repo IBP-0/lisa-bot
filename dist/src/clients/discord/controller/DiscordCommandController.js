@@ -8,6 +8,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var DiscordCommandController_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 const chevronjs_1 = require("chevronjs");
 const lodash_1 = require("lodash");
@@ -16,7 +17,8 @@ const LisaStateController_1 = require("../../../lisa/controller/LisaStateControl
 const LisaStatusService_1 = require("../../../lisa/service/LisaStatusService");
 const LisaTextService_1 = require("../../../lisa/service/LisaTextService");
 const DiscordService_1 = require("../service/DiscordService");
-let DiscordCommandController = class DiscordCommandController {
+const logger_js_1 = require("../../../logger.js");
+let DiscordCommandController = DiscordCommandController_1 = class DiscordCommandController {
     constructor(lisaStateController, lisaStatusService, lisaTextService, lisaDiscordService) {
         this.lisaStateController = lisaStateController;
         this.lisaStatusService = lisaStatusService;
@@ -30,7 +32,9 @@ let DiscordCommandController = class DiscordCommandController {
         if (!this.isAlive()) {
             return lodash_1.sample(textDead);
         }
-        this.lisaStateController.modifyLisaStatus(waterModifier, happinessModifier, this.lisaDiscordService.getFullUserName(author));
+        const byUser = this.lisaDiscordService.getFullUserName(author);
+        DiscordCommandController_1.logger.info(`Discord user '${byUser}' modified status; water modifier ${waterModifier}, happiness modifier ${happinessModifier}.`);
+        this.lisaStateController.modifyLisaStatus(waterModifier, happinessModifier, byUser);
         return [lodash_1.sample(textSuccess), this.createStatusText()].join("\n");
     }
     performKill(author, cause, allowedUserIds, textSuccess, textAlreadyDead, textNotAllowed = []) {
@@ -58,7 +62,10 @@ let DiscordCommandController = class DiscordCommandController {
         return this.lisaStatusService.isAlive(this.lisaStateController.getStateCopy());
     }
 };
-DiscordCommandController = __decorate([
+DiscordCommandController.logger = logger_js_1.rootLogger.child({
+    target: DiscordCommandController_1
+});
+DiscordCommandController = DiscordCommandController_1 = __decorate([
     chevronjs_1.Injectable(chevron_1.chevron, {
         dependencies: [
             LisaStateController_1.LisaStateController,

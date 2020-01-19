@@ -12,7 +12,7 @@ const HIGH_QUALITY_JOKES = [
     "The raisin wined about how he couldn't achieve grapeness.",
     "I can't find my rutabaga. I hope it will turnip.",
     "When I bought some fruit trees the nursery owner gave me some insects to help with pollination." +
-    " They were free bees.",
+        " They were free bees.",
     "The research assistant couldn't experiment with plants because he hadn't botany.",
     "The farmer was surprised when his pumpkin won a blue ribbon at the State Fair. He shouted, 'Oh, my gourd.'",
     "After winter, the trees are relieved.",

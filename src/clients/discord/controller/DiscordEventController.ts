@@ -32,8 +32,7 @@ class DiscordEventController {
         private readonly lisaStateController: LisaStateController,
         private readonly lisaDiscordClient: DiscordClient,
         private readonly lisaTextService: LisaTextService
-    ) {
-    }
+    ) {}
 
     public bindListeners(): void {
         this.lisaDiscordClient

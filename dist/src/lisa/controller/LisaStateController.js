@@ -79,7 +79,7 @@ let LisaStateController = LisaStateController_1 = class LisaStateController {
             LisaStateController_1.logger.debug("Lisa is dead, skip status change.");
             return;
         }
-        LisaStateController_1.logger.info(`'${byUser}' modified status; water modifier ${waterModifier}, happiness modifier ${happinessModifier}.`);
+        LisaStateController_1.logger.debug(`'${byUser}' modified status; water modifier ${waterModifier}, happiness modifier ${happinessModifier}.`);
         this.performModifyStatus(waterModifier, happinessModifier, byUser);
         this.stateChanged();
     }

@@ -22,8 +22,7 @@ class LisaStateStorageController {
     constructor(
         private readonly jsonStorageService: JsonStorageService,
         private readonly lisaStateStorageService: LisaStateStorageService
-    ) {
-    }
+    ) {}
 
     public bindStateChangeSubscription(
         stateChangeSubject: Subject<LisaState>
