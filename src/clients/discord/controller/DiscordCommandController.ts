@@ -7,6 +7,7 @@ import { LisaDeathCause } from "../../../lisa/LisaState";
 import { LisaStatusService } from "../../../lisa/service/LisaStatusService";
 import { LisaTextService } from "../../../lisa/service/LisaTextService";
 import { DiscordService } from "../service/DiscordService";
+import { rootLogger } from "../../../logger.js";
 
 @Injectable(chevron, {
     dependencies: [
@@ -17,13 +18,15 @@ import { DiscordService } from "../service/DiscordService";
     ]
 })
 class DiscordCommandController {
+    private static readonly logger = rootLogger.child({
+        target: DiscordCommandController
+    });
     constructor(
         private readonly lisaStateController: LisaStateController,
         private readonly lisaStatusService: LisaStatusService,
         private readonly lisaTextService: LisaTextService,
         private readonly lisaDiscordService: DiscordService
-    ) {
-    }
+    ) {}
 
     public performAction(
         author: User,
@@ -41,10 +44,14 @@ class DiscordCommandController {
             return sample(textDead)!;
         }
 
+        const byUser = this.lisaDiscordService.getFullUserName(author);
+        DiscordCommandController.logger.info(
+            `Discord user '${byUser}' modified status; water modifier ${waterModifier}, happiness modifier ${happinessModifier}.`
+        );
         this.lisaStateController.modifyLisaStatus(
             waterModifier,
             happinessModifier,
-            this.lisaDiscordService.getFullUserName(author)
+            byUser
         );
 
         return [sample(textSuccess)!, this.createStatusText()].join("\n");

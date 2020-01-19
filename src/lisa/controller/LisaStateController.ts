@@ -119,7 +119,7 @@ class LisaStateController {
             return;
         }
 
-        LisaStateController.logger.info(
+        LisaStateController.logger.debug(
             `'${byUser}' modified status; water modifier ${waterModifier}, happiness modifier ${happinessModifier}.`
         );
         this.performModifyStatus(waterModifier, happinessModifier, byUser);
