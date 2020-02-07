@@ -10,7 +10,7 @@ class WaterCommand extends discord_js_commando_1.Command {
             aliases: [],
             group: "lisa",
             memberName: "water",
-            description: "Water Lisa."
+            description: "Water Lisa.",
         });
         this.lisaDiscordCommandController = chevron_1.chevron.getInjectableInstance(DiscordCommandController_1.DiscordCommandController);
     }
@@ -19,7 +19,7 @@ class WaterCommand extends discord_js_commando_1.Command {
             "_Is being watered_",
             "_Water splashes._",
             "_Watering noises._",
-            "_You hear Lisa sucking up the water._"
+            "_You hear Lisa sucking up the water._",
         ], ["It's too late to water poor Lisa..."]));
     }
 }

@@ -29,4 +29,4 @@ interface LisaState {
     death: LisaDeath;
     bestLifetime: Duration;
 }
-export { LisaState, LisaDeathCause, WATER_INITIAL, WATER_MIN, WATER_MAX, HAPPINESS_INITIAL, HAPPINESS_MIN, HAPPINESS_MAX };
+export { LisaState, LisaDeathCause, WATER_INITIAL, WATER_MIN, WATER_MAX, HAPPINESS_INITIAL, HAPPINESS_MIN, HAPPINESS_MAX, };

@@ -8,7 +8,7 @@ import { JsonStorageService } from "../service/JsonStorageService";
 import { LisaStateStorageService } from "../service/LisaStateStorageService";
 
 @Injectable(chevron, {
-    dependencies: [JsonStorageService, LisaStateStorageService]
+    dependencies: [JsonStorageService, LisaStateStorageService],
 })
 class LisaStateStorageController {
     private static readonly STORAGE_THROTTLE_TIMEOUT = 10000;
@@ -16,7 +16,7 @@ class LisaStateStorageController {
     private static readonly STORAGE_KEY = "lisaState";
 
     private static readonly logger = rootLogger.child({
-        target: LisaStateStorageController
+        target: LisaStateStorageController,
     });
 
     constructor(
@@ -33,8 +33,8 @@ class LisaStateStorageController {
                     LisaStateStorageController.STORAGE_THROTTLE_TIMEOUT
                 )
             )
-            .subscribe(state => {
-                this.storeState(state).catch(e =>
+            .subscribe((state) => {
+                this.storeState(state).catch((e) =>
                     LisaStateStorageController.logger.error(
                         "Could not save state!",
                         e

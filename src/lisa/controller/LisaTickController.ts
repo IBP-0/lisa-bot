@@ -13,7 +13,7 @@ interface TickData {
 @Injectable(chevron)
 class LisaTickController {
     private static readonly logger = rootLogger.child({
-        target: LisaTickController
+        target: LisaTickController,
     });
 
     private static readonly TIMEOUT = 60000;
@@ -37,7 +37,7 @@ class LisaTickController {
                 return {
                     waterModifier: LisaTickController.WATER_MODIFIER,
                     happinessModifier: LisaTickController.HAPPINESS_MODIFIER,
-                    byUser: LisaTickController.USER_TICK
+                    byUser: LisaTickController.USER_TICK,
                 };
             })
         );

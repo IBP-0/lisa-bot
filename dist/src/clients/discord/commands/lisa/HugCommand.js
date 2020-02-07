@@ -10,7 +10,7 @@ class HugCommand extends discord_js_commando_1.Command {
             aliases: ["huggu"],
             group: "lisa",
             memberName: "hug",
-            description: "Hug Lisa."
+            description: "Hug Lisa.",
         });
         this.lisaDiscordCommandController = chevron_1.chevron.getInjectableInstance(DiscordCommandController_1.DiscordCommandController);
     }

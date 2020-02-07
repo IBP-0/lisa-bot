@@ -12,7 +12,7 @@ class WaterCommand extends Command {
             aliases: [],
             group: "lisa",
             memberName: "water",
-            description: "Water Lisa."
+            description: "Water Lisa.",
         });
         this.lisaDiscordCommandController = chevron.getInjectableInstance(
             DiscordCommandController
@@ -30,7 +30,7 @@ class WaterCommand extends Command {
                     "_Is being watered_",
                     "_Water splashes._",
                     "_Watering noises._",
-                    "_You hear Lisa sucking up the water._"
+                    "_You hear Lisa sucking up the water._",
                 ],
                 ["It's too late to water poor Lisa..."]
             )

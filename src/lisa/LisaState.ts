@@ -12,7 +12,7 @@ enum LisaDeathCause {
     DROWNING = "drowning",
     DEHYDRATION = "dehydration",
     SADNESS = "sadness",
-    FIRE = "fire"
+    FIRE = "fire",
 }
 
 interface LisaLife {
@@ -44,5 +44,5 @@ export {
     WATER_MAX,
     HAPPINESS_INITIAL,
     HAPPINESS_MIN,
-    HAPPINESS_MAX
+    HAPPINESS_MAX,
 };

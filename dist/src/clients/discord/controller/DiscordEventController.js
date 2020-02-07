@@ -20,8 +20,8 @@ const DiscordClient_1 = require("../DiscordClient");
 const createPresence = (name) => {
     return {
         activity: {
-            name
-        }
+            name,
+        },
     };
 };
 let DiscordEventController = DiscordEventController_1 = class DiscordEventController {
@@ -33,11 +33,11 @@ let DiscordEventController = DiscordEventController_1 = class DiscordEventContro
     bindListeners() {
         this.lisaDiscordClient
             .getMessageObservable()
-            .pipe(operators_1.filter(message => !message.system && !message.author.bot), operators_1.throttleTime(DiscordEventController_1.MESSAGE_THROTTLE_TIMEOUT))
+            .pipe(operators_1.filter((message) => !message.system && !message.author.bot), operators_1.throttleTime(DiscordEventController_1.MESSAGE_THROTTLE_TIMEOUT))
             .subscribe(() => this.onMessage());
         this.lisaStateController.stateChangeSubject
             .pipe(operators_1.throttleTime(DiscordEventController_1.PRESENCE_UPDATE_THROTTLE_TIMEOUT))
-            .subscribe(state => this.onStateChange(state));
+            .subscribe((state) => this.onStateChange(state));
         this.onStateChange(this.lisaStateController.getStateCopy());
     }
     onMessage() {
@@ -50,11 +50,11 @@ let DiscordEventController = DiscordEventController_1 = class DiscordEventContro
         this.lisaDiscordClient
             .setPresence(createPresence(statusLabel))
             .then(() => DiscordEventController_1.logger.debug("Updated presence."))
-            .catch(e => DiscordEventController_1.logger.error("Could not update presence.", e));
+            .catch((e) => DiscordEventController_1.logger.error("Could not update presence.", e));
     }
 };
 DiscordEventController.logger = logger_1.rootLogger.child({
-    target: DiscordEventController_1
+    target: DiscordEventController_1,
 });
 DiscordEventController.PRESENCE_UPDATE_THROTTLE_TIMEOUT = 10000;
 DiscordEventController.MESSAGE_THROTTLE_TIMEOUT = 1000;
@@ -62,7 +62,7 @@ DiscordEventController.MESSAGE_HAPPINESS_MODIFIER = 0.25;
 DiscordEventController.USER_DISCORD_ACTIVITY = "Discord activity";
 DiscordEventController = DiscordEventController_1 = __decorate([
     chevronjs_1.Injectable(chevron_1.chevron, {
-        dependencies: [LisaStateController_1.LisaStateController, DiscordClient_1.DiscordClient, LisaTextService_1.LisaTextService]
+        dependencies: [LisaStateController_1.LisaStateController, DiscordClient_1.DiscordClient, LisaTextService_1.LisaTextService],
     }),
     __metadata("design:paramtypes", [LisaStateController_1.LisaStateController,
         DiscordClient_1.DiscordClient,

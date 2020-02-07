@@ -52,7 +52,7 @@ let LisaStatusService = LisaStatusService_1 = class LisaStatusService {
     }
 };
 LisaStatusService.logger = logger_1.rootLogger.child({
-    target: LisaStatusService_1
+    target: LisaStatusService_1,
 });
 LisaStatusService = LisaStatusService_1 = __decorate([
     chevronjs_1.Injectable(chevron_1.chevron)

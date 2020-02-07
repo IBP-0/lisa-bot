@@ -26,13 +26,13 @@ let LisaTickController = LisaTickController_1 = class LisaTickController {
             return {
                 waterModifier: LisaTickController_1.WATER_MODIFIER,
                 happinessModifier: LisaTickController_1.HAPPINESS_MODIFIER,
-                byUser: LisaTickController_1.USER_TICK
+                byUser: LisaTickController_1.USER_TICK,
             };
         }));
     }
 };
 LisaTickController.logger = logger_1.rootLogger.child({
-    target: LisaTickController_1
+    target: LisaTickController_1,
 });
 LisaTickController.TIMEOUT = 60000;
 LisaTickController.WATER_MODIFIER = -0.5;

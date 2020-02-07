@@ -14,12 +14,12 @@ import { rootLogger } from "../../../logger.js";
         LisaStateController,
         LisaStatusService,
         LisaTextService,
-        DiscordService
-    ]
+        DiscordService,
+    ],
 })
 class DiscordCommandController {
     private static readonly logger = rootLogger.child({
-        target: DiscordCommandController
+        target: DiscordCommandController,
     });
     constructor(
         private readonly lisaStateController: LisaStateController,

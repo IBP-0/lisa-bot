@@ -23,7 +23,7 @@ const HIGH_QUALITY_JOKES = [
     "What kind of tree grows on your hand? A palm tree.",
     "After a cold winter, will deciduous trees be releaved?",
     "I saw something similar to moss the other day, but I didn't know what to lichen it to.",
-    "In some conifer forests, you can't cedar wood for the trees."
+    "In some conifer forests, you can't cedar wood for the trees.",
 ];
 class JokeCommand extends discord_js_commando_1.Command {
     constructor(client) {
@@ -32,7 +32,7 @@ class JokeCommand extends discord_js_commando_1.Command {
             aliases: ["pun"],
             group: "lisa",
             memberName: "joke",
-            description: "Tell Lisa a joke."
+            description: "Tell Lisa a joke.",
         });
         this.lisaDiscordCommandController = chevron_1.chevron.getInjectableInstance(DiscordCommandController_1.DiscordCommandController);
     }

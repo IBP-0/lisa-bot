@@ -4,7 +4,7 @@ import { LisaState } from "../LisaState";
 import { LisaStatusService } from "./LisaStatusService";
 
 @Injectable(chevron, {
-    dependencies: [LisaStatusService]
+    dependencies: [LisaStatusService],
 })
 class LisaTextService {
     constructor(private readonly lisaStatusService: LisaStatusService) {}

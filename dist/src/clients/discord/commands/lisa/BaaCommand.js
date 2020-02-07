@@ -8,7 +8,7 @@ const GOAT_IDS = [
     "178470784984023040",
     "143158243076734986",
     "128985967875850240",
-    "273221196001181697"
+    "273221196001181697",
 ];
 class BaaCommand extends discord_js_commando_1.Command {
     constructor(client) {
@@ -18,7 +18,7 @@ class BaaCommand extends discord_js_commando_1.Command {
             group: "lisa",
             memberName: "baa",
             description: "Baa.",
-            hidden: true
+            hidden: true,
         });
         this.lisaDiscordCommandController = chevron_1.chevron.getInjectableInstance(DiscordCommandController_1.DiscordCommandController);
     }

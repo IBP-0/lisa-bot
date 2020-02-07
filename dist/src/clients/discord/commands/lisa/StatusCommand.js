@@ -10,7 +10,7 @@ class StatusCommand extends discord_js_commando_1.Command {
             aliases: [],
             group: "lisa",
             memberName: "status",
-            description: "Shows the status of Lisa."
+            description: "Shows the status of Lisa.",
         });
         this.lisaDiscordCommandController = chevron_1.chevron.getInjectableInstance(DiscordCommandController_1.DiscordCommandController);
     }

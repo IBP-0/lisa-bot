@@ -12,7 +12,7 @@ class NiklasCommand extends discord_js_commando_1.Command {
             group: "lisa",
             memberName: "niklas",
             description: "^w^",
-            hidden: true
+            hidden: true,
         });
         this.lisaDiscordCommandController = chevron_1.chevron.getInjectableInstance(DiscordCommandController_1.DiscordCommandController);
     }

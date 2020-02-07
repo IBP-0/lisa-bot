@@ -3,7 +3,7 @@ import { duration } from "moment";
 import {
     HAPPINESS_INITIAL,
     LisaState,
-    WATER_INITIAL
+    WATER_INITIAL,
 } from "../../../../src/lisa/LisaState";
 import { LisaStatusService } from "../../../../src/lisa/service/LisaStatusService";
 import { LisaTextService } from "../../../../src/lisa/service/LisaTextService";
@@ -13,17 +13,17 @@ const createState = (): LisaState => {
         bestLifetime: duration(0),
         status: {
             water: WATER_INITIAL,
-            happiness: HAPPINESS_INITIAL
+            happiness: HAPPINESS_INITIAL,
         },
         life: {
             time: new Date(),
-            byUser: "none"
+            byUser: "none",
         },
         death: {
             time: null,
             byUser: null,
-            cause: null
-        }
+            cause: null,
+        },
     };
 };
 
@@ -38,12 +38,12 @@ describe("LisaTextService", () => {
         lisaStatusService = new LisaStatusService();
         chevron.registerInjectable(lisaStatusService, {
             bootstrapping: DefaultBootstrappings.IDENTITY,
-            name: LisaStatusService
+            name: LisaStatusService,
         });
 
         chevron.registerInjectable(LisaTextService, {
             bootstrapping: DefaultBootstrappings.CLASS,
-            dependencies: [LisaStatusService]
+            dependencies: [LisaStatusService],
         });
         lisaTextService = chevron.getInjectableInstance(LisaTextService);
     });

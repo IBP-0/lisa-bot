@@ -39,7 +39,7 @@ let DiscordClient = class DiscordClient {
          */
         commandRegistry.registerGroups([
             ["util", "Utility"],
-            ["lisa", "Lisa"]
+            ["lisa", "Lisa"],
         ]);
         /*
          * Commands
@@ -50,7 +50,7 @@ let DiscordClient = class DiscordClient {
             ping: true,
             prefix: false,
             commandState: false,
-            unknownCommand: false
+            unknownCommand: false,
         });
         commandRegistry.registerCommands([
             AboutCommand_1.AboutCommand,
@@ -65,7 +65,7 @@ let DiscordClient = class DiscordClient {
             JokeCommand_1.JokeCommand,
             BaaCommand_1.BaaCommand,
             MissyCommand_1.MissyCommand,
-            NiklasCommand_1.NiklasCommand
+            NiklasCommand_1.NiklasCommand,
         ]);
     }
     async login(token) {
@@ -75,8 +75,8 @@ let DiscordClient = class DiscordClient {
         await this.commandoClient.user.setPresence(data);
     }
     getMessageObservable() {
-        return new rxjs_1.Observable(subscriber => {
-            this.commandoClient.on("message", message => {
+        return new rxjs_1.Observable((subscriber) => {
+            this.commandoClient.on("message", (message) => {
                 subscriber.next(message);
             });
         });

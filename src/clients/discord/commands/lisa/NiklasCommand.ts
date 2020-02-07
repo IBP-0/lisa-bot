@@ -15,7 +15,7 @@ class NiklasCommand extends Command {
             group: "lisa",
             memberName: "niklas",
             description: "^w^",
-            hidden: true
+            hidden: true,
         });
         this.lisaDiscordCommandController = chevron.getInjectableInstance(
             DiscordCommandController

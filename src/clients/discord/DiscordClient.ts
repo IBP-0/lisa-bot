@@ -36,7 +36,7 @@ class DiscordClient {
          */
         commandRegistry.registerGroups([
             ["util", "Utility"],
-            ["lisa", "Lisa"]
+            ["lisa", "Lisa"],
         ]);
 
         /*
@@ -48,7 +48,7 @@ class DiscordClient {
             ping: true,
             prefix: false,
             commandState: false,
-            unknownCommand: false
+            unknownCommand: false,
         });
         commandRegistry.registerCommands([
             AboutCommand,
@@ -66,7 +66,7 @@ class DiscordClient {
 
             BaaCommand,
             MissyCommand,
-            NiklasCommand
+            NiklasCommand,
         ]);
     }
 
@@ -79,8 +79,8 @@ class DiscordClient {
     }
 
     public getMessageObservable(): Observable<Message> {
-        return new Observable(subscriber => {
-            this.commandoClient.on("message", message => {
+        return new Observable((subscriber) => {
+            this.commandoClient.on("message", (message) => {
                 subscriber.next(message);
             });
         });

@@ -30,17 +30,17 @@ let LisaStateController = LisaStateController_1 = class LisaStateController {
             bestLifetime,
             status: {
                 water: LisaState_1.WATER_INITIAL,
-                happiness: LisaState_1.HAPPINESS_INITIAL
+                happiness: LisaState_1.HAPPINESS_INITIAL,
             },
             life: {
                 time: new Date(),
-                byUser: createdByUser
+                byUser: createdByUser,
             },
             death: {
                 time: null,
                 byUser: null,
-                cause: null
-            }
+                cause: null,
+            },
         };
     }
     /**
@@ -125,13 +125,13 @@ let LisaStateController = LisaStateController_1 = class LisaStateController {
     }
 };
 LisaStateController.logger = logger_1.rootLogger.child({
-    target: LisaStateController_1
+    target: LisaStateController_1,
 });
 LisaStateController.USER_SYSTEM = "System";
 LisaStateController.BEST_LIFETIME_CHECK_TIMEOUT = 5000;
 LisaStateController = LisaStateController_1 = __decorate([
     chevronjs_1.Injectable(chevron_1.chevron, {
-        dependencies: [LisaStatusService_1.LisaStatusService]
+        dependencies: [LisaStatusService_1.LisaStatusService],
     }),
     __metadata("design:paramtypes", [LisaStatusService_1.LisaStatusService])
 ], LisaStateController);

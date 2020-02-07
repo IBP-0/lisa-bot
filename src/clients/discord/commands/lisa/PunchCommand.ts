@@ -12,7 +12,7 @@ class PunchCommand extends Command {
             aliases: ["hit"],
             group: "lisa",
             memberName: "punch",
-            description: "Punch Lisa."
+            description: "Punch Lisa.",
         });
         this.lisaDiscordCommandController = chevron.getInjectableInstance(
             DiscordCommandController

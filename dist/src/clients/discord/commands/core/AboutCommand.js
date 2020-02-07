@@ -16,7 +16,7 @@ class AboutCommand extends discord_js_commando_1.Command {
             aliases: ["why", "info"],
             group: "util",
             memberName: "about",
-            description: "Shows info about the bot."
+            description: "Shows info about the bot.",
         });
     }
     run(message) {

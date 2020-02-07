@@ -8,7 +8,7 @@ class InviteCommand extends Command {
             aliases: ["join"],
             group: "util",
             memberName: "invite",
-            description: "Add Lisa to your server."
+            description: "Add Lisa to your server.",
         });
     }
 
@@ -16,7 +16,7 @@ class InviteCommand extends Command {
         const invite = await this.client.generateInvite([
             Permissions.FLAGS.SEND_MESSAGES,
             Permissions.FLAGS.EMBED_LINKS,
-            Permissions.FLAGS.ATTACH_FILES
+            Permissions.FLAGS.ATTACH_FILES,
         ]);
         return message.say(`I'm always happy to join new servers!
 If you want me to join your server, follow this link:

@@ -12,7 +12,7 @@ class StatusCommand extends Command {
             aliases: [],
             group: "lisa",
             memberName: "status",
-            description: "Shows the status of Lisa."
+            description: "Shows the status of Lisa.",
         });
         this.lisaDiscordCommandController = chevron.getInjectableInstance(
             DiscordCommandController

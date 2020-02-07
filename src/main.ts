@@ -45,7 +45,7 @@ const startLisaDiscordClient = async (): Promise<void> => {
     chevron.registerInjectable(
         {
             commandPrefix: "$",
-            owner: "128985967875850240"
+            owner: "128985967875850240",
         },
         { name: "discordOptions" }
     );
@@ -69,9 +69,9 @@ const startLisaDiscordClient = async (): Promise<void> => {
 logger.info("Starting Lisa main client...");
 startLisaMainClient()
     .then(() => logger.info("Started Lisa main client."))
-    .catch(e => console.error("Could not start Lisa main client.", e));
+    .catch((e) => console.error("Could not start Lisa main client.", e));
 
 logger.info("Starting Lisa discord client...");
 startLisaDiscordClient()
     .then(() => logger.info("Started Lisa discord client."))
-    .catch(e => console.error("Could not start Lisa discord client.", e));
+    .catch((e) => console.error("Could not start Lisa discord client.", e));

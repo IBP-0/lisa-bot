@@ -12,16 +12,16 @@ import {
     LisaState,
     WATER_INITIAL,
     WATER_MAX,
-    WATER_MIN
+    WATER_MIN,
 } from "../LisaState";
 import { LisaStatusService } from "../service/LisaStatusService";
 
 @Injectable(chevron, {
-    dependencies: [LisaStatusService]
+    dependencies: [LisaStatusService],
 })
 class LisaStateController {
     private static readonly logger = rootLogger.child({
-        target: LisaStateController
+        target: LisaStateController,
     });
 
     private static readonly USER_SYSTEM = "System";
@@ -50,17 +50,17 @@ class LisaStateController {
             bestLifetime,
             status: {
                 water: WATER_INITIAL,
-                happiness: HAPPINESS_INITIAL
+                happiness: HAPPINESS_INITIAL,
             },
             life: {
                 time: new Date(),
-                byUser: createdByUser
+                byUser: createdByUser,
             },
             death: {
                 time: null,
                 byUser: null,
-                cause: null
-            }
+                cause: null,
+            },
         };
     }
 

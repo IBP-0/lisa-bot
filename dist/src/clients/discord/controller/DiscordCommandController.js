@@ -63,7 +63,7 @@ let DiscordCommandController = DiscordCommandController_1 = class DiscordCommand
     }
 };
 DiscordCommandController.logger = logger_js_1.rootLogger.child({
-    target: DiscordCommandController_1
+    target: DiscordCommandController_1,
 });
 DiscordCommandController = DiscordCommandController_1 = __decorate([
     chevronjs_1.Injectable(chevron_1.chevron, {
@@ -71,8 +71,8 @@ DiscordCommandController = DiscordCommandController_1 = __decorate([
             LisaStateController_1.LisaStateController,
             LisaStatusService_1.LisaStatusService,
             LisaTextService_1.LisaTextService,
-            DiscordService_1.DiscordService
-        ]
+            DiscordService_1.DiscordService,
+        ],
     }),
     __metadata("design:paramtypes", [LisaStateController_1.LisaStateController,
         LisaStatusService_1.LisaStatusService,

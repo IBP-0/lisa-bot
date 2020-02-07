@@ -11,17 +11,17 @@ import { DiscordClient } from "../DiscordClient";
 const createPresence = (name: string): PresenceData => {
     return {
         activity: {
-            name
-        }
+            name,
+        },
     };
 };
 
 @Injectable(chevron, {
-    dependencies: [LisaStateController, DiscordClient, LisaTextService]
+    dependencies: [LisaStateController, DiscordClient, LisaTextService],
 })
 class DiscordEventController {
     private static readonly logger = rootLogger.child({
-        target: DiscordEventController
+        target: DiscordEventController,
     });
     private static readonly PRESENCE_UPDATE_THROTTLE_TIMEOUT = 10000;
     private static readonly MESSAGE_THROTTLE_TIMEOUT = 1000;
@@ -38,7 +38,7 @@ class DiscordEventController {
         this.lisaDiscordClient
             .getMessageObservable()
             .pipe(
-                filter(message => !message.system && !message.author.bot),
+                filter((message) => !message.system && !message.author.bot),
                 throttleTime(DiscordEventController.MESSAGE_THROTTLE_TIMEOUT)
             )
             .subscribe(() => this.onMessage());
@@ -49,7 +49,7 @@ class DiscordEventController {
                     DiscordEventController.PRESENCE_UPDATE_THROTTLE_TIMEOUT
                 )
             )
-            .subscribe(state => this.onStateChange(state));
+            .subscribe((state) => this.onStateChange(state));
         this.onStateChange(this.lisaStateController.getStateCopy());
     }
 
@@ -74,7 +74,7 @@ class DiscordEventController {
             .then(() =>
                 DiscordEventController.logger.debug("Updated presence.")
             )
-            .catch(e =>
+            .catch((e) =>
                 DiscordEventController.logger.error(
                     "Could not update presence.",
                     e

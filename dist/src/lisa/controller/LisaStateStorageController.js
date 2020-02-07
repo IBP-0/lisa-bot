@@ -24,8 +24,8 @@ let LisaStateStorageController = LisaStateStorageController_1 = class LisaStateS
     bindStateChangeSubscription(stateChangeSubject) {
         stateChangeSubject
             .pipe(operators_1.throttleTime(LisaStateStorageController_1.STORAGE_THROTTLE_TIMEOUT))
-            .subscribe(state => {
-            this.storeState(state).catch(e => LisaStateStorageController_1.logger.error("Could not save state!", e));
+            .subscribe((state) => {
+            this.storeState(state).catch((e) => LisaStateStorageController_1.logger.error("Could not save state!", e));
         });
     }
     async hasStoredState() {
@@ -44,11 +44,11 @@ LisaStateStorageController.STORAGE_THROTTLE_TIMEOUT = 10000;
 LisaStateStorageController.STORAGE_PATH = "data/storage.json";
 LisaStateStorageController.STORAGE_KEY = "lisaState";
 LisaStateStorageController.logger = logger_1.rootLogger.child({
-    target: LisaStateStorageController_1
+    target: LisaStateStorageController_1,
 });
 LisaStateStorageController = LisaStateStorageController_1 = __decorate([
     chevronjs_1.Injectable(chevron_1.chevron, {
-        dependencies: [JsonStorageService_1.JsonStorageService, LisaStateStorageService_1.LisaStateStorageService]
+        dependencies: [JsonStorageService_1.JsonStorageService, LisaStateStorageService_1.LisaStateStorageService],
     }),
     __metadata("design:paramtypes", [JsonStorageService_1.JsonStorageService,
         LisaStateStorageService_1.LisaStateStorageService])
