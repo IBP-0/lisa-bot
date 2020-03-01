@@ -18,7 +18,7 @@ class ServersCommand extends Command {
     }
 
     private getServers(): string {
-        return this.client.guilds
+        return this.client.guilds.cache
             .array()
             .map(guild => `${guild.id}: ${guild.name}`)
             .join("\n");

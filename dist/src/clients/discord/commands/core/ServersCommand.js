@@ -16,7 +16,7 @@ class ServersCommand extends discord_js_commando_1.Command {
         return message.say(this.getServers());
     }
     getServers() {
-        return this.client.guilds
+        return this.client.guilds.cache
             .array()
             .map(guild => `${guild.id}: ${guild.name}`)
             .join("\n");
