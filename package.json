@@ -36,7 +36,7 @@
         "discord.js": "github:discordjs/discord.js#6544d2233804f01b08d15a88edf9b5331949353d",
         "discord.js-commando": "github:discordjs/Commando#bdbd84e2a978322f3af12c21e729eb7b7cd4a3dc",
         "fs-extra": "^9.0.0",
-        "lightdash": "^11.2.0",
+        "lightdash": "^12.0.0-0",
         "lodash": "^4.17.15",
         "moment": "^2.24.0",
         "rxjs": "^6.5.5",
