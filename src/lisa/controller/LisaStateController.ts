@@ -191,7 +191,7 @@ class LisaStateController {
         );
         if (lifetime > this.state.bestLifetime) {
             LisaStateController.logger.silly(
-                `Increasing high score from ${this.state.bestLifetime} to ${lifetime}.`
+                `Increasing high score from ${this.state.bestLifetime.milliseconds()} to ${lifetime.milliseconds()}.`
             );
             this.state.bestLifetime = lifetime;
         }
