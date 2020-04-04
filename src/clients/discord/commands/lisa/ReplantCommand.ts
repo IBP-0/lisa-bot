@@ -14,9 +14,9 @@ class ReplantCommand extends Command {
             memberName: "replant",
             description: "Replant Lisa.",
         });
-        this.lisaDiscordCommandController = chevron.getInjectableInstance(
+        this.lisaDiscordCommandController = chevron.getInjectableInstance<
             DiscordCommandController
-        );
+        >(DiscordCommandController);
     }
 
     run(message: CommandoMessage): Promise<Message | Message[]> {

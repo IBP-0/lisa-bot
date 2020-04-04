@@ -10,13 +10,13 @@ import { rootLogger } from "./logger";
 const logger = rootLogger.child({ target: "main" });
 
 const startLisaMainClient = async (): Promise<void> => {
-    const lisaStateController: LisaStateController = chevron.getInjectableInstance(
+    const lisaStateController = chevron.getInjectableInstance<
         LisaStateController
-    );
+    >(LisaStateController);
 
-    const lisaStorageController: LisaStateStorageController = chevron.getInjectableInstance(
+    const lisaStorageController = chevron.getInjectableInstance<
         LisaStateStorageController
-    );
+    >(LisaStateStorageController);
     if (await lisaStorageController.hasStoredState()) {
         logger.info("Found stored Lisa state, loading it.");
         lisaStateController.loadState(
@@ -29,7 +29,7 @@ const startLisaMainClient = async (): Promise<void> => {
         lisaStateController.stateChangeSubject
     );
 
-    const lisaTimer: LisaTickController = chevron.getInjectableInstance(
+    const lisaTimer = chevron.getInjectableInstance<LisaTickController>(
         LisaTickController
     );
     lisaTimer.tickObservable.subscribe(
@@ -50,7 +50,7 @@ const startLisaDiscordClient = async (): Promise<void> => {
         { name: "discordOptions" }
     );
 
-    const lisaDiscordClient: DiscordClient = chevron.getInjectableInstance(
+    const lisaDiscordClient = chevron.getInjectableInstance<DiscordClient>(
         DiscordClient
     );
     const discordToken = process.env.DISCORD_TOKEN;
@@ -60,9 +60,9 @@ const startLisaDiscordClient = async (): Promise<void> => {
 
     await lisaDiscordClient.login(discordToken);
 
-    const lisaDiscordController: DiscordEventController = chevron.getInjectableInstance(
+    const lisaDiscordController = chevron.getInjectableInstance<
         DiscordEventController
-    );
+    >(DiscordEventController);
     lisaDiscordController.bindListeners();
 };
 

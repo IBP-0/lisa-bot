@@ -14,9 +14,9 @@ class WaterCommand extends Command {
             memberName: "water",
             description: "Water Lisa.",
         });
-        this.lisaDiscordCommandController = chevron.getInjectableInstance(
+        this.lisaDiscordCommandController = chevron.getInjectableInstance<
             DiscordCommandController
-        );
+        >(DiscordCommandController);
     }
 
     run(message: CommandoMessage): Promise<Message | Message[]> {

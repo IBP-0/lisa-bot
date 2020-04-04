@@ -15,9 +15,9 @@ class BurnCommand extends Command {
             memberName: "burn",
             description: "Burn Lisa (you monster).",
         });
-        this.lisaDiscordCommandController = chevron.getInjectableInstance(
+        this.lisaDiscordCommandController = chevron.getInjectableInstance<
             DiscordCommandController
-        );
+        >(DiscordCommandController);
     }
 
     run(message: CommandoMessage): Promise<Message | Message[]> {

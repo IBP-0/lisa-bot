@@ -1,3 +1,3 @@
 import { Chevron } from "chevronjs";
-declare const chevron: Chevron<any, any, any>;
+declare const chevron: Chevron<unknown>;
 export { chevron };

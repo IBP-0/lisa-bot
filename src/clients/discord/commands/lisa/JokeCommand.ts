@@ -37,9 +37,9 @@ class JokeCommand extends Command {
             memberName: "joke",
             description: "Tell Lisa a joke.",
         });
-        this.lisaDiscordCommandController = chevron.getInjectableInstance(
+        this.lisaDiscordCommandController = chevron.getInjectableInstance<
             DiscordCommandController
-        );
+        >(DiscordCommandController);
     }
 
     run(message: CommandoMessage): Promise<Message | Message[]> {

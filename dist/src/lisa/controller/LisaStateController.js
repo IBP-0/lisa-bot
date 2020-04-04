@@ -119,7 +119,7 @@ let LisaStateController = LisaStateController_1 = class LisaStateController {
     updateBestLifetimeIfRequired() {
         const lifetime = this.lisaStatusService.getLifetime(this.getStateCopy());
         if (lifetime > this.state.bestLifetime) {
-            LisaStateController_1.logger.silly(`Increasing high score from ${this.state.bestLifetime} to ${lifetime}.`);
+            LisaStateController_1.logger.silly(`Increasing high score from ${this.state.bestLifetime.milliseconds()} to ${lifetime.milliseconds()}.`);
             this.state.bestLifetime = lifetime;
         }
     }

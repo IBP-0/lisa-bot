@@ -14,9 +14,9 @@ class StatusCommand extends Command {
             memberName: "status",
             description: "Shows the status of Lisa.",
         });
-        this.lisaDiscordCommandController = chevron.getInjectableInstance(
+        this.lisaDiscordCommandController = chevron.getInjectableInstance<
             DiscordCommandController
-        );
+        >(DiscordCommandController);
     }
 
     run(message: CommandoMessage): Promise<Message | Message[]> {

@@ -1,4 +1,4 @@
-import { Chevron, DefaultBootstrappings } from "chevronjs";
+import { Chevron, DefaultFactory } from "chevronjs";
 import { duration } from "moment";
 import {
     HAPPINESS_INITIAL,
@@ -30,57 +30,62 @@ const createState = (): LisaState => {
 describe("LisaTextService", () => {
     let lisaTextService: LisaTextService;
 
-    let lisaStatusService: LisaStatusService;
+    let mockLisaStatusService: LisaStatusService;
 
     beforeEach(() => {
         const chevron = new Chevron();
 
-        lisaStatusService = new LisaStatusService();
-        chevron.registerInjectable(lisaStatusService, {
-            bootstrapping: DefaultBootstrappings.IDENTITY,
+        mockLisaStatusService = new LisaStatusService();
+        chevron.registerInjectable(mockLisaStatusService, {
+            factory: DefaultFactory.IDENTITY(),
             name: LisaStatusService,
         });
 
         chevron.registerInjectable(LisaTextService, {
-            bootstrapping: DefaultBootstrappings.CLASS,
+            factory: DefaultFactory.CLASS(),
             dependencies: [LisaStatusService],
         });
-        lisaTextService = chevron.getInjectableInstance(LisaTextService);
+        lisaTextService = chevron.getInjectableInstance<LisaTextService>(
+            LisaTextService
+        );
     });
 
     describe("createStatusLabel", () => {
         it("returns 'is dead' when dead.", () => {
-            spyOn(lisaStatusService, "isAlive").and.returnValue(false);
+            spyOn(mockLisaStatusService, "isAlive").and.returnValue(false);
 
             expect(lisaTextService.createStatusLabel(createState())).toEqual(
                 "is dead"
             );
         });
         it("returns 'doing great' when a high relative score is returned.", () => {
-            spyOn(lisaStatusService, "isAlive").and.returnValue(true);
-            spyOn(lisaStatusService, "calculateRelativeIndex").and.returnValue(
-                0.75
-            );
+            spyOn(mockLisaStatusService, "isAlive").and.returnValue(true);
+            spyOn(
+                mockLisaStatusService,
+                "calculateRelativeIndex"
+            ).and.returnValue(0.75);
 
             expect(lisaTextService.createStatusLabel(createState())).toEqual(
                 "doing great"
             );
         });
         it("returns 'doing fine' when a medium relative score is returned.", () => {
-            spyOn(lisaStatusService, "isAlive").and.returnValue(true);
-            spyOn(lisaStatusService, "calculateRelativeIndex").and.returnValue(
-                0.5
-            );
+            spyOn(mockLisaStatusService, "isAlive").and.returnValue(true);
+            spyOn(
+                mockLisaStatusService,
+                "calculateRelativeIndex"
+            ).and.returnValue(0.5);
 
             expect(lisaTextService.createStatusLabel(createState())).toEqual(
                 "doing fine"
             );
         });
         it("returns 'close to dying' when a low relative score is returned.", () => {
-            spyOn(lisaStatusService, "isAlive").and.returnValue(true);
-            spyOn(lisaStatusService, "calculateRelativeIndex").and.returnValue(
-                0.25
-            );
+            spyOn(mockLisaStatusService, "isAlive").and.returnValue(true);
+            spyOn(
+                mockLisaStatusService,
+                "calculateRelativeIndex"
+            ).and.returnValue(0.25);
 
             expect(lisaTextService.createStatusLabel(createState())).toEqual(
                 "close to dying"
