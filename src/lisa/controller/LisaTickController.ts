@@ -1,8 +1,7 @@
-import { Injectable } from "chevronjs";
 import { interval, Observable } from "rxjs";
 import { map } from "rxjs/operators";
-import { chevron } from "../../chevron";
 import { rootLogger } from "../../logger";
+import { injectable } from "inversify";
 
 interface TickData {
     waterModifier: number;
@@ -10,7 +9,7 @@ interface TickData {
     byUser: string;
 }
 
-@Injectable(chevron)
+@injectable()
 class LisaTickController {
     private static readonly logger = rootLogger.child({
         target: LisaTickController,

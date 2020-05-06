@@ -2,11 +2,11 @@ import { Subject } from "rxjs";
 import { LisaDeathCause, LisaState } from "../LisaState";
 import { LisaStatusService } from "../service/LisaStatusService";
 declare class LisaStateController {
-    private readonly lisaStatusService;
     private static readonly logger;
     private static readonly USER_SYSTEM;
     private static readonly BEST_LIFETIME_CHECK_TIMEOUT;
     readonly stateChangeSubject: Subject<LisaState>;
+    private readonly lisaStatusService;
     private state;
     constructor(lisaStatusService: LisaStatusService);
     private static createNewLisaState;

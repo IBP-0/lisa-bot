@@ -8,18 +8,21 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 var LisaStateStorageController_1;
 Object.defineProperty(exports, "__esModule", { value: true });
-const chevronjs_1 = require("chevronjs");
 const operators_1 = require("rxjs/operators");
-const chevron_1 = require("../../chevron");
 const logger_1 = require("../../logger");
 const JsonStorageService_1 = require("../service/JsonStorageService");
 const LisaStateStorageService_1 = require("../service/LisaStateStorageService");
+const inversify_1 = require("inversify");
+const types_1 = require("../../types");
 let LisaStateStorageController = LisaStateStorageController_1 = class LisaStateStorageController {
     constructor(jsonStorageService, lisaStateStorageService) {
-        this.jsonStorageService = jsonStorageService;
         this.lisaStateStorageService = lisaStateStorageService;
+        this.jsonStorageService = jsonStorageService;
     }
     bindStateChangeSubscription(stateChangeSubject) {
         stateChangeSubject
@@ -47,9 +50,9 @@ LisaStateStorageController.logger = logger_1.rootLogger.child({
     target: LisaStateStorageController_1,
 });
 LisaStateStorageController = LisaStateStorageController_1 = __decorate([
-    chevronjs_1.Injectable(chevron_1.chevron, {
-        dependencies: [JsonStorageService_1.JsonStorageService, LisaStateStorageService_1.LisaStateStorageService],
-    }),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(types_1.TYPES.JsonStorageService)),
+    __param(1, inversify_1.inject(types_1.TYPES.LisaStateStorageService)),
     __metadata("design:paramtypes", [JsonStorageService_1.JsonStorageService,
         LisaStateStorageService_1.LisaStateStorageService])
 ], LisaStateStorageController);

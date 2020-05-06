@@ -6,10 +6,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const chevronjs_1 = require("chevronjs");
 const lodash_1 = require("lodash");
 const moment_1 = require("moment");
-const chevron_1 = require("../../chevron");
+const inversify_1 = require("inversify");
 let LisaStateStorageService = class LisaStateStorageService {
     fromStorable(jsonState) {
         const state = lodash_1.cloneDeep(jsonState);
@@ -35,6 +34,6 @@ let LisaStateStorageService = class LisaStateStorageService {
     }
 };
 LisaStateStorageService = __decorate([
-    chevronjs_1.Injectable(chevron_1.chevron)
+    inversify_1.injectable()
 ], LisaStateStorageService);
 exports.LisaStateStorageService = LisaStateStorageService;

@@ -5,11 +5,11 @@ import { LisaStatusService } from "../../../lisa/service/LisaStatusService";
 import { LisaTextService } from "../../../lisa/service/LisaTextService";
 import { DiscordService } from "../service/DiscordService";
 declare class DiscordCommandController {
+    private static readonly logger;
     private readonly lisaStateController;
     private readonly lisaStatusService;
     private readonly lisaTextService;
     private readonly lisaDiscordService;
-    private static readonly logger;
     constructor(lisaStateController: LisaStateController, lisaStatusService: LisaStatusService, lisaTextService: LisaTextService, lisaDiscordService: DiscordService);
     performAction(author: User, waterModifier: number, happinessModifier: number, allowedUserIds: string[] | null, textSuccess: string[], textDead: string[], textNotAllowed?: string[]): string;
     performKill(author: User, cause: LisaDeathCause, allowedUserIds: string[] | null, textSuccess: string[], textAlreadyDead: string[], textNotAllowed?: string[]): string;

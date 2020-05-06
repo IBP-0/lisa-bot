@@ -6,9 +6,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const chevronjs_1 = require("chevronjs");
 const fs_extra_1 = require("fs-extra");
-const chevron_1 = require("../../chevron");
+const inversify_1 = require("inversify");
 let JsonStorageService = class JsonStorageService {
     async hasStorageKey(path, key) {
         return (await this.load(path, key)) != null;
@@ -42,6 +41,6 @@ let JsonStorageService = class JsonStorageService {
     }
 };
 JsonStorageService = __decorate([
-    chevronjs_1.Injectable(chevron_1.chevron)
+    inversify_1.injectable()
 ], JsonStorageService);
 exports.JsonStorageService = JsonStorageService;

@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_commando_1 = require("discord.js-commando");
-const chevron_1 = require("../../../../chevron");
-const DiscordCommandController_1 = require("../../controller/DiscordCommandController");
+const inversify_config_1 = require("../../../../inversify.config");
+const types_1 = require("../../../../types");
 const HIGH_QUALITY_JOKES = [
     "Why do trees have so many friends? They branch out.",
     "A photographer was great at botany because he knew photo synthesis.",
@@ -34,7 +34,7 @@ class JokeCommand extends discord_js_commando_1.Command {
             memberName: "joke",
             description: "Tell Lisa a joke.",
         });
-        this.lisaDiscordCommandController = chevron_1.chevron.getInjectableInstance(DiscordCommandController_1.DiscordCommandController);
+        this.lisaDiscordCommandController = inversify_config_1.container.get(types_1.TYPES.DiscordCommandController);
     }
     run(message) {
         const goodJoke = Math.random() > 0.5;

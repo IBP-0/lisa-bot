@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_commando_1 = require("discord.js-commando");
-const chevron_1 = require("../../../../chevron");
-const DiscordCommandController_1 = require("../../controller/DiscordCommandController");
+const inversify_config_1 = require("../../../../inversify.config");
+const types_1 = require("../../../../types");
 class StatusCommand extends discord_js_commando_1.Command {
     constructor(client) {
         super(client, {
@@ -12,7 +12,7 @@ class StatusCommand extends discord_js_commando_1.Command {
             memberName: "status",
             description: "Shows the status of Lisa.",
         });
-        this.lisaDiscordCommandController = chevron_1.chevron.getInjectableInstance(DiscordCommandController_1.DiscordCommandController);
+        this.lisaDiscordCommandController = inversify_config_1.container.get(types_1.TYPES.DiscordCommandController);
     }
     run(message) {
         return message.say(this.lisaDiscordCommandController.createStatusText());

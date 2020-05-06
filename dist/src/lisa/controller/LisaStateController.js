@@ -8,16 +8,19 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 var LisaStateController_1;
 Object.defineProperty(exports, "__esModule", { value: true });
-const chevronjs_1 = require("chevronjs");
 const lodash_1 = require("lodash");
 const moment_1 = require("moment");
 const rxjs_1 = require("rxjs");
-const chevron_1 = require("../../chevron");
 const logger_1 = require("../../logger");
 const LisaState_1 = require("../LisaState");
 const LisaStatusService_1 = require("../service/LisaStatusService");
+const inversify_1 = require("inversify");
+const types_1 = require("../../types");
 let LisaStateController = LisaStateController_1 = class LisaStateController {
     constructor(lisaStatusService) {
         this.lisaStatusService = lisaStatusService;
@@ -130,9 +133,8 @@ LisaStateController.logger = logger_1.rootLogger.child({
 LisaStateController.USER_SYSTEM = "System";
 LisaStateController.BEST_LIFETIME_CHECK_TIMEOUT = 5000;
 LisaStateController = LisaStateController_1 = __decorate([
-    chevronjs_1.Injectable(chevron_1.chevron, {
-        dependencies: [LisaStatusService_1.LisaStatusService],
-    }),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(types_1.TYPES.LisaStatusService)),
     __metadata("design:paramtypes", [LisaStatusService_1.LisaStatusService])
 ], LisaStateController);
 exports.LisaStateController = LisaStateController;

@@ -1,8 +1,7 @@
-import { Injectable } from "chevronjs";
 import { cloneDeep } from "lodash";
 import { duration } from "moment";
-import { chevron } from "../../chevron";
 import { LisaDeathCause, LisaState } from "../LisaState";
+import { injectable } from "inversify";
 
 interface JsonLisaState {
     status: {
@@ -21,7 +20,7 @@ interface JsonLisaState {
     bestLifetime: number;
 }
 
-@Injectable(chevron)
+@injectable()
 class LisaStateStorageService {
     public fromStorable(jsonState: JsonLisaState): LisaState {
         const state: any = cloneDeep(jsonState);

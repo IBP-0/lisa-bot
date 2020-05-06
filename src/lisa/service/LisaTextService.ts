@@ -1,13 +1,17 @@
-import { Injectable } from "chevronjs";
-import { chevron } from "../../chevron";
 import { LisaState } from "../LisaState";
 import { LisaStatusService } from "./LisaStatusService";
+import { inject, injectable } from "inversify";
+import { TYPES } from "../../types";
 
-@Injectable(chevron, {
-    dependencies: [LisaStatusService],
-})
+@injectable()
 class LisaTextService {
-    constructor(private readonly lisaStatusService: LisaStatusService) {}
+    private readonly lisaStatusService: LisaStatusService;
+
+    constructor(
+        @inject(TYPES.LisaStatusService) lisaStatusService: LisaStatusService
+    ) {
+        this.lisaStatusService = lisaStatusService;
+    }
 
     public createStatusText(state: LisaState): string {
         const statusLabel = `Lisa is ${this.createStatusLabel(state)}.`;

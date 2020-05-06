@@ -1,12 +1,11 @@
-import { Injectable } from "chevronjs";
 import { pathExists, readJSON, writeJSON } from "fs-extra";
-import { chevron } from "../../chevron";
+import { injectable } from "inversify";
 
 interface Storage<T = any> {
     [key: string]: T;
 }
 
-@Injectable(chevron)
+@injectable()
 class JsonStorageService {
     public async hasStorageKey(path: string, key: string): Promise<boolean> {
         return (await this.load(path, key)) != null;

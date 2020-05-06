@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_commando_1 = require("discord.js-commando");
-const chevron_1 = require("../../../../chevron");
-const DiscordCommandController_1 = require("../../controller/DiscordCommandController");
+const inversify_config_1 = require("../../../../inversify.config");
+const types_1 = require("../../../../types");
 class PunchCommand extends discord_js_commando_1.Command {
     constructor(client) {
         super(client, {
@@ -12,7 +12,7 @@ class PunchCommand extends discord_js_commando_1.Command {
             memberName: "punch",
             description: "Punch Lisa.",
         });
-        this.lisaDiscordCommandController = chevron_1.chevron.getInjectableInstance(DiscordCommandController_1.DiscordCommandController);
+        this.lisaDiscordCommandController = inversify_config_1.container.get(types_1.TYPES.DiscordCommandController);
     }
     run(message) {
         return message.say(this.lisaDiscordCommandController.performAction(message.author, 0, -10, null, ["_Is being punched in the leaves._", "oof.", "ouch ouw owie."], ["The dead feel no pain..."]));

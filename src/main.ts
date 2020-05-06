@@ -1,22 +1,24 @@
+import "reflect-metadata";
 import { isNil } from "lodash";
-import { chevron } from "./chevron";
+import { container } from "./inversify.config";
 import { DiscordEventController } from "./clients/discord/controller/DiscordEventController";
 import { DiscordClient } from "./clients/discord/DiscordClient";
 import { LisaStateController } from "./lisa/controller/LisaStateController";
 import { LisaStateStorageController } from "./lisa/controller/LisaStateStorageController";
 import { LisaTickController } from "./lisa/controller/LisaTickController";
 import { rootLogger } from "./logger";
+import { TYPES } from "./types";
 
 const logger = rootLogger.child({ target: "main" });
 
 const startLisaMainClient = async (): Promise<void> => {
-    const lisaStateController = chevron.getInjectableInstance<
-        LisaStateController
-    >(LisaStateController);
+    const lisaStateController = container.get<LisaStateController>(
+        TYPES.LisaStateController
+    );
 
-    const lisaStorageController = chevron.getInjectableInstance<
-        LisaStateStorageController
-    >(LisaStateStorageController);
+    const lisaStorageController = container.get<LisaStateStorageController>(
+        TYPES.LisaStateStorageController
+    );
     if (await lisaStorageController.hasStoredState()) {
         logger.info("Found stored Lisa state, loading it.");
         lisaStateController.loadState(
@@ -29,8 +31,8 @@ const startLisaMainClient = async (): Promise<void> => {
         lisaStateController.stateChangeSubject
     );
 
-    const lisaTimer = chevron.getInjectableInstance<LisaTickController>(
-        LisaTickController
+    const lisaTimer = container.get<LisaTickController>(
+        TYPES.LisaTickController
     );
     lisaTimer.tickObservable.subscribe(
         ({ waterModifier, happinessModifier, byUser }) =>
@@ -42,17 +44,7 @@ const startLisaMainClient = async (): Promise<void> => {
     );
 };
 const startLisaDiscordClient = async (): Promise<void> => {
-    chevron.registerInjectable(
-        {
-            commandPrefix: "$",
-            owner: "128985967875850240",
-        },
-        { name: "discordOptions" }
-    );
-
-    const lisaDiscordClient = chevron.getInjectableInstance<DiscordClient>(
-        DiscordClient
-    );
+    const lisaDiscordClient = container.get<DiscordClient>(TYPES.DiscordClient);
     const discordToken = process.env.DISCORD_TOKEN;
     if (isNil(discordToken)) {
         throw new Error("No secret set.");
@@ -60,9 +52,9 @@ const startLisaDiscordClient = async (): Promise<void> => {
 
     await lisaDiscordClient.login(discordToken);
 
-    const lisaDiscordController = chevron.getInjectableInstance<
-        DiscordEventController
-    >(DiscordEventController);
+    const lisaDiscordController = container.get<DiscordEventController>(
+        TYPES.DiscordEventController
+    );
     lisaDiscordController.bindListeners();
 };
 

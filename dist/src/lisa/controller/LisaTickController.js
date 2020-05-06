@@ -10,11 +10,10 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var LisaTickController_1;
 Object.defineProperty(exports, "__esModule", { value: true });
-const chevronjs_1 = require("chevronjs");
 const rxjs_1 = require("rxjs");
 const operators_1 = require("rxjs/operators");
-const chevron_1 = require("../../chevron");
 const logger_1 = require("../../logger");
+const inversify_1 = require("inversify");
 let LisaTickController = LisaTickController_1 = class LisaTickController {
     constructor() {
         this.tickObservable = this.createTickObservable();
@@ -39,7 +38,7 @@ LisaTickController.WATER_MODIFIER = -0.5;
 LisaTickController.HAPPINESS_MODIFIER = -0.75;
 LisaTickController.USER_TICK = "Time";
 LisaTickController = LisaTickController_1 = __decorate([
-    chevronjs_1.Injectable(chevron_1.chevron),
+    inversify_1.injectable(),
     __metadata("design:paramtypes", [])
 ], LisaTickController);
 exports.LisaTickController = LisaTickController;

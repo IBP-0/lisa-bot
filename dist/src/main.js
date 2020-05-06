@@ -1,17 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+require("reflect-metadata");
 const lodash_1 = require("lodash");
-const chevron_1 = require("./chevron");
-const DiscordEventController_1 = require("./clients/discord/controller/DiscordEventController");
-const DiscordClient_1 = require("./clients/discord/DiscordClient");
-const LisaStateController_1 = require("./lisa/controller/LisaStateController");
-const LisaStateStorageController_1 = require("./lisa/controller/LisaStateStorageController");
-const LisaTickController_1 = require("./lisa/controller/LisaTickController");
+const inversify_config_1 = require("./inversify.config");
 const logger_1 = require("./logger");
+const types_1 = require("./types");
 const logger = logger_1.rootLogger.child({ target: "main" });
 const startLisaMainClient = async () => {
-    const lisaStateController = chevron_1.chevron.getInjectableInstance(LisaStateController_1.LisaStateController);
-    const lisaStorageController = chevron_1.chevron.getInjectableInstance(LisaStateStorageController_1.LisaStateStorageController);
+    const lisaStateController = inversify_config_1.container.get(types_1.TYPES.LisaStateController);
+    const lisaStorageController = inversify_config_1.container.get(types_1.TYPES.LisaStateStorageController);
     if (await lisaStorageController.hasStoredState()) {
         logger.info("Found stored Lisa state, loading it.");
         lisaStateController.loadState(await lisaStorageController.loadStoredState());
@@ -20,21 +17,17 @@ const startLisaMainClient = async () => {
         logger.info("No stored state found, skipping loading.");
     }
     lisaStorageController.bindStateChangeSubscription(lisaStateController.stateChangeSubject);
-    const lisaTimer = chevron_1.chevron.getInjectableInstance(LisaTickController_1.LisaTickController);
+    const lisaTimer = inversify_config_1.container.get(types_1.TYPES.LisaTickController);
     lisaTimer.tickObservable.subscribe(({ waterModifier, happinessModifier, byUser }) => lisaStateController.modifyLisaStatus(waterModifier, happinessModifier, byUser));
 };
 const startLisaDiscordClient = async () => {
-    chevron_1.chevron.registerInjectable({
-        commandPrefix: "$",
-        owner: "128985967875850240",
-    }, { name: "discordOptions" });
-    const lisaDiscordClient = chevron_1.chevron.getInjectableInstance(DiscordClient_1.DiscordClient);
+    const lisaDiscordClient = inversify_config_1.container.get(types_1.TYPES.DiscordClient);
     const discordToken = process.env.DISCORD_TOKEN;
     if (lodash_1.isNil(discordToken)) {
         throw new Error("No secret set.");
     }
     await lisaDiscordClient.login(discordToken);
-    const lisaDiscordController = chevron_1.chevron.getInjectableInstance(DiscordEventController_1.DiscordEventController);
+    const lisaDiscordController = inversify_config_1.container.get(types_1.TYPES.DiscordEventController);
     lisaDiscordController.bindListeners();
 };
 logger.info("Starting Lisa main client...");

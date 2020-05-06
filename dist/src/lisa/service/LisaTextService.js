@@ -8,10 +8,13 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const chevronjs_1 = require("chevronjs");
-const chevron_1 = require("../../chevron");
 const LisaStatusService_1 = require("./LisaStatusService");
+const inversify_1 = require("inversify");
+const types_1 = require("../../types");
 let LisaTextService = class LisaTextService {
     constructor(lisaStatusService) {
         this.lisaStatusService = lisaStatusService;
@@ -58,9 +61,8 @@ let LisaTextService = class LisaTextService {
     }
 };
 LisaTextService = __decorate([
-    chevronjs_1.Injectable(chevron_1.chevron, {
-        dependencies: [LisaStatusService_1.LisaStatusService],
-    }),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(types_1.TYPES.LisaStatusService)),
     __metadata("design:paramtypes", [LisaStatusService_1.LisaStatusService])
 ], LisaTextService);
 exports.LisaTextService = LisaTextService;

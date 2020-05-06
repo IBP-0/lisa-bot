@@ -1,7 +1,8 @@
 import { Message } from "discord.js";
 import { Command, CommandoClient, CommandoMessage } from "discord.js-commando";
-import { chevron } from "../../../../chevron";
+import { container } from "../../../../inversify.config";
 import { DiscordCommandController } from "../../controller/DiscordCommandController";
+import { TYPES } from "../../../../types";
 
 const NIKLAS_ID = ["178470784984023040"];
 
@@ -17,9 +18,9 @@ class NiklasCommand extends Command {
             description: "^w^",
             hidden: true,
         });
-        this.lisaDiscordCommandController = chevron.getInjectableInstance<
+        this.lisaDiscordCommandController = container.get<
             DiscordCommandController
-        >(DiscordCommandController);
+        >(TYPES.DiscordCommandController);
     }
 
     run(message: CommandoMessage): Promise<Message | Message[]> {

@@ -1,15 +1,13 @@
-import { Injectable } from "chevronjs";
 import { Subject } from "rxjs";
 import { throttleTime } from "rxjs/operators";
-import { chevron } from "../../chevron";
 import { rootLogger } from "../../logger";
 import { LisaState } from "../LisaState";
 import { JsonStorageService } from "../service/JsonStorageService";
 import { LisaStateStorageService } from "../service/LisaStateStorageService";
+import { inject, injectable } from "inversify";
+import { TYPES } from "../../types";
 
-@Injectable(chevron, {
-    dependencies: [JsonStorageService, LisaStateStorageService],
-})
+@injectable()
 class LisaStateStorageController {
     private static readonly STORAGE_THROTTLE_TIMEOUT = 10000;
     private static readonly STORAGE_PATH = "data/storage.json";
@@ -19,10 +17,18 @@ class LisaStateStorageController {
         target: LisaStateStorageController,
     });
 
+    private readonly jsonStorageService: JsonStorageService;
+    private readonly lisaStateStorageService: LisaStateStorageService;
+
     constructor(
-        private readonly jsonStorageService: JsonStorageService,
-        private readonly lisaStateStorageService: LisaStateStorageService
-    ) {}
+        @inject(TYPES.JsonStorageService)
+        jsonStorageService: JsonStorageService,
+        @inject(TYPES.LisaStateStorageService)
+        lisaStateStorageService: LisaStateStorageService
+    ) {
+        this.lisaStateStorageService = lisaStateStorageService;
+        this.jsonStorageService = jsonStorageService;
+    }
 
     public bindStateChangeSubscription(
         stateChangeSubject: Subject<LisaState>

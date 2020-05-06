@@ -1,8 +1,6 @@
-import { Injectable } from "chevronjs";
 import { cloneDeep } from "lodash";
 import { Duration, duration } from "moment";
 import { interval, Subject } from "rxjs";
-import { chevron } from "../../chevron";
 import { rootLogger } from "../../logger";
 import {
     HAPPINESS_INITIAL,
@@ -15,10 +13,10 @@ import {
     WATER_MIN,
 } from "../LisaState";
 import { LisaStatusService } from "../service/LisaStatusService";
+import { inject, injectable } from "inversify";
+import { TYPES } from "../../types";
 
-@Injectable(chevron, {
-    dependencies: [LisaStatusService],
-})
+@injectable()
 class LisaStateController {
     private static readonly logger = rootLogger.child({
         target: LisaStateController,
@@ -26,11 +24,14 @@ class LisaStateController {
 
     private static readonly USER_SYSTEM = "System";
     private static readonly BEST_LIFETIME_CHECK_TIMEOUT = 5000;
-
     public readonly stateChangeSubject: Subject<LisaState>;
+    private readonly lisaStatusService: LisaStatusService;
     private state: LisaState;
 
-    constructor(private readonly lisaStatusService: LisaStatusService) {
+    constructor(
+        @inject(TYPES.LisaStatusService) lisaStatusService: LisaStatusService
+    ) {
+        this.lisaStatusService = lisaStatusService;
         this.state = LisaStateController.createNewLisaState(
             LisaStateController.USER_SYSTEM,
             duration(0)

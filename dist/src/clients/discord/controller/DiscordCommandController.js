@@ -8,22 +8,25 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 var DiscordCommandController_1;
 Object.defineProperty(exports, "__esModule", { value: true });
-const chevronjs_1 = require("chevronjs");
 const lodash_1 = require("lodash");
-const chevron_1 = require("../../../chevron");
 const LisaStateController_1 = require("../../../lisa/controller/LisaStateController");
 const LisaStatusService_1 = require("../../../lisa/service/LisaStatusService");
 const LisaTextService_1 = require("../../../lisa/service/LisaTextService");
 const DiscordService_1 = require("../service/DiscordService");
 const logger_js_1 = require("../../../logger.js");
+const inversify_1 = require("inversify");
+const types_1 = require("../../../types");
 let DiscordCommandController = DiscordCommandController_1 = class DiscordCommandController {
     constructor(lisaStateController, lisaStatusService, lisaTextService, lisaDiscordService) {
-        this.lisaStateController = lisaStateController;
-        this.lisaStatusService = lisaStatusService;
-        this.lisaTextService = lisaTextService;
         this.lisaDiscordService = lisaDiscordService;
+        this.lisaTextService = lisaTextService;
+        this.lisaStatusService = lisaStatusService;
+        this.lisaStateController = lisaStateController;
     }
     performAction(author, waterModifier, happinessModifier, allowedUserIds, textSuccess, textDead, textNotAllowed = []) {
         if (!this.lisaDiscordService.isUserAllowed(allowedUserIds, author)) {
@@ -66,14 +69,11 @@ DiscordCommandController.logger = logger_js_1.rootLogger.child({
     target: DiscordCommandController_1,
 });
 DiscordCommandController = DiscordCommandController_1 = __decorate([
-    chevronjs_1.Injectable(chevron_1.chevron, {
-        dependencies: [
-            LisaStateController_1.LisaStateController,
-            LisaStatusService_1.LisaStatusService,
-            LisaTextService_1.LisaTextService,
-            DiscordService_1.DiscordService,
-        ],
-    }),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(types_1.TYPES.LisaStateController)),
+    __param(1, inversify_1.inject(types_1.TYPES.LisaStatusService)),
+    __param(2, inversify_1.inject(types_1.TYPES.LisaTextService)),
+    __param(3, inversify_1.inject(types_1.TYPES.DiscordService)),
     __metadata("design:paramtypes", [LisaStateController_1.LisaStateController,
         LisaStatusService_1.LisaStatusService,
         LisaTextService_1.LisaTextService,

@@ -1,4 +1,4 @@
-import { Chevron, DefaultFactory } from "chevronjs";
+import "reflect-metadata";
 import { duration } from "moment";
 import {
     HAPPINESS_INITIAL,
@@ -7,6 +7,8 @@ import {
 } from "../../../../src/lisa/LisaState";
 import { LisaStatusService } from "../../../../src/lisa/service/LisaStatusService";
 import { LisaTextService } from "../../../../src/lisa/service/LisaTextService";
+import { container } from "../../../../src/inversify.config";
+import { TYPES } from "../../../../src/types";
 
 const createState = (): LisaState => {
     return {
@@ -33,21 +35,17 @@ describe("LisaTextService", () => {
     let mockLisaStatusService: LisaStatusService;
 
     beforeEach(() => {
-        const chevron = new Chevron();
+        container.snapshot();
 
         mockLisaStatusService = new LisaStatusService();
-        chevron.registerInjectable(mockLisaStatusService, {
-            factory: DefaultFactory.IDENTITY(),
-            name: LisaStatusService,
-        });
+        container
+            .rebind<LisaStatusService>(TYPES.LisaStatusService)
+            .toConstantValue(mockLisaStatusService);
 
-        chevron.registerInjectable(LisaTextService, {
-            factory: DefaultFactory.CLASS(),
-            dependencies: [LisaStatusService],
-        });
-        lisaTextService = chevron.getInjectableInstance<LisaTextService>(
-            LisaTextService
-        );
+        lisaTextService = container.get<LisaTextService>(TYPES.LisaTextService);
+    });
+    afterEach(() => {
+        container.restore();
     });
 
     describe("createStatusLabel", () => {

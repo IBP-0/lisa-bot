@@ -1,8 +1,6 @@
-import { Injectable } from "chevronjs";
 import { Message, PresenceData } from "discord.js";
 import { CommandoClient, CommandoClientOptions } from "discord.js-commando";
 import { Observable } from "rxjs";
-import { chevron } from "../../chevron";
 import { AboutCommand } from "./commands/core/AboutCommand";
 import { InviteCommand } from "./commands/core/InviteCommand";
 import { ServersCommand } from "./commands/core/ServersCommand";
@@ -16,13 +14,17 @@ import { PunchCommand } from "./commands/lisa/PunchCommand";
 import { ReplantCommand } from "./commands/lisa/ReplantCommand";
 import { StatusCommand } from "./commands/lisa/StatusCommand";
 import { WaterCommand } from "./commands/lisa/WaterCommand";
+import { inject, injectable } from "inversify";
+import { TYPES } from "../../types";
 
-@Injectable(chevron, { dependencies: ["discordOptions"] })
+@injectable()
 class DiscordClient {
     private readonly commandoClient: CommandoClient;
 
-    constructor(options: CommandoClientOptions) {
-        this.commandoClient = new CommandoClient(options);
+    constructor(
+        @inject(TYPES.DiscordConfig) discordConfig: CommandoClientOptions
+    ) {
+        this.commandoClient = new CommandoClient(discordConfig);
 
         const commandRegistry = this.commandoClient.registry;
 

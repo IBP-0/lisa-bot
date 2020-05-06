@@ -8,11 +8,12 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const chevronjs_1 = require("chevronjs");
 const discord_js_commando_1 = require("discord.js-commando");
 const rxjs_1 = require("rxjs");
-const chevron_1 = require("../../chevron");
 const AboutCommand_1 = require("./commands/core/AboutCommand");
 const InviteCommand_1 = require("./commands/core/InviteCommand");
 const ServersCommand_1 = require("./commands/core/ServersCommand");
@@ -26,9 +27,11 @@ const PunchCommand_1 = require("./commands/lisa/PunchCommand");
 const ReplantCommand_1 = require("./commands/lisa/ReplantCommand");
 const StatusCommand_1 = require("./commands/lisa/StatusCommand");
 const WaterCommand_1 = require("./commands/lisa/WaterCommand");
+const inversify_1 = require("inversify");
+const types_1 = require("../../types");
 let DiscordClient = class DiscordClient {
-    constructor(options) {
-        this.commandoClient = new discord_js_commando_1.CommandoClient(options);
+    constructor(discordConfig) {
+        this.commandoClient = new discord_js_commando_1.CommandoClient(discordConfig);
         const commandRegistry = this.commandoClient.registry;
         /*
          * Types
@@ -83,7 +86,8 @@ let DiscordClient = class DiscordClient {
     }
 };
 DiscordClient = __decorate([
-    chevronjs_1.Injectable(chevron_1.chevron, { dependencies: ["discordOptions"] }),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(types_1.TYPES.DiscordConfig)),
     __metadata("design:paramtypes", [Object])
 ], DiscordClient);
 exports.DiscordClient = DiscordClient;

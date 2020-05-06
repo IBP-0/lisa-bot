@@ -1,10 +1,9 @@
-import { Injectable } from "chevronjs";
 import { duration, Duration } from "moment";
-import { chevron } from "../../chevron";
 import { rootLogger } from "../../logger";
 import { HAPPINESS_INITIAL, LisaState, WATER_INITIAL } from "../LisaState";
+import { injectable } from "inversify";
 
-@Injectable(chevron)
+@injectable()
 class LisaStatusService {
     private static readonly logger = rootLogger.child({
         target: LisaStatusService,

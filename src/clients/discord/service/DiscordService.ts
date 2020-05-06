@@ -1,8 +1,7 @@
-import { Injectable } from "chevronjs";
 import { User } from "discord.js";
-import { chevron } from "../../../chevron";
+import { injectable } from "inversify";
 
-@Injectable(chevron)
+@injectable()
 class DiscordService {
     public getFullUserName(user: User): string {
         return `${user.username}#${user.discriminator}`;

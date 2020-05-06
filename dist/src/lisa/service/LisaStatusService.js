@@ -7,11 +7,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 var LisaStatusService_1;
 Object.defineProperty(exports, "__esModule", { value: true });
-const chevronjs_1 = require("chevronjs");
 const moment_1 = require("moment");
-const chevron_1 = require("../../chevron");
 const logger_1 = require("../../logger");
 const LisaState_1 = require("../LisaState");
+const inversify_1 = require("inversify");
 let LisaStatusService = LisaStatusService_1 = class LisaStatusService {
     isAlive(state) {
         return state.death.time == null;
@@ -55,6 +54,6 @@ LisaStatusService.logger = logger_1.rootLogger.child({
     target: LisaStatusService_1,
 });
 LisaStatusService = LisaStatusService_1 = __decorate([
-    chevronjs_1.Injectable(chevron_1.chevron)
+    inversify_1.injectable()
 ], LisaStatusService);
 exports.LisaStatusService = LisaStatusService;

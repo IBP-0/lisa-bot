@@ -8,15 +8,18 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 var DiscordEventController_1;
 Object.defineProperty(exports, "__esModule", { value: true });
-const chevronjs_1 = require("chevronjs");
 const operators_1 = require("rxjs/operators");
-const chevron_1 = require("../../../chevron");
 const LisaStateController_1 = require("../../../lisa/controller/LisaStateController");
 const LisaTextService_1 = require("../../../lisa/service/LisaTextService");
 const logger_1 = require("../../../logger");
 const DiscordClient_1 = require("../DiscordClient");
+const inversify_1 = require("inversify");
+const types_1 = require("../../../types");
 const createPresence = (name) => {
     return {
         activity: {
@@ -26,9 +29,9 @@ const createPresence = (name) => {
 };
 let DiscordEventController = DiscordEventController_1 = class DiscordEventController {
     constructor(lisaStateController, lisaDiscordClient, lisaTextService) {
-        this.lisaStateController = lisaStateController;
-        this.lisaDiscordClient = lisaDiscordClient;
         this.lisaTextService = lisaTextService;
+        this.lisaDiscordClient = lisaDiscordClient;
+        this.lisaStateController = lisaStateController;
     }
     bindListeners() {
         this.lisaDiscordClient
@@ -61,9 +64,10 @@ DiscordEventController.MESSAGE_THROTTLE_TIMEOUT = 1000;
 DiscordEventController.MESSAGE_HAPPINESS_MODIFIER = 0.25;
 DiscordEventController.USER_DISCORD_ACTIVITY = "Discord activity";
 DiscordEventController = DiscordEventController_1 = __decorate([
-    chevronjs_1.Injectable(chevron_1.chevron, {
-        dependencies: [LisaStateController_1.LisaStateController, DiscordClient_1.DiscordClient, LisaTextService_1.LisaTextService],
-    }),
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(types_1.TYPES.LisaStateController)),
+    __param(1, inversify_1.inject(types_1.TYPES.DiscordClient)),
+    __param(2, inversify_1.inject(types_1.TYPES.LisaTextService)),
     __metadata("design:paramtypes", [LisaStateController_1.LisaStateController,
         DiscordClient_1.DiscordClient,
         LisaTextService_1.LisaTextService])
