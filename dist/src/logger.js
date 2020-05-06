@@ -7,9 +7,9 @@ const rootLogger = winston_1.createLogger({
     level: mode_1.isProductionMode() ? "info" : "silly",
     format: logFormat,
     defaultMeta: { target: "root" },
-    transports: [new winston_1.transports.File({ filename: "log/lisa-bot.log" })],
+    transports: [new winston_1.transports.Console()],
 });
 exports.rootLogger = rootLogger;
-if (!mode_1.isProductionMode()) {
-    rootLogger.add(new winston_1.transports.Console());
+if (mode_1.isProductionMode()) {
+    rootLogger.add(new winston_1.transports.File({ filename: "log/lisa-bot.log" }));
 }

@@ -12,11 +12,11 @@ const rootLogger = createLogger({
     level: isProductionMode() ? "info" : "silly",
     format: logFormat,
     defaultMeta: { target: "root" },
-    transports: [new transports.File({ filename: "log/lisa-bot.log" })],
+    transports: [new transports.Console()],
 });
 
-if (!isProductionMode()) {
-    rootLogger.add(new transports.Console());
+if (isProductionMode()) {
+    rootLogger.add(new transports.File({ filename: "log/lisa-bot.log" }));
 }
 
 export { rootLogger };
