@@ -38,3 +38,4 @@ logger.info("Starting Lisa discord client...");
 startLisaDiscordClient()
     .then(() => logger.info("Started Lisa discord client."))
     .catch((e) => console.error("Could not start Lisa discord client.", e));
+//# sourceMappingURL=main.js.map

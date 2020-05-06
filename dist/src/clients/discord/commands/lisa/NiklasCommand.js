@@ -21,3 +21,4 @@ class NiklasCommand extends discord_js_commando_1.Command {
     }
 }
 exports.NiklasCommand = NiklasCommand;
+//# sourceMappingURL=NiklasCommand.js.map

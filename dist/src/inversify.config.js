@@ -51,3 +51,4 @@ exports.container
 exports.container
     .bind(types_1.TYPES.DiscordConfig)
     .toConstantValue(config_1.DISCORD_CLIENT_CONFIG);
+//# sourceMappingURL=inversify.config.js.map

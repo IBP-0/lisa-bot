@@ -91,3 +91,4 @@ DiscordClient = __decorate([
     __metadata("design:paramtypes", [Object])
 ], DiscordClient);
 exports.DiscordClient = DiscordClient;
+//# sourceMappingURL=DiscordClient.js.map

@@ -7,11 +7,10 @@
     "types": "./dist/src/main.d.ts",
     "scripts": {
         "start": "npm-run-all build serve",
-        "serve": "node dist/src/main.js",
+        "serve": "node -r source-map-support/register ./dist/src/main.js",
         "dist": "npm-run-all lint build test",
         "build": "npm-run-all clean:dist build:tsc",
         "build:tsc": "tsc --build ./tsconfig.json",
-        "watch": "tsc --build ./tsconfig.json -w",
         "lint": "eslint ./src/ ./spec/src/ --ext .ts",
         "fix": "eslint ./src/ ./spec/src/ --ext .ts --fix",
         "test": "npm-run-all clean:test build:tsc test:jasmine",

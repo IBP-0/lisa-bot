@@ -80,3 +80,4 @@ DiscordCommandController = DiscordCommandController_1 = __decorate([
         DiscordService_1.DiscordService])
 ], DiscordCommandController);
 exports.DiscordCommandController = DiscordCommandController;
+//# sourceMappingURL=DiscordCommandController.js.map

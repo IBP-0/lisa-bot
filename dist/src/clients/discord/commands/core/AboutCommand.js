@@ -24,3 +24,4 @@ class AboutCommand extends discord_js_commando_1.Command {
     }
 }
 exports.AboutCommand = AboutCommand;
+//# sourceMappingURL=AboutCommand.js.map

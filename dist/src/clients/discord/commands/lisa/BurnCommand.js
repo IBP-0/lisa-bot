@@ -24,3 +24,4 @@ class BurnCommand extends discord_js_commando_1.Command {
     }
 }
 exports.BurnCommand = BurnCommand;
+//# sourceMappingURL=BurnCommand.js.map

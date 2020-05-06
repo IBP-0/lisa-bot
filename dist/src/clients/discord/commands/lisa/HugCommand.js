@@ -19,3 +19,4 @@ class HugCommand extends discord_js_commando_1.Command {
     }
 }
 exports.HugCommand = HugCommand;
+//# sourceMappingURL=HugCommand.js.map

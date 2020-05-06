@@ -27,3 +27,4 @@ class BaaCommand extends discord_js_commando_1.Command {
     }
 }
 exports.BaaCommand = BaaCommand;
+//# sourceMappingURL=BaaCommand.js.map

@@ -73,3 +73,4 @@ DiscordEventController = DiscordEventController_1 = __decorate([
         StatusTextService_1.StatusTextService])
 ], DiscordEventController);
 exports.DiscordEventController = DiscordEventController;
+//# sourceMappingURL=DiscordEventController.js.map

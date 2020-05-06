@@ -19,3 +19,4 @@ class StatusCommand extends discord_js_commando_1.Command {
     }
 }
 exports.StatusCommand = StatusCommand;
+//# sourceMappingURL=StatusCommand.js.map

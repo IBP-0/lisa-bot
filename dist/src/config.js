@@ -4,3 +4,4 @@ exports.DISCORD_CLIENT_CONFIG = {
     commandPrefix: "$",
     owner: "128985967875850240",
 };
+//# sourceMappingURL=config.js.map

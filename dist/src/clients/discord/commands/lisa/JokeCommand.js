@@ -42,3 +42,4 @@ class JokeCommand extends discord_js_commando_1.Command {
     }
 }
 exports.JokeCommand = JokeCommand;
+//# sourceMappingURL=JokeCommand.js.map

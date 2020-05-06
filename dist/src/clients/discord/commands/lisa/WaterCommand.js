@@ -24,3 +24,4 @@ class WaterCommand extends discord_js_commando_1.Command {
     }
 }
 exports.WaterCommand = WaterCommand;
+//# sourceMappingURL=WaterCommand.js.map

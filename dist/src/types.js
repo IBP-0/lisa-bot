@@ -14,3 +14,4 @@ exports.TYPES = {
     DiscordClient: Symbol.for("DiscordClient"),
     DiscordConfig: Symbol.for("DiscordConfig"),
 };
+//# sourceMappingURL=types.js.map

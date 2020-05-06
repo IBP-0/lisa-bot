@@ -57,3 +57,4 @@ StatusService = StatusService_1 = __decorate([
     inversify_1.injectable()
 ], StatusService);
 exports.StatusService = StatusService;
+//# sourceMappingURL=StatusService.js.map

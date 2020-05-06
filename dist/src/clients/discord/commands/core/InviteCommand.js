@@ -24,3 +24,4 @@ ${invite}`);
     }
 }
 exports.InviteCommand = InviteCommand;
+//# sourceMappingURL=InviteCommand.js.map

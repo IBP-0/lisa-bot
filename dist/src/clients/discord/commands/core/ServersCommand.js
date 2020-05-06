@@ -23,3 +23,4 @@ class ServersCommand extends discord_js_commando_1.Command {
     }
 }
 exports.ServersCommand = ServersCommand;
+//# sourceMappingURL=ServersCommand.js.map

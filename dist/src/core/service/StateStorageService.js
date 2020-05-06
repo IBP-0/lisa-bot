@@ -37,3 +37,4 @@ StateStorageService = __decorate([
     inversify_1.injectable()
 ], StateStorageService);
 exports.StateStorageService = StateStorageService;
+//# sourceMappingURL=StateStorageService.js.map

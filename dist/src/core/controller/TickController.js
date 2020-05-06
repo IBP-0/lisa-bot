@@ -42,3 +42,4 @@ TickController = TickController_1 = __decorate([
     __metadata("design:paramtypes", [])
 ], TickController);
 exports.TickController = TickController;
+//# sourceMappingURL=TickController.js.map

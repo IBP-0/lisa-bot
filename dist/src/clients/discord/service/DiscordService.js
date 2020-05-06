@@ -19,3 +19,4 @@ DiscordService = __decorate([
     inversify_1.injectable()
 ], DiscordService);
 exports.DiscordService = DiscordService;
+//# sourceMappingURL=DiscordService.js.map

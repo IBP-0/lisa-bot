@@ -44,3 +44,4 @@ JsonStorageService = __decorate([
     inversify_1.injectable()
 ], JsonStorageService);
 exports.JsonStorageService = JsonStorageService;
+//# sourceMappingURL=JsonStorageService.js.map

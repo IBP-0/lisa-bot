@@ -24,3 +24,4 @@ class ReplantCommand extends discord_js_commando_1.Command {
     }
 }
 exports.ReplantCommand = ReplantCommand;
+//# sourceMappingURL=ReplantCommand.js.map

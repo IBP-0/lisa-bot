@@ -13,3 +13,4 @@ exports.rootLogger = rootLogger;
 if (mode_1.isProductionMode()) {
     rootLogger.add(new winston_1.transports.File({ filename: "log/lisa-bot.log" }));
 }
+//# sourceMappingURL=logger.js.map

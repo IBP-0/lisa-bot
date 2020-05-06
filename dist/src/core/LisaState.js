@@ -20,3 +20,4 @@ var LisaDeathCause;
     LisaDeathCause["FIRE"] = "fire";
 })(LisaDeathCause || (LisaDeathCause = {}));
 exports.LisaDeathCause = LisaDeathCause;
+//# sourceMappingURL=LisaState.js.map
