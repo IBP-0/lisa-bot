@@ -4,7 +4,7 @@ interface TickData {
     happinessModifier: number;
     byUser: string;
 }
-declare class LisaTickController {
+declare class TickController {
     private static readonly logger;
     private static readonly TIMEOUT;
     private static readonly WATER_MODIFIER;
@@ -14,4 +14,4 @@ declare class LisaTickController {
     constructor();
     private createTickObservable;
 }
-export { LisaTickController };
+export { TickController };

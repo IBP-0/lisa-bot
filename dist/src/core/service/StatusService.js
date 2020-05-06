@@ -5,13 +5,13 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var LisaStatusService_1;
+var StatusService_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 const moment_1 = require("moment");
 const logger_1 = require("../../logger");
 const LisaState_1 = require("../LisaState");
 const inversify_1 = require("inversify");
-let LisaStatusService = LisaStatusService_1 = class LisaStatusService {
+let StatusService = StatusService_1 = class StatusService {
     isAlive(state) {
         return state.death.time == null;
     }
@@ -46,14 +46,14 @@ let LisaStatusService = LisaStatusService_1 = class LisaStatusService {
         const relativeIndex = relativeWater < relativeHappiness
             ? relativeWater
             : relativeHappiness;
-        LisaStatusService_1.logger.debug(`Calculated relative index ${relativeIndex.toFixed(2)} for water ${state.status.water} and happiness ${state.status.happiness}.`);
+        StatusService_1.logger.debug(`Calculated relative index ${relativeIndex.toFixed(2)} for water ${state.status.water} and happiness ${state.status.happiness}.`);
         return relativeIndex;
     }
 };
-LisaStatusService.logger = logger_1.rootLogger.child({
-    target: LisaStatusService_1,
+StatusService.logger = logger_1.rootLogger.child({
+    target: StatusService_1,
 });
-LisaStatusService = LisaStatusService_1 = __decorate([
+StatusService = StatusService_1 = __decorate([
     inversify_1.injectable()
-], LisaStatusService);
-exports.LisaStatusService = LisaStatusService;
+], StatusService);
+exports.StatusService = StatusService;

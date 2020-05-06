@@ -12,10 +12,10 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const LisaStatusService_1 = require("./LisaStatusService");
+const StatusService_1 = require("./StatusService");
 const inversify_1 = require("inversify");
 const types_1 = require("../../types");
-let LisaTextService = class LisaTextService {
+let StatusTextService = class StatusTextService {
     constructor(lisaStatusService) {
         this.lisaStatusService = lisaStatusService;
     }
@@ -60,9 +60,9 @@ let LisaTextService = class LisaTextService {
         return `${currentLabel}: ${lifetimeLabel} | Best lifetime: ${highScoreLabel}.`;
     }
 };
-LisaTextService = __decorate([
+StatusTextService = __decorate([
     inversify_1.injectable(),
     __param(0, inversify_1.inject(types_1.TYPES.LisaStatusService)),
-    __metadata("design:paramtypes", [LisaStatusService_1.LisaStatusService])
-], LisaTextService);
-exports.LisaTextService = LisaTextService;
+    __metadata("design:paramtypes", [StatusService_1.StatusService])
+], StatusTextService);
+exports.StatusTextService = StatusTextService;

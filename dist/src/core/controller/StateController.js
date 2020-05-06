@@ -11,22 +11,22 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-var LisaStateController_1;
+var StateController_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 const lodash_1 = require("lodash");
 const moment_1 = require("moment");
 const rxjs_1 = require("rxjs");
 const logger_1 = require("../../logger");
 const LisaState_1 = require("../LisaState");
-const LisaStatusService_1 = require("../service/LisaStatusService");
+const StatusService_1 = require("../service/StatusService");
 const inversify_1 = require("inversify");
 const types_1 = require("../../types");
-let LisaStateController = LisaStateController_1 = class LisaStateController {
+let StateController = StateController_1 = class StateController {
     constructor(lisaStatusService) {
         this.lisaStatusService = lisaStatusService;
-        this.state = LisaStateController_1.createNewLisaState(LisaStateController_1.USER_SYSTEM, moment_1.duration(0));
+        this.state = StateController_1.createNewLisaState(StateController_1.USER_SYSTEM, moment_1.duration(0));
         this.stateChangeSubject = new rxjs_1.Subject();
-        rxjs_1.interval(LisaStateController_1.BEST_LIFETIME_CHECK_TIMEOUT).subscribe(() => this.updateBestLifetimeIfRequired());
+        rxjs_1.interval(StateController_1.BEST_LIFETIME_CHECK_TIMEOUT).subscribe(() => this.updateBestLifetimeIfRequired());
     }
     static createNewLisaState(createdByUser, bestLifetime) {
         return {
@@ -63,31 +63,31 @@ let LisaStateController = LisaStateController_1 = class LisaStateController {
         this.state = state;
         this.stateChanged();
     }
-    replantLisa(byUser = LisaStateController_1.USER_SYSTEM) {
-        LisaStateController_1.logger.info(`'${byUser}' replanted lisa.`);
+    replantLisa(byUser = StateController_1.USER_SYSTEM) {
+        StateController_1.logger.info(`'${byUser}' replanted lisa.`);
         this.performReplant(byUser);
         this.stateChanged();
     }
-    killLisa(cause, byUser = LisaStateController_1.USER_SYSTEM) {
+    killLisa(cause, byUser = StateController_1.USER_SYSTEM) {
         if (!this.lisaStatusService.isAlive(this.getStateCopy())) {
-            LisaStateController_1.logger.debug("Lisa is already dead, skip kill.");
+            StateController_1.logger.debug("Lisa is already dead, skip kill.");
             return;
         }
-        LisaStateController_1.logger.info(`'${byUser}' killed lisa by ${cause}.`);
+        StateController_1.logger.info(`'${byUser}' killed lisa by ${cause}.`);
         this.performKill(cause, byUser);
         this.stateChanged();
     }
-    modifyLisaStatus(waterModifier, happinessModifier, byUser = LisaStateController_1.USER_SYSTEM) {
+    modifyLisaStatus(waterModifier, happinessModifier, byUser = StateController_1.USER_SYSTEM) {
         if (!this.lisaStatusService.isAlive(this.getStateCopy())) {
-            LisaStateController_1.logger.debug("Lisa is dead, skip status change.");
+            StateController_1.logger.debug("Lisa is dead, skip status change.");
             return;
         }
-        LisaStateController_1.logger.debug(`'${byUser}' modified status; water modifier ${waterModifier}, happiness modifier ${happinessModifier}.`);
+        StateController_1.logger.debug(`'${byUser}' modified status; water modifier ${waterModifier}, happiness modifier ${happinessModifier}.`);
         this.performModifyStatus(waterModifier, happinessModifier, byUser);
         this.stateChanged();
     }
     performReplant(byUser) {
-        this.state = LisaStateController_1.createNewLisaState(byUser, this.state.bestLifetime);
+        this.state = StateController_1.createNewLisaState(byUser, this.state.bestLifetime);
     }
     performKill(cause, byUser) {
         this.state.death = { time: new Date(), byUser, cause };
@@ -99,42 +99,42 @@ let LisaStateController = LisaStateController_1 = class LisaStateController {
     }
     checkStats(byUser) {
         if (this.state.status.water > LisaState_1.WATER_MAX) {
-            LisaStateController_1.logger.silly(`Water level ${this.state.status.water} is above limit of ${LisaState_1.WATER_MAX} -> ${LisaState_1.LisaDeathCause.DROWNING}.`);
+            StateController_1.logger.silly(`Water level ${this.state.status.water} is above limit of ${LisaState_1.WATER_MAX} -> ${LisaState_1.LisaDeathCause.DROWNING}.`);
             this.performKill(LisaState_1.LisaDeathCause.DROWNING, byUser);
         }
         else if (this.state.status.water < LisaState_1.WATER_MIN) {
-            LisaStateController_1.logger.silly(`Water level ${this.state.status.water} is below limit of ${LisaState_1.WATER_MIN} -> ${LisaState_1.LisaDeathCause.DEHYDRATION}.`);
+            StateController_1.logger.silly(`Water level ${this.state.status.water} is below limit of ${LisaState_1.WATER_MIN} -> ${LisaState_1.LisaDeathCause.DEHYDRATION}.`);
             this.performKill(LisaState_1.LisaDeathCause.DEHYDRATION, byUser);
         }
         if (this.state.status.happiness > LisaState_1.HAPPINESS_MAX) {
-            LisaStateController_1.logger.silly(`Happiness level ${this.state.status.happiness} is above limit of ${LisaState_1.HAPPINESS_MAX} -> reducing to limit.`);
+            StateController_1.logger.silly(`Happiness level ${this.state.status.happiness} is above limit of ${LisaState_1.HAPPINESS_MAX} -> reducing to limit.`);
             this.state.status.happiness = LisaState_1.HAPPINESS_MAX;
         }
         else if (this.state.status.happiness < LisaState_1.HAPPINESS_MIN) {
-            LisaStateController_1.logger.silly(`Happiness level ${this.state.status.happiness} is below limit of ${LisaState_1.HAPPINESS_MIN} -> ${LisaState_1.LisaDeathCause.SADNESS}.`);
+            StateController_1.logger.silly(`Happiness level ${this.state.status.happiness} is below limit of ${LisaState_1.HAPPINESS_MIN} -> ${LisaState_1.LisaDeathCause.SADNESS}.`);
             this.performKill(LisaState_1.LisaDeathCause.SADNESS, byUser);
         }
     }
     stateChanged() {
-        LisaStateController_1.logger.silly("Lisa state changed.");
+        StateController_1.logger.silly("Lisa state changed.");
         this.stateChangeSubject.next(this.getStateCopy());
     }
     updateBestLifetimeIfRequired() {
         const lifetime = this.lisaStatusService.getLifetime(this.getStateCopy());
         if (lifetime > this.state.bestLifetime) {
-            LisaStateController_1.logger.silly(`Increasing high score from ${this.state.bestLifetime.milliseconds()} to ${lifetime.milliseconds()}.`);
+            StateController_1.logger.silly(`Increasing high score from ${this.state.bestLifetime.milliseconds()} to ${lifetime.milliseconds()}.`);
             this.state.bestLifetime = lifetime;
         }
     }
 };
-LisaStateController.logger = logger_1.rootLogger.child({
-    target: LisaStateController_1,
+StateController.logger = logger_1.rootLogger.child({
+    target: StateController_1,
 });
-LisaStateController.USER_SYSTEM = "System";
-LisaStateController.BEST_LIFETIME_CHECK_TIMEOUT = 5000;
-LisaStateController = LisaStateController_1 = __decorate([
+StateController.USER_SYSTEM = "System";
+StateController.BEST_LIFETIME_CHECK_TIMEOUT = 5000;
+StateController = StateController_1 = __decorate([
     inversify_1.injectable(),
     __param(0, inversify_1.inject(types_1.TYPES.LisaStatusService)),
-    __metadata("design:paramtypes", [LisaStatusService_1.LisaStatusService])
-], LisaStateController);
-exports.LisaStateController = LisaStateController;
+    __metadata("design:paramtypes", [StatusService_1.StatusService])
+], StateController);
+exports.StateController = StateController;

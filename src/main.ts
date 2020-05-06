@@ -3,20 +3,20 @@ import { isNil } from "lodash";
 import { container } from "./inversify.config";
 import { DiscordEventController } from "./clients/discord/controller/DiscordEventController";
 import { DiscordClient } from "./clients/discord/DiscordClient";
-import { LisaStateController } from "./lisa/controller/LisaStateController";
-import { LisaStateStorageController } from "./lisa/controller/LisaStateStorageController";
-import { LisaTickController } from "./lisa/controller/LisaTickController";
+import { StateController } from "./core/controller/StateController";
+import { StateStorageController } from "./core/controller/StateStorageController";
+import { TickController } from "./core/controller/TickController";
 import { rootLogger } from "./logger";
 import { TYPES } from "./types";
 
 const logger = rootLogger.child({ target: "main" });
 
 const startLisaMainClient = async (): Promise<void> => {
-    const lisaStateController = container.get<LisaStateController>(
+    const lisaStateController = container.get<StateController>(
         TYPES.LisaStateController
     );
 
-    const lisaStorageController = container.get<LisaStateStorageController>(
+    const lisaStorageController = container.get<StateStorageController>(
         TYPES.LisaStateStorageController
     );
     if (await lisaStorageController.hasStoredState()) {
@@ -31,9 +31,7 @@ const startLisaMainClient = async (): Promise<void> => {
         lisaStateController.stateChangeSubject
     );
 
-    const lisaTimer = container.get<LisaTickController>(
-        TYPES.LisaTickController
-    );
+    const lisaTimer = container.get<TickController>(TYPES.LisaTickController);
     lisaTimer.tickObservable.subscribe(
         ({ waterModifier, happinessModifier, byUser }) =>
             lisaStateController.modifyLisaStatus(

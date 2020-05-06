@@ -15,8 +15,8 @@ interface JsonLisaState {
     };
     bestLifetime: number;
 }
-declare class LisaStateStorageService {
+declare class StateStorageService {
     fromStorable(jsonState: JsonLisaState): LisaState;
     toStorable(state: LisaState): JsonLisaState;
 }
-export { LisaStateStorageService };
+export { StateStorageService };

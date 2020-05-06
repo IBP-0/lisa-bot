@@ -21,7 +21,7 @@ interface JsonLisaState {
 }
 
 @injectable()
-class LisaStateStorageService {
+class StateStorageService {
     public fromStorable(jsonState: JsonLisaState): LisaState {
         const state: any = cloneDeep(jsonState);
         if (state.life.time != null) {
@@ -47,4 +47,4 @@ class LisaStateStorageService {
     }
 }
 
-export { LisaStateStorageService };
+export { StateStorageService };

@@ -1,15 +1,15 @@
 import { Container } from "inversify";
-import { LisaStateStorageService } from "./lisa/service/LisaStateStorageService";
+import { StateStorageService } from "./core/service/StateStorageService";
 import { TYPES } from "./types";
-import { JsonStorageService } from "./lisa/service/JsonStorageService";
-import { LisaStatusService } from "./lisa/service/LisaStatusService";
-import { LisaTextService } from "./lisa/service/LisaTextService";
-import { LisaStateController } from "./lisa/controller/LisaStateController";
+import { JsonStorageService } from "./core/service/JsonStorageService";
+import { StatusService } from "./core/service/StatusService";
+import { StatusTextService } from "./core/service/StatusTextService";
+import { StateController } from "./core/controller/StateController";
 import { CommandoClientOptions } from "discord.js-commando";
 import { DiscordCommandController } from "./clients/discord/controller/DiscordCommandController";
 import { DISCORD_CLIENT_CONFIG } from "./config";
-import { LisaStateStorageController } from "./lisa/controller/LisaStateStorageController";
-import { LisaTickController } from "./lisa/controller/LisaTickController";
+import { StateStorageController } from "./core/controller/StateStorageController";
+import { TickController } from "./core/controller/TickController";
 import { DiscordService } from "./clients/discord/service/DiscordService";
 import { DiscordClient } from "./clients/discord/DiscordClient";
 import { DiscordEventController } from "./clients/discord/controller/DiscordEventController";
@@ -17,27 +17,25 @@ import { DiscordEventController } from "./clients/discord/controller/DiscordEven
 export const container = new Container();
 
 container
-    .bind<LisaStateStorageService>(TYPES.LisaStateStorageService)
-    .to(LisaStateStorageService);
+    .bind<StateStorageService>(TYPES.LisaStateStorageService)
+    .to(StateStorageService);
 container
     .bind<JsonStorageService>(TYPES.JsonStorageService)
     .to(JsonStorageService);
-container
-    .bind<LisaStatusService>(TYPES.LisaStatusService)
-    .to(LisaStatusService);
-container.bind<LisaTextService>(TYPES.LisaTextService).to(LisaTextService);
+container.bind<StatusService>(TYPES.LisaStatusService).to(StatusService);
+container.bind<StatusTextService>(TYPES.LisaTextService).to(StatusTextService);
 
 container
-    .bind<LisaStateController>(TYPES.LisaStateController)
-    .to(LisaStateController)
+    .bind<StateController>(TYPES.LisaStateController)
+    .to(StateController)
     .inSingletonScope();
 container
-    .bind<LisaStateStorageController>(TYPES.LisaStateStorageController)
-    .to(LisaStateStorageController)
+    .bind<StateStorageController>(TYPES.LisaStateStorageController)
+    .to(StateStorageController)
     .inSingletonScope();
 container
-    .bind<LisaTickController>(TYPES.LisaTickController)
-    .to(LisaTickController)
+    .bind<TickController>(TYPES.LisaTickController)
+    .to(TickController)
     .inSingletonScope();
 
 container.bind<DiscordService>(TYPES.DiscordService).to(DiscordService);

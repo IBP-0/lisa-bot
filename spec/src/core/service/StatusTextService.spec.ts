@@ -4,9 +4,9 @@ import {
     HAPPINESS_INITIAL,
     LisaState,
     WATER_INITIAL,
-} from "../../../../src/lisa/LisaState";
-import { LisaStatusService } from "../../../../src/lisa/service/LisaStatusService";
-import { LisaTextService } from "../../../../src/lisa/service/LisaTextService";
+} from "../../../../src/core/LisaState";
+import { StatusService } from "../../../../src/core/service/StatusService";
+import { StatusTextService } from "../../../../src/core/service/StatusTextService";
 import { container } from "../../../../src/inversify.config";
 import { TYPES } from "../../../../src/types";
 
@@ -30,19 +30,19 @@ const createState = (): LisaState => {
 };
 
 describe("LisaTextService", () => {
-    let lisaTextService: LisaTextService;
+    let lisaTextService: StatusTextService;
 
-    let mockLisaStatusService: LisaStatusService;
+    let mockLisaStatusService: StatusService;
 
     beforeEach(() => {
         container.snapshot();
 
-        mockLisaStatusService = new LisaStatusService();
+        mockLisaStatusService = new StatusService();
         container
-            .rebind<LisaStatusService>(TYPES.LisaStatusService)
+            .rebind<StatusService>(TYPES.LisaStatusService)
             .toConstantValue(mockLisaStatusService);
 
-        lisaTextService = container.get<LisaTextService>(TYPES.LisaTextService);
+        lisaTextService = container.get<StatusTextService>(TYPES.LisaTextService);
     });
     afterEach(() => {
         container.restore();

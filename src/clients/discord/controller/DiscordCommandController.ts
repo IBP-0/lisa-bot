@@ -1,9 +1,9 @@
 import { User } from "discord.js";
 import { sample } from "lodash";
-import { LisaStateController } from "../../../lisa/controller/LisaStateController";
-import { LisaDeathCause } from "../../../lisa/LisaState";
-import { LisaStatusService } from "../../../lisa/service/LisaStatusService";
-import { LisaTextService } from "../../../lisa/service/LisaTextService";
+import { StateController } from "../../../core/controller/StateController";
+import { LisaDeathCause } from "../../../core/LisaState";
+import { StatusService } from "../../../core/service/StatusService";
+import { StatusTextService } from "../../../core/service/StatusTextService";
 import { DiscordService } from "../service/DiscordService";
 import { rootLogger } from "../../../logger.js";
 import { inject, injectable } from "inversify";
@@ -15,16 +15,16 @@ class DiscordCommandController {
         target: DiscordCommandController,
     });
 
-    private readonly lisaStateController: LisaStateController;
-    private readonly lisaStatusService: LisaStatusService;
-    private readonly lisaTextService: LisaTextService;
+    private readonly lisaStateController: StateController;
+    private readonly lisaStatusService: StatusService;
+    private readonly lisaTextService: StatusTextService;
     private readonly lisaDiscordService: DiscordService;
 
     constructor(
         @inject(TYPES.LisaStateController)
-        lisaStateController: LisaStateController,
-        @inject(TYPES.LisaStatusService) lisaStatusService: LisaStatusService,
-        @inject(TYPES.LisaTextService) lisaTextService: LisaTextService,
+        lisaStateController: StateController,
+        @inject(TYPES.LisaStatusService) lisaStatusService: StatusService,
+        @inject(TYPES.LisaTextService) lisaTextService: StatusTextService,
         @inject(TYPES.DiscordService) lisaDiscordService: DiscordService
     ) {
         this.lisaDiscordService = lisaDiscordService;

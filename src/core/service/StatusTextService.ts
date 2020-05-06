@@ -1,14 +1,14 @@
 import { LisaState } from "../LisaState";
-import { LisaStatusService } from "./LisaStatusService";
+import { StatusService } from "./StatusService";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../types";
 
 @injectable()
-class LisaTextService {
-    private readonly lisaStatusService: LisaStatusService;
+class StatusTextService {
+    private readonly lisaStatusService: StatusService;
 
     constructor(
-        @inject(TYPES.LisaStatusService) lisaStatusService: LisaStatusService
+        @inject(TYPES.LisaStatusService) lisaStatusService: StatusService
     ) {
         this.lisaStatusService = lisaStatusService;
     }
@@ -63,4 +63,4 @@ class LisaTextService {
     }
 }
 
-export { LisaTextService };
+export { StatusTextService };

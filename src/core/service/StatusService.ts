@@ -4,9 +4,9 @@ import { HAPPINESS_INITIAL, LisaState, WATER_INITIAL } from "../LisaState";
 import { injectable } from "inversify";
 
 @injectable()
-class LisaStatusService {
+class StatusService {
     private static readonly logger = rootLogger.child({
-        target: LisaStatusService,
+        target: StatusService,
     });
 
     public isAlive(state: LisaState): boolean {
@@ -51,7 +51,7 @@ class LisaStatusService {
             relativeWater < relativeHappiness
                 ? relativeWater
                 : relativeHappiness;
-        LisaStatusService.logger.debug(
+        StatusService.logger.debug(
             `Calculated relative index ${relativeIndex.toFixed(2)} for water ${
                 state.status.water
             } and happiness ${state.status.happiness}.`
@@ -60,4 +60,4 @@ class LisaStatusService {
     }
 }
 
-export { LisaStatusService };
+export { StatusService };

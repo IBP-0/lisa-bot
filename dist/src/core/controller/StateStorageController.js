@@ -11,49 +11,49 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-var LisaStateStorageController_1;
+var StateStorageController_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 const operators_1 = require("rxjs/operators");
 const logger_1 = require("../../logger");
 const JsonStorageService_1 = require("../service/JsonStorageService");
-const LisaStateStorageService_1 = require("../service/LisaStateStorageService");
+const StateStorageService_1 = require("../service/StateStorageService");
 const inversify_1 = require("inversify");
 const types_1 = require("../../types");
-let LisaStateStorageController = LisaStateStorageController_1 = class LisaStateStorageController {
+let StateStorageController = StateStorageController_1 = class StateStorageController {
     constructor(jsonStorageService, lisaStateStorageService) {
         this.lisaStateStorageService = lisaStateStorageService;
         this.jsonStorageService = jsonStorageService;
     }
     bindStateChangeSubscription(stateChangeSubject) {
         stateChangeSubject
-            .pipe(operators_1.throttleTime(LisaStateStorageController_1.STORAGE_THROTTLE_TIMEOUT))
+            .pipe(operators_1.throttleTime(StateStorageController_1.STORAGE_THROTTLE_TIMEOUT))
             .subscribe((state) => {
-            this.storeState(state).catch((e) => LisaStateStorageController_1.logger.error("Could not save state!", e));
+            this.storeState(state).catch((e) => StateStorageController_1.logger.error("Could not save state!", e));
         });
     }
     async hasStoredState() {
-        return this.jsonStorageService.hasStorageKey(LisaStateStorageController_1.STORAGE_PATH, LisaStateStorageController_1.STORAGE_KEY);
+        return this.jsonStorageService.hasStorageKey(StateStorageController_1.STORAGE_PATH, StateStorageController_1.STORAGE_KEY);
     }
     async loadStoredState() {
-        const storedState = await this.jsonStorageService.load(LisaStateStorageController_1.STORAGE_PATH, LisaStateStorageController_1.STORAGE_KEY);
+        const storedState = await this.jsonStorageService.load(StateStorageController_1.STORAGE_PATH, StateStorageController_1.STORAGE_KEY);
         return this.lisaStateStorageService.fromStorable(storedState);
     }
     async storeState(state) {
         const jsonLisaState = this.lisaStateStorageService.toStorable(state);
-        return await this.jsonStorageService.store(LisaStateStorageController_1.STORAGE_PATH, LisaStateStorageController_1.STORAGE_KEY, jsonLisaState);
+        return await this.jsonStorageService.store(StateStorageController_1.STORAGE_PATH, StateStorageController_1.STORAGE_KEY, jsonLisaState);
     }
 };
-LisaStateStorageController.STORAGE_THROTTLE_TIMEOUT = 10000;
-LisaStateStorageController.STORAGE_PATH = "data/storage.json";
-LisaStateStorageController.STORAGE_KEY = "lisaState";
-LisaStateStorageController.logger = logger_1.rootLogger.child({
-    target: LisaStateStorageController_1,
+StateStorageController.STORAGE_THROTTLE_TIMEOUT = 10000;
+StateStorageController.STORAGE_PATH = "data/storage.json";
+StateStorageController.STORAGE_KEY = "lisaState";
+StateStorageController.logger = logger_1.rootLogger.child({
+    target: StateStorageController_1,
 });
-LisaStateStorageController = LisaStateStorageController_1 = __decorate([
+StateStorageController = StateStorageController_1 = __decorate([
     inversify_1.injectable(),
     __param(0, inversify_1.inject(types_1.TYPES.JsonStorageService)),
     __param(1, inversify_1.inject(types_1.TYPES.LisaStateStorageService)),
     __metadata("design:paramtypes", [JsonStorageService_1.JsonStorageService,
-        LisaStateStorageService_1.LisaStateStorageService])
-], LisaStateStorageController);
-exports.LisaStateStorageController = LisaStateStorageController;
+        StateStorageService_1.StateStorageService])
+], StateStorageController);
+exports.StateStorageController = StateStorageController;

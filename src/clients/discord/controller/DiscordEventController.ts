@@ -1,8 +1,8 @@
 import { PresenceData } from "discord.js";
 import { filter, throttleTime } from "rxjs/operators";
-import { LisaStateController } from "../../../lisa/controller/LisaStateController";
-import { LisaState } from "../../../lisa/LisaState";
-import { LisaTextService } from "../../../lisa/service/LisaTextService";
+import { StateController } from "../../../core/controller/StateController";
+import { LisaState } from "../../../core/LisaState";
+import { StatusTextService } from "../../../core/service/StatusTextService";
 import { rootLogger } from "../../../logger";
 import { DiscordClient } from "../DiscordClient";
 import { inject, injectable } from "inversify";
@@ -26,15 +26,15 @@ class DiscordEventController {
     private static readonly MESSAGE_HAPPINESS_MODIFIER = 0.25;
     private static readonly USER_DISCORD_ACTIVITY = "Discord activity";
 
-    private readonly lisaStateController: LisaStateController;
+    private readonly lisaStateController: StateController;
     private readonly lisaDiscordClient: DiscordClient;
-    private readonly lisaTextService: LisaTextService;
+    private readonly lisaTextService: StatusTextService;
 
     constructor(
         @inject(TYPES.LisaStateController)
-        lisaStateController: LisaStateController,
+        lisaStateController: StateController,
         @inject(TYPES.DiscordClient) lisaDiscordClient: DiscordClient,
-        @inject(TYPES.LisaTextService) lisaTextService: LisaTextService
+        @inject(TYPES.LisaTextService) lisaTextService: StatusTextService
     ) {
         this.lisaTextService = lisaTextService;
         this.lisaDiscordClient = lisaDiscordClient;

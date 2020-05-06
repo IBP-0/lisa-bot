@@ -1,5 +1,5 @@
-import { LisaStateController } from "../../../lisa/controller/LisaStateController";
-import { LisaTextService } from "../../../lisa/service/LisaTextService";
+import { StateController } from "../../../core/controller/StateController";
+import { StatusTextService } from "../../../core/service/StatusTextService";
 import { DiscordClient } from "../DiscordClient";
 declare class DiscordEventController {
     private static readonly logger;
@@ -10,7 +10,7 @@ declare class DiscordEventController {
     private readonly lisaStateController;
     private readonly lisaDiscordClient;
     private readonly lisaTextService;
-    constructor(lisaStateController: LisaStateController, lisaDiscordClient: DiscordClient, lisaTextService: LisaTextService);
+    constructor(lisaStateController: StateController, lisaDiscordClient: DiscordClient, lisaTextService: StatusTextService);
     bindListeners(): void;
     private onMessage;
     private onStateChange;

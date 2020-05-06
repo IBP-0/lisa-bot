@@ -1,14 +1,14 @@
 import { Subject } from "rxjs";
 import { LisaDeathCause, LisaState } from "../LisaState";
-import { LisaStatusService } from "../service/LisaStatusService";
-declare class LisaStateController {
+import { StatusService } from "../service/StatusService";
+declare class StateController {
     private static readonly logger;
     private static readonly USER_SYSTEM;
     private static readonly BEST_LIFETIME_CHECK_TIMEOUT;
     readonly stateChangeSubject: Subject<LisaState>;
     private readonly lisaStatusService;
     private state;
-    constructor(lisaStatusService: LisaStatusService);
+    constructor(lisaStatusService: StatusService);
     private static createNewLisaState;
     /**
      * Gets a copy of the state to process e.g. when creating text for the current status.
@@ -32,4 +32,4 @@ declare class LisaStateController {
     private stateChanged;
     private updateBestLifetimeIfRequired;
 }
-export { LisaStateController };
+export { StateController };

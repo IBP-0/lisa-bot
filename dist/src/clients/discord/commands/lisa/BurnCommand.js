@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_commando_1 = require("discord.js-commando");
 const inversify_config_1 = require("../../../../inversify.config");
-const LisaState_1 = require("../../../../lisa/LisaState");
+const LisaState_1 = require("../../../../core/LisaState");
 const types_1 = require("../../../../types");
 class BurnCommand extends discord_js_commando_1.Command {
     constructor(client) {

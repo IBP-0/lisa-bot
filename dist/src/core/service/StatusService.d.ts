@@ -1,6 +1,6 @@
 import { Duration } from "moment";
 import { LisaState } from "../LisaState";
-declare class LisaStatusService {
+declare class StatusService {
     private static readonly logger;
     isAlive(state: LisaState): boolean;
     getLifetime(state: LisaState): Duration;
@@ -12,4 +12,4 @@ declare class LisaStatusService {
      */
     calculateRelativeIndex(state: LisaState): number;
 }
-export { LisaStatusService };
+export { StatusService };

@@ -10,9 +10,9 @@ interface TickData {
 }
 
 @injectable()
-class LisaTickController {
+class TickController {
     private static readonly logger = rootLogger.child({
-        target: LisaTickController,
+        target: TickController,
     });
 
     private static readonly TIMEOUT = 60000;
@@ -24,23 +24,23 @@ class LisaTickController {
 
     constructor() {
         this.tickObservable = this.createTickObservable();
-        LisaTickController.logger.debug(
-            `Started Lisa timer with an interval of ${LisaTickController.TIMEOUT}.`
+        TickController.logger.debug(
+            `Started Lisa timer with an interval of ${TickController.TIMEOUT}.`
         );
     }
 
     private createTickObservable(): Observable<TickData> {
-        return interval(LisaTickController.TIMEOUT).pipe(
+        return interval(TickController.TIMEOUT).pipe(
             map(() => {
-                LisaTickController.logger.debug("Running tick.");
+                TickController.logger.debug("Running tick.");
                 return {
-                    waterModifier: LisaTickController.WATER_MODIFIER,
-                    happinessModifier: LisaTickController.HAPPINESS_MODIFIER,
-                    byUser: LisaTickController.USER_TICK,
+                    waterModifier: TickController.WATER_MODIFIER,
+                    happinessModifier: TickController.HAPPINESS_MODIFIER,
+                    byUser: TickController.USER_TICK,
                 };
             })
         );
     }
 }
 
-export { LisaTickController };
+export { TickController };

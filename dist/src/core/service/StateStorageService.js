@@ -9,7 +9,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const lodash_1 = require("lodash");
 const moment_1 = require("moment");
 const inversify_1 = require("inversify");
-let LisaStateStorageService = class LisaStateStorageService {
+let StateStorageService = class StateStorageService {
     fromStorable(jsonState) {
         const state = lodash_1.cloneDeep(jsonState);
         if (state.life.time != null) {
@@ -33,7 +33,7 @@ let LisaStateStorageService = class LisaStateStorageService {
         return storedState;
     }
 };
-LisaStateStorageService = __decorate([
+StateStorageService = __decorate([
     inversify_1.injectable()
-], LisaStateStorageService);
-exports.LisaStateStorageService = LisaStateStorageService;
+], StateStorageService);
+exports.StateStorageService = StateStorageService;

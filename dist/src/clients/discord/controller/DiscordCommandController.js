@@ -14,9 +14,9 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 var DiscordCommandController_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 const lodash_1 = require("lodash");
-const LisaStateController_1 = require("../../../lisa/controller/LisaStateController");
-const LisaStatusService_1 = require("../../../lisa/service/LisaStatusService");
-const LisaTextService_1 = require("../../../lisa/service/LisaTextService");
+const StateController_1 = require("../../../core/controller/StateController");
+const StatusService_1 = require("../../../core/service/StatusService");
+const StatusTextService_1 = require("../../../core/service/StatusTextService");
 const DiscordService_1 = require("../service/DiscordService");
 const logger_js_1 = require("../../../logger.js");
 const inversify_1 = require("inversify");
@@ -74,9 +74,9 @@ DiscordCommandController = DiscordCommandController_1 = __decorate([
     __param(1, inversify_1.inject(types_1.TYPES.LisaStatusService)),
     __param(2, inversify_1.inject(types_1.TYPES.LisaTextService)),
     __param(3, inversify_1.inject(types_1.TYPES.DiscordService)),
-    __metadata("design:paramtypes", [LisaStateController_1.LisaStateController,
-        LisaStatusService_1.LisaStatusService,
-        LisaTextService_1.LisaTextService,
+    __metadata("design:paramtypes", [StateController_1.StateController,
+        StatusService_1.StatusService,
+        StatusTextService_1.StatusTextService,
         DiscordService_1.DiscordService])
 ], DiscordCommandController);
 exports.DiscordCommandController = DiscordCommandController;

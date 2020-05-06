@@ -14,8 +14,8 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 var DiscordEventController_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 const operators_1 = require("rxjs/operators");
-const LisaStateController_1 = require("../../../lisa/controller/LisaStateController");
-const LisaTextService_1 = require("../../../lisa/service/LisaTextService");
+const StateController_1 = require("../../../core/controller/StateController");
+const StatusTextService_1 = require("../../../core/service/StatusTextService");
 const logger_1 = require("../../../logger");
 const DiscordClient_1 = require("../DiscordClient");
 const inversify_1 = require("inversify");
@@ -68,8 +68,8 @@ DiscordEventController = DiscordEventController_1 = __decorate([
     __param(0, inversify_1.inject(types_1.TYPES.LisaStateController)),
     __param(1, inversify_1.inject(types_1.TYPES.DiscordClient)),
     __param(2, inversify_1.inject(types_1.TYPES.LisaTextService)),
-    __metadata("design:paramtypes", [LisaStateController_1.LisaStateController,
+    __metadata("design:paramtypes", [StateController_1.StateController,
         DiscordClient_1.DiscordClient,
-        LisaTextService_1.LisaTextService])
+        StatusTextService_1.StatusTextService])
 ], DiscordEventController);
 exports.DiscordEventController = DiscordEventController;
