@@ -31,6 +31,7 @@
     "repository": "https://github.com/FelixRilling/lisa-bot",
     "license": "MIT",
     "dependencies": {
+        "source-map-support": "^0.5.19",
         "discord.js": "github:discordjs/discord.js#d827544fbd12e827fb4b6ff99d8894ecd79ede02",
         "discord.js-commando": "github:discordjs/Commando#bdbd84e2a978322f3af12c21e729eb7b7cd4a3dc",
         "fs-extra": "^9.0.0",
@@ -58,7 +59,6 @@
         "npm-run-all": "^4.1.5",
         "prettier": "^2.0.5",
         "rimraf": "^3.0.1",
-        "source-map-support": "^0.5.19",
         "ts-mockito": "^2.5.0",
         "typescript": "^3.8.3"
     }
