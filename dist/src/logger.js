@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.rootLogger = void 0;
 const winston_1 = require("winston");
 const mode_1 = require("./mode");
 const logFormat = winston_1.format.combine(winston_1.format.timestamp(), winston_1.format.printf(({ level, message, timestamp }) => `${timestamp} [${level}]: ${message}`));

@@ -6,42 +6,46 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.JsonStorageService = void 0;
 const fs_extra_1 = require("fs-extra");
 const inversify_1 = require("inversify");
-let JsonStorageService = class JsonStorageService {
-    async hasStorageKey(path, key) {
-        return (await this.load(path, key)) != null;
-    }
-    async load(path, key) {
-        if (!(await this.hasStorage(path))) {
-            return null;
+let JsonStorageService = /** @class */ (() => {
+    let JsonStorageService = class JsonStorageService {
+        async hasStorageKey(path, key) {
+            return (await this.load(path, key)) != null;
         }
-        const object = await this.loadAll(path);
-        if (!(key in object)) {
-            return null;
+        async load(path, key) {
+            if (!(await this.hasStorage(path))) {
+                return null;
+            }
+            const object = await this.loadAll(path);
+            if (!(key in object)) {
+                return null;
+            }
+            return object[key];
         }
-        return object[key];
-    }
-    async store(path, key, data) {
-        if (!(await this.hasStorage(path))) {
-            await this.initStorage(path);
+        async store(path, key, data) {
+            if (!(await this.hasStorage(path))) {
+                await this.initStorage(path);
+            }
+            const object = await this.loadAll(path);
+            object[key] = data;
+            return await fs_extra_1.writeJSON(path, object);
         }
-        const object = await this.loadAll(path);
-        object[key] = data;
-        return await fs_extra_1.writeJSON(path, object);
-    }
-    async hasStorage(path) {
-        return fs_extra_1.pathExists(path);
-    }
-    async loadAll(path) {
-        return await fs_extra_1.readJSON(path);
-    }
-    async initStorage(path) {
-        return await fs_extra_1.writeJSON(path, {});
-    }
-};
-JsonStorageService = __decorate([
-    inversify_1.injectable()
-], JsonStorageService);
+        async hasStorage(path) {
+            return fs_extra_1.pathExists(path);
+        }
+        async loadAll(path) {
+            return await fs_extra_1.readJSON(path);
+        }
+        async initStorage(path) {
+            return await fs_extra_1.writeJSON(path, {});
+        }
+    };
+    JsonStorageService = __decorate([
+        inversify_1.injectable()
+    ], JsonStorageService);
+    return JsonStorageService;
+})();
 exports.JsonStorageService = JsonStorageService;
 //# sourceMappingURL=JsonStorageService.js.map

@@ -12,6 +12,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.DiscordClient = void 0;
 const discord_js_commando_1 = require("discord.js-commando");
 const rxjs_1 = require("rxjs");
 const AboutCommand_1 = require("./commands/core/AboutCommand");
@@ -29,66 +30,69 @@ const StatusCommand_1 = require("./commands/lisa/StatusCommand");
 const WaterCommand_1 = require("./commands/lisa/WaterCommand");
 const inversify_1 = require("inversify");
 const types_1 = require("../../types");
-let DiscordClient = class DiscordClient {
-    constructor(discordConfig) {
-        this.commandoClient = new discord_js_commando_1.CommandoClient(discordConfig);
-        const commandRegistry = this.commandoClient.registry;
-        /*
-         * Types
-         */
-        commandRegistry.registerDefaultTypes();
-        /*
-         * Groups
-         */
-        commandRegistry.registerGroups([
-            ["util", "Utility"],
-            ["lisa", "Lisa"],
-        ]);
-        /*
-         * Commands
-         */
-        commandRegistry.registerDefaultCommands({
-            help: true,
-            eval: false,
-            ping: true,
-            prefix: false,
-            commandState: false,
-            unknownCommand: false,
-        });
-        commandRegistry.registerCommands([
-            AboutCommand_1.AboutCommand,
-            InviteCommand_1.InviteCommand,
-            ServersCommand_1.ServersCommand,
-            StatusCommand_1.StatusCommand,
-            ReplantCommand_1.ReplantCommand,
-            BurnCommand_1.BurnCommand,
-            PunchCommand_1.PunchCommand,
-            WaterCommand_1.WaterCommand,
-            HugCommand_1.HugCommand,
-            JokeCommand_1.JokeCommand,
-            BaaCommand_1.BaaCommand,
-            MissyCommand_1.MissyCommand,
-            NiklasCommand_1.NiklasCommand,
-        ]);
-    }
-    async login(token) {
-        await this.commandoClient.login(token);
-    }
-    async setPresence(data) {
-        await this.commandoClient.user.setPresence(data);
-    }
-    getMessageObservable() {
-        return new rxjs_1.Observable((subscriber) => {
-            this.commandoClient.on("message", (message) => {
-                subscriber.next(message);
+let DiscordClient = /** @class */ (() => {
+    let DiscordClient = class DiscordClient {
+        constructor(discordConfig) {
+            this.commandoClient = new discord_js_commando_1.CommandoClient(discordConfig);
+            const commandRegistry = this.commandoClient.registry;
+            /*
+             * Types
+             */
+            commandRegistry.registerDefaultTypes();
+            /*
+             * Groups
+             */
+            commandRegistry.registerGroups([
+                ["util", "Utility"],
+                ["lisa", "Lisa"],
+            ]);
+            /*
+             * Commands
+             */
+            commandRegistry.registerDefaultCommands({
+                help: true,
+                eval: false,
+                ping: true,
+                prefix: false,
+                commandState: false,
+                unknownCommand: false,
             });
-        });
-    }
-};
-DiscordClient = __decorate([
-    inversify_1.injectable(),
-    __param(0, inversify_1.inject(types_1.TYPES.DiscordConfig)),
-    __metadata("design:paramtypes", [Object])
-], DiscordClient);
+            commandRegistry.registerCommands([
+                AboutCommand_1.AboutCommand,
+                InviteCommand_1.InviteCommand,
+                ServersCommand_1.ServersCommand,
+                StatusCommand_1.StatusCommand,
+                ReplantCommand_1.ReplantCommand,
+                BurnCommand_1.BurnCommand,
+                PunchCommand_1.PunchCommand,
+                WaterCommand_1.WaterCommand,
+                HugCommand_1.HugCommand,
+                JokeCommand_1.JokeCommand,
+                BaaCommand_1.BaaCommand,
+                MissyCommand_1.MissyCommand,
+                NiklasCommand_1.NiklasCommand,
+            ]);
+        }
+        async login(token) {
+            await this.commandoClient.login(token);
+        }
+        async setPresence(data) {
+            await this.commandoClient.user.setPresence(data);
+        }
+        getMessageObservable() {
+            return new rxjs_1.Observable((subscriber) => {
+                this.commandoClient.on("message", (message) => {
+                    subscriber.next(message);
+                });
+            });
+        }
+    };
+    DiscordClient = __decorate([
+        inversify_1.injectable(),
+        __param(0, inversify_1.inject(types_1.TYPES.DiscordConfig)),
+        __metadata("design:paramtypes", [Object])
+    ], DiscordClient);
+    return DiscordClient;
+})();
 exports.DiscordClient = DiscordClient;
 //# sourceMappingURL=DiscordClient.js.map

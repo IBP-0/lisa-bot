@@ -6,17 +6,21 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.DiscordService = void 0;
 const inversify_1 = require("inversify");
-let DiscordService = class DiscordService {
-    getFullUserName(user) {
-        return `${user.username}#${user.discriminator}`;
-    }
-    isUserAllowed(allowedUserIds, author) {
-        return allowedUserIds == null || allowedUserIds.includes(author.id);
-    }
-};
-DiscordService = __decorate([
-    inversify_1.injectable()
-], DiscordService);
+let DiscordService = /** @class */ (() => {
+    let DiscordService = class DiscordService {
+        getFullUserName(user) {
+            return `${user.username}#${user.discriminator}`;
+        }
+        isUserAllowed(allowedUserIds, author) {
+            return allowedUserIds == null || allowedUserIds.includes(author.id);
+        }
+    };
+    DiscordService = __decorate([
+        inversify_1.injectable()
+    ], DiscordService);
+    return DiscordService;
+})();
 exports.DiscordService = DiscordService;
 //# sourceMappingURL=DiscordService.js.map

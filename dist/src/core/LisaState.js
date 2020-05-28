@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.HAPPINESS_MAX = exports.HAPPINESS_MIN = exports.HAPPINESS_INITIAL = exports.WATER_MAX = exports.WATER_MIN = exports.WATER_INITIAL = exports.LisaDeathCause = void 0;
 const WATER_INITIAL = 100;
 exports.WATER_INITIAL = WATER_INITIAL;
 const WATER_MIN = 0.1;

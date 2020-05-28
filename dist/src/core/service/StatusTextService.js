@@ -12,58 +12,62 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.StatusTextService = void 0;
 const StatusService_1 = require("./StatusService");
 const inversify_1 = require("inversify");
 const types_1 = require("../../types");
-let StatusTextService = class StatusTextService {
-    constructor(lisaStatusService) {
-        this.lisaStatusService = lisaStatusService;
-    }
-    createStatusText(state) {
-        const statusLabel = `Lisa is ${this.createStatusLabel(state)}.`;
-        const scoreText = this.createScoreText(state);
-        let text;
-        if (!this.lisaStatusService.isAlive(state)) {
-            const timeSinceDeathLabel = this.lisaStatusService
-                .getTimeSinceDeath(state)
+let StatusTextService = /** @class */ (() => {
+    let StatusTextService = class StatusTextService {
+        constructor(lisaStatusService) {
+            this.lisaStatusService = lisaStatusService;
+        }
+        createStatusText(state) {
+            const statusLabel = `Lisa is ${this.createStatusLabel(state)}.`;
+            const scoreText = this.createScoreText(state);
+            let text;
+            if (!this.lisaStatusService.isAlive(state)) {
+                const timeSinceDeathLabel = this.lisaStatusService
+                    .getTimeSinceDeath(state)
+                    .humanize();
+                text = `Lisa died ${timeSinceDeathLabel} ago, she was killed by ${state.death.byUser} through ${state.death.cause}.`;
+            }
+            else {
+                const waterLevel = state.status.water.toFixed(2);
+                const happinessLevel = state.status.happiness.toFixed(2);
+                text = `Water: ${waterLevel}% | Happiness: ${happinessLevel}%.`;
+            }
+            return [statusLabel, text, scoreText].join("\n");
+        }
+        createStatusLabel(state) {
+            if (!this.lisaStatusService.isAlive(state)) {
+                return "is dead";
+            }
+            const relativeIndex = this.lisaStatusService.calculateRelativeIndex(state);
+            if (relativeIndex > 0.666) {
+                return "doing great";
+            }
+            else if (relativeIndex > 0.333) {
+                return "doing fine";
+            }
+            return "close to dying";
+        }
+        createScoreText(state) {
+            const lifetimeLabel = this.lisaStatusService
+                .getLifetime(state)
                 .humanize();
-            text = `Lisa died ${timeSinceDeathLabel} ago, she was killed by ${state.death.byUser} through ${state.death.cause}.`;
+            const highScoreLabel = state.bestLifetime.humanize();
+            const currentLabel = this.lisaStatusService.isAlive(state)
+                ? "Current lifetime"
+                : "Lifetime";
+            return `${currentLabel}: ${lifetimeLabel} | Best lifetime: ${highScoreLabel}.`;
         }
-        else {
-            const waterLevel = state.status.water.toFixed(2);
-            const happinessLevel = state.status.happiness.toFixed(2);
-            text = `Water: ${waterLevel}% | Happiness: ${happinessLevel}%.`;
-        }
-        return [statusLabel, text, scoreText].join("\n");
-    }
-    createStatusLabel(state) {
-        if (!this.lisaStatusService.isAlive(state)) {
-            return "is dead";
-        }
-        const relativeIndex = this.lisaStatusService.calculateRelativeIndex(state);
-        if (relativeIndex > 0.666) {
-            return "doing great";
-        }
-        else if (relativeIndex > 0.333) {
-            return "doing fine";
-        }
-        return "close to dying";
-    }
-    createScoreText(state) {
-        const lifetimeLabel = this.lisaStatusService
-            .getLifetime(state)
-            .humanize();
-        const highScoreLabel = state.bestLifetime.humanize();
-        const currentLabel = this.lisaStatusService.isAlive(state)
-            ? "Current lifetime"
-            : "Lifetime";
-        return `${currentLabel}: ${lifetimeLabel} | Best lifetime: ${highScoreLabel}.`;
-    }
-};
-StatusTextService = __decorate([
-    inversify_1.injectable(),
-    __param(0, inversify_1.inject(types_1.TYPES.LisaStatusService)),
-    __metadata("design:paramtypes", [StatusService_1.StatusService])
-], StatusTextService);
+    };
+    StatusTextService = __decorate([
+        inversify_1.injectable(),
+        __param(0, inversify_1.inject(types_1.TYPES.LisaStatusService)),
+        __metadata("design:paramtypes", [StatusService_1.StatusService])
+    ], StatusTextService);
+    return StatusTextService;
+})();
 exports.StatusTextService = StatusTextService;
 //# sourceMappingURL=StatusTextService.js.map

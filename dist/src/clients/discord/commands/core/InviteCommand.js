@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.InviteCommand = void 0;
 const discord_js_1 = require("discord.js");
 const discord_js_commando_1 = require("discord.js-commando");
 class InviteCommand extends discord_js_commando_1.Command {

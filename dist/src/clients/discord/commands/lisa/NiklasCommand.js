@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.NiklasCommand = void 0;
 const discord_js_commando_1 = require("discord.js-commando");
 const inversify_config_1 = require("../../../../inversify.config");
 const types_1 = require("../../../../types");
