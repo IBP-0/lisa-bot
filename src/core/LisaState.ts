@@ -15,24 +15,20 @@ enum LisaDeathCause {
     FIRE = "fire",
 }
 
-interface LisaLife {
-    time: Date;
-    byUser: string;
-}
-
-interface LisaDeath {
-    time: Date | null;
-    byUser: string | null;
-    cause: LisaDeathCause | null;
-}
-
-interface LisaState {
+interface LisaState extends Record<string, unknown> {
     status: {
         water: number;
         happiness: number;
     };
-    life: LisaLife;
-    death: LisaDeath;
+    life: {
+        time: Date;
+        byUser: string;
+    };
+    death: {
+        time: Date | null;
+        byUser: string | null;
+        cause: LisaDeathCause | null;
+    };
     bestLifetime: Duration;
 }
 

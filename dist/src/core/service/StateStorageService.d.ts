@@ -1,20 +1,5 @@
-import { LisaDeathCause, LisaState } from "../LisaState";
-interface JsonLisaState {
-    status: {
-        water: number;
-        happiness: number;
-    };
-    life: {
-        time: number;
-        byUser: string;
-    };
-    death: {
-        time: number | null;
-        byUser: string | null;
-        cause: LisaDeathCause | null;
-    };
-    bestLifetime: number;
-}
+import { LisaState } from "../LisaState";
+import { JsonLisaState } from "../JsonLisaState";
 declare class StateStorageService {
     fromStorable(jsonState: JsonLisaState): LisaState;
     toStorable(state: LisaState): JsonLisaState;

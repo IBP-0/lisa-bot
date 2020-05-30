@@ -6,6 +6,7 @@ import { JsonStorageService } from "../service/JsonStorageService";
 import { StateStorageService } from "../service/StateStorageService";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../types";
+import { JsonLisaState } from "../JsonLisaState";
 
 @injectable()
 class StateStorageController {
@@ -53,10 +54,10 @@ class StateStorageController {
     }
 
     public async loadStoredState(): Promise<LisaState> {
-        const storedState = await this.jsonStorageService.load(
+        const storedState = (await this.jsonStorageService.load(
             StateStorageController.STORAGE_PATH,
             StateStorageController.STORAGE_KEY
-        );
+        )) as JsonLisaState;
         return this.lisaStateStorageService.fromStorable(storedState);
     }
 

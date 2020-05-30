@@ -22,6 +22,7 @@ let StatusTextService = /** @class */ (() => {
             this.lisaStatusService = lisaStatusService;
         }
         createStatusText(state) {
+            var _a, _b;
             const statusLabel = `Lisa is ${this.createStatusLabel(state)}.`;
             const scoreText = this.createScoreText(state);
             let text;
@@ -29,7 +30,7 @@ let StatusTextService = /** @class */ (() => {
                 const timeSinceDeathLabel = this.lisaStatusService
                     .getTimeSinceDeath(state)
                     .humanize();
-                text = `Lisa died ${timeSinceDeathLabel} ago, she was killed by ${state.death.byUser} through ${state.death.cause}.`;
+                text = `Lisa died ${timeSinceDeathLabel} ago, she was killed by ${(_a = state.death.byUser) !== null && _a !== void 0 ? _a : "anonymous"} through ${(_b = state.death.cause) !== null && _b !== void 0 ? _b : "unknown cause"}.`;
             }
             else {
                 const waterLevel = state.status.water.toFixed(2);

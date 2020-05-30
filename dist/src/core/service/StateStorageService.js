@@ -7,32 +7,41 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.StateStorageService = void 0;
-const lodash_1 = require("lodash");
 const moment_1 = require("moment");
 const inversify_1 = require("inversify");
 let StateStorageService = /** @class */ (() => {
     let StateStorageService = class StateStorageService {
         fromStorable(jsonState) {
-            const state = lodash_1.cloneDeep(jsonState);
-            if (state.life.time != null) {
-                state.life.time = new Date(state.life.time);
-            }
-            if (state.death.time != null) {
-                state.death.time = new Date(state.death.time);
-            }
-            state.bestLifetime = moment_1.duration(state.bestLifetime);
-            return state;
+            return {
+                status: { ...jsonState.status },
+                life: {
+                    ...jsonState.life,
+                    time: new Date(jsonState.life.time),
+                },
+                death: {
+                    ...jsonState.death,
+                    time: jsonState.death.time != null
+                        ? new Date(jsonState.death.time)
+                        : null,
+                },
+                bestLifetime: moment_1.duration(jsonState.bestLifetime),
+            };
         }
         toStorable(state) {
-            const storedState = lodash_1.cloneDeep(state);
-            if (storedState.life.time != null) {
-                storedState.life.time = storedState.life.time.getTime();
-            }
-            if (storedState.death.time != null) {
-                storedState.death.time = storedState.death.time.getTime();
-            }
-            storedState.bestLifetime = state.bestLifetime.asMilliseconds();
-            return storedState;
+            return {
+                status: { ...state.status },
+                life: {
+                    ...state.life,
+                    time: state.life.time.getTime(),
+                },
+                death: {
+                    ...state.death,
+                    time: state.death.time != null
+                        ? state.death.time.getTime()
+                        : null,
+                },
+                bestLifetime: state.bestLifetime.asMilliseconds(),
+            };
         }
     };
     StateStorageService = __decorate([

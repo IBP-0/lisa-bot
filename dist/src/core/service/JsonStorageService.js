@@ -12,6 +12,7 @@ const inversify_1 = require("inversify");
 let JsonStorageService = /** @class */ (() => {
     let JsonStorageService = class JsonStorageService {
         async hasStorageKey(path, key) {
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
             return (await this.load(path, key)) != null;
         }
         async load(path, key) {
@@ -36,7 +37,7 @@ let JsonStorageService = /** @class */ (() => {
             return fs_extra_1.pathExists(path);
         }
         async loadAll(path) {
-            return await fs_extra_1.readJSON(path);
+            return (await fs_extra_1.readJSON(path));
         }
         async initStorage(path) {
             return await fs_extra_1.writeJSON(path, {});

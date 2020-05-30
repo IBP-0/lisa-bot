@@ -1,17 +1,14 @@
 import { pathExists, readJSON, writeJSON } from "fs-extra";
 import { injectable } from "inversify";
 
-interface Storage<T = any> {
-    [key: string]: T;
-}
-
 @injectable()
 class JsonStorageService {
     public async hasStorageKey(path: string, key: string): Promise<boolean> {
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         return (await this.load(path, key)) != null;
     }
 
-    public async load(path: string, key: string): Promise<null | any> {
+    public async load(path: string, key: string): Promise<null | unknown> {
         if (!(await this.hasStorage(path))) {
             return null;
         }
@@ -22,7 +19,11 @@ class JsonStorageService {
         return object[key];
     }
 
-    public async store(path: string, key: string, data: any): Promise<void> {
+    public async store(
+        path: string,
+        key: string,
+        data: Record<string, unknown>
+    ): Promise<void> {
         if (!(await this.hasStorage(path))) {
             await this.initStorage(path);
         }
@@ -36,8 +37,8 @@ class JsonStorageService {
         return pathExists(path);
     }
 
-    private async loadAll(path: string): Promise<Storage> {
-        return await readJSON(path);
+    private async loadAll(path: string): Promise<Record<string, unknown>> {
+        return (await readJSON(path)) as Record<string, unknown>;
     }
 
     private async initStorage(path: string): Promise<void> {

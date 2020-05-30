@@ -42,7 +42,9 @@ describe("LisaTextService", () => {
             .rebind<StatusService>(TYPES.LisaStatusService)
             .toConstantValue(mockLisaStatusService);
 
-        lisaTextService = container.get<StatusTextService>(TYPES.LisaTextService);
+        lisaTextService = container.get<StatusTextService>(
+            TYPES.LisaTextService
+        );
     });
     afterEach(() => {
         container.restore();

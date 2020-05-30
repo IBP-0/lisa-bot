@@ -1,49 +1,44 @@
-import { cloneDeep } from "lodash";
 import { duration } from "moment";
-import { LisaDeathCause, LisaState } from "../LisaState";
+import { LisaState } from "../LisaState";
 import { injectable } from "inversify";
-
-interface JsonLisaState {
-    status: {
-        water: number;
-        happiness: number;
-    };
-    life: {
-        time: number;
-        byUser: string;
-    };
-    death: {
-        time: number | null;
-        byUser: string | null;
-        cause: LisaDeathCause | null;
-    };
-    bestLifetime: number;
-}
+import { JsonLisaState } from "../JsonLisaState";
 
 @injectable()
 class StateStorageService {
     public fromStorable(jsonState: JsonLisaState): LisaState {
-        const state: any = cloneDeep(jsonState);
-        if (state.life.time != null) {
-            state.life.time = new Date(state.life.time);
-        }
-        if (state.death.time != null) {
-            state.death.time = new Date(state.death.time);
-        }
-        state.bestLifetime = duration(state.bestLifetime);
-        return state;
+        return {
+            status: { ...jsonState.status },
+            life: {
+                ...jsonState.life,
+                time: new Date(jsonState.life.time),
+            },
+            death: {
+                ...jsonState.death,
+                time:
+                    jsonState.death.time != null
+                        ? new Date(jsonState.death.time)
+                        : null,
+            },
+            bestLifetime: duration(jsonState.bestLifetime),
+        };
     }
 
     public toStorable(state: LisaState): JsonLisaState {
-        const storedState: any = cloneDeep(state);
-        if (storedState.life.time != null) {
-            storedState.life.time = storedState.life.time.getTime();
-        }
-        if (storedState.death.time != null) {
-            storedState.death.time = storedState.death.time.getTime();
-        }
-        storedState.bestLifetime = state.bestLifetime.asMilliseconds();
-        return storedState;
+        return {
+            status: { ...state.status },
+            life: {
+                ...state.life,
+                time: state.life.time.getTime(),
+            },
+            death: {
+                ...state.death,
+                time:
+                    state.death.time != null
+                        ? state.death.time.getTime()
+                        : null,
+            },
+            bestLifetime: state.bestLifetime.asMilliseconds(),
+        };
     }
 }
 

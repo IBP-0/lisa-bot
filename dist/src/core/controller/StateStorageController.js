@@ -37,7 +37,7 @@ let StateStorageController = /** @class */ (() => {
             return this.jsonStorageService.hasStorageKey(StateStorageController_1.STORAGE_PATH, StateStorageController_1.STORAGE_KEY);
         }
         async loadStoredState() {
-            const storedState = await this.jsonStorageService.load(StateStorageController_1.STORAGE_PATH, StateStorageController_1.STORAGE_KEY);
+            const storedState = (await this.jsonStorageService.load(StateStorageController_1.STORAGE_PATH, StateStorageController_1.STORAGE_KEY));
             return this.lisaStateStorageService.fromStorable(storedState);
         }
         async storeState(state) {

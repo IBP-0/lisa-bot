@@ -11,22 +11,20 @@ declare enum LisaDeathCause {
     SADNESS = "sadness",
     FIRE = "fire"
 }
-interface LisaLife {
-    time: Date;
-    byUser: string;
-}
-interface LisaDeath {
-    time: Date | null;
-    byUser: string | null;
-    cause: LisaDeathCause | null;
-}
-interface LisaState {
+interface LisaState extends Record<string, unknown> {
     status: {
         water: number;
         happiness: number;
     };
-    life: LisaLife;
-    death: LisaDeath;
+    life: {
+        time: Date;
+        byUser: string;
+    };
+    death: {
+        time: Date | null;
+        byUser: string | null;
+        cause: LisaDeathCause | null;
+    };
     bestLifetime: Duration;
 }
 export { LisaState, LisaDeathCause, WATER_INITIAL, WATER_MIN, WATER_MAX, HAPPINESS_INITIAL, HAPPINESS_MIN, HAPPINESS_MAX, };

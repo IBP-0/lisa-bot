@@ -4,7 +4,8 @@ import { isProductionMode } from "./mode";
 const logFormat = format.combine(
     format.timestamp(),
     format.printf(
-        ({ level, message, timestamp }) => `${timestamp} [${level}]: ${message}`
+        ({ level, message, timestamp }) =>
+            `${timestamp as number} [${level}]: ${message}`
     )
 );
 
