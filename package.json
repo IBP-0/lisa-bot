@@ -7,7 +7,7 @@
     "types": "./dist/src/main.d.ts",
     "scripts": {
         "start": "npm run build && npm run serve",
-        "serve": "node -r source-map-support/register ./dist/cjs/main.js",
+        "serve": "node ./dist/cjs/main.js",
         "dist": "npm run clean && npm run lint && npm run build && npm run test",
         "clean": "rimraf ./dist",
         "build": "tsc --build tsconfig.json",
@@ -37,7 +37,6 @@
         "moment": "^2.27.0",
         "reflect-metadata": "^0.1.13",
         "rxjs": "^6.6.0",
-        "source-map-support": "^0.5.19",
         "winston": "^3.3.3"
     },
     "devDependencies": {
