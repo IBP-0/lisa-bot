@@ -5,7 +5,7 @@ import { LisaDeathCause } from "../../../core/LisaState";
 import { StatusService } from "../../../core/service/StatusService";
 import { StatusTextService } from "../../../core/service/StatusTextService";
 import { DiscordService } from "../service/DiscordService";
-import { rootLogger } from "../../../logger.js";
+import { rootLogger } from "../../../logger";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../../types";
 

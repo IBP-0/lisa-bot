@@ -4,11 +4,11 @@ import {
     HAPPINESS_INITIAL,
     LisaState,
     WATER_INITIAL,
-} from "../../../../src/core/LisaState";
-import { StatusService } from "../../../../src/core/service/StatusService";
-import { StatusTextService } from "../../../../src/core/service/StatusTextService";
-import { container } from "../../../../src/inversify.config";
-import { TYPES } from "../../../../src/types";
+} from "../../../src/core/LisaState";
+import { StatusService } from "../../../src/core/service/StatusService";
+import { StatusTextService } from "../../../src/core/service/StatusTextService";
+import { container } from "../../../src/inversify.config";
+import { TYPES } from "../../../src/types";
 
 const createState = (): LisaState => {
     return {
