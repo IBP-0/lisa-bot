@@ -4,7 +4,6 @@ import { injectable } from "inversify";
 @injectable()
 class JsonStorageService {
     public async hasStorageKey(path: string, key: string): Promise<boolean> {
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         return (await this.load(path, key)) != null;
     }
 
