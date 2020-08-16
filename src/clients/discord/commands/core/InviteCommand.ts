@@ -1,5 +1,7 @@
-import { Message, Permissions } from "discord.js";
-import { Command, CommandoClient, CommandoMessage } from "discord.js-commando";
+import type { Message } from "discord.js";
+import { Permissions } from "discord.js";
+import type { CommandoClient, CommandoMessage } from "discord.js-commando";
+import { Command } from "discord.js-commando";
 
 class InviteCommand extends Command {
     constructor(client: CommandoClient) {

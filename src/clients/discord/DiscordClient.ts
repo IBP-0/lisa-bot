@@ -1,5 +1,6 @@
-import { Message, PresenceData } from "discord.js";
-import { CommandoClient, CommandoClientOptions } from "discord.js-commando";
+import type { Message, PresenceData } from "discord.js";
+import type { CommandoClientOptions } from "discord.js-commando";
+import { CommandoClient } from "discord.js-commando";
 import { Observable } from "rxjs";
 import { AboutCommand } from "./commands/core/AboutCommand";
 import { InviteCommand } from "./commands/core/InviteCommand";

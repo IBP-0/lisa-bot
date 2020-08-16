@@ -1,4 +1,4 @@
-import { LisaDeathCause } from "./LisaState";
+import type { LisaDeathCause } from "./LisaState";
 
 interface JsonLisaState extends Record<string, unknown> {
     status: {

@@ -6,11 +6,15 @@
         "moduleResolution": "node",
         "esModuleInterop": true,
         "strict": true,
+        "forceConsistentCasingInFileNames": true,
+        "noUnusedParameters": true,
+        "noUnusedLocals": true,
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
         "lib": [
-            "esnext",
-            "dom"
+            "esnext"
         ]
-    }
+    },
+    "include": [],
+    "exclude": ["node_modules"]
 }

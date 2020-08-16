@@ -1,7 +1,7 @@
 import { duration } from "moment";
-import { LisaState } from "../LisaState";
+import type { LisaState } from "../LisaState";
 import { injectable } from "inversify";
-import { JsonLisaState } from "../JsonLisaState";
+import type { JsonLisaState } from "../JsonLisaState";
 
 @injectable()
 class StateStorageService {

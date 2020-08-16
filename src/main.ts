@@ -1,11 +1,11 @@
 import "reflect-metadata";
 import { isNil } from "lodash";
 import { container } from "./inversify.config";
-import { DiscordEventController } from "./clients/discord/controller/DiscordEventController";
-import { DiscordClient } from "./clients/discord/DiscordClient";
-import { StateController } from "./core/controller/StateController";
-import { StateStorageController } from "./core/controller/StateStorageController";
-import { TickController } from "./core/controller/TickController";
+import type { DiscordEventController } from "./clients/discord/controller/DiscordEventController";
+import type { DiscordClient } from "./clients/discord/DiscordClient";
+import type { StateController } from "./core/controller/StateController";
+import type { StateStorageController } from "./core/controller/StateStorageController";
+import type { TickController } from "./core/controller/TickController";
 import { rootLogger } from "./logger";
 import { TYPES } from "./types";
 

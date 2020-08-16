@@ -1,12 +1,12 @@
-import { Subject } from "rxjs";
+import type { Subject } from "rxjs";
 import { throttleTime } from "rxjs/operators";
 import { rootLogger } from "../../logger";
-import { LisaState } from "../LisaState";
-import { JsonStorageService } from "../service/JsonStorageService";
-import { StateStorageService } from "../service/StateStorageService";
+import type { LisaState } from "../LisaState";
+import type { JsonStorageService } from "../service/JsonStorageService";
+import type { StateStorageService } from "../service/StateStorageService";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../types";
-import { JsonLisaState } from "../JsonLisaState";
+import type { JsonLisaState } from "../JsonLisaState";
 
 @injectable()
 class StateStorageController {

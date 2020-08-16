@@ -1,10 +1,10 @@
-import { User } from "discord.js";
+import type { User } from "discord.js";
 import { sample } from "lodash";
-import { StateController } from "../../../core/controller/StateController";
-import { LisaDeathCause } from "../../../core/LisaState";
-import { StatusService } from "../../../core/service/StatusService";
-import { StatusTextService } from "../../../core/service/StatusTextService";
-import { DiscordService } from "../service/DiscordService";
+import type { StateController } from "../../../core/controller/StateController";
+import type { LisaDeathCause } from "../../../core/LisaState";
+import type { StatusService } from "../../../core/service/StatusService";
+import type { StatusTextService } from "../../../core/service/StatusTextService";
+import type { DiscordService } from "../service/DiscordService";
 import { rootLogger } from "../../../logger";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../../types";

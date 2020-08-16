@@ -1,18 +1,19 @@
 import { cloneDeep } from "lodash";
-import { Duration, duration } from "moment";
+import type { Duration } from "moment";
+import { duration } from "moment";
 import { interval, Subject } from "rxjs";
 import { rootLogger } from "../../logger";
+import type { LisaState } from "../LisaState";
 import {
     HAPPINESS_INITIAL,
     HAPPINESS_MAX,
     HAPPINESS_MIN,
     LisaDeathCause,
-    LisaState,
     WATER_INITIAL,
     WATER_MAX,
     WATER_MIN,
 } from "../LisaState";
-import { StatusService } from "../service/StatusService";
+import type { StatusService } from "../service/StatusService";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../types";
 

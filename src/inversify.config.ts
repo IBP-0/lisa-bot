@@ -5,7 +5,7 @@ import { JsonStorageService } from "./core/service/JsonStorageService";
 import { StatusService } from "./core/service/StatusService";
 import { StatusTextService } from "./core/service/StatusTextService";
 import { StateController } from "./core/controller/StateController";
-import { CommandoClientOptions } from "discord.js-commando";
+import type { CommandoClientOptions } from "discord.js-commando";
 import { DiscordCommandController } from "./clients/discord/controller/DiscordCommandController";
 import { DISCORD_CLIENT_CONFIG } from "./config";
 import { StateStorageController } from "./core/controller/StateStorageController";

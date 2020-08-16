@@ -1,4 +1,5 @@
-import { interval, Observable } from "rxjs";
+import type { Observable } from "rxjs";
+import { interval } from "rxjs";
 import { map } from "rxjs/operators";
 import { rootLogger } from "../../logger";
 import { injectable } from "inversify";
