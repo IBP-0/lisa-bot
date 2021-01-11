@@ -19,7 +19,7 @@ class AboutCommand extends Command {
             aliases: ["why", "info"],
             group: "util",
             memberName: "about",
-            description: "Shows info about the bot."
+            description: "Shows info about the bot.",
         });
     }
 

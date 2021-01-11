@@ -1,32 +1,37 @@
-import { Injectable } from "chevronjs";
 import { User } from "discord.js";
 import { sample } from "lodash";
-import { chevron } from "../../../chevron";
-import { LisaStateController } from "../../../lisa/controller/LisaStateController";
-import { LisaDeathCause } from "../../../lisa/LisaState";
-import { LisaStatusService } from "../../../lisa/service/LisaStatusService";
-import { LisaTextService } from "../../../lisa/service/LisaTextService";
+import { StateController } from "../../../core/controller/StateController";
+import { LisaDeathCause } from "../../../core/LisaState";
+import { StatusService } from "../../../core/service/StatusService";
+import { StatusTextService } from "../../../core/service/StatusTextService";
 import { DiscordService } from "../service/DiscordService";
-import { rootLogger } from "../../../logger.js";
+import { rootLogger } from "../../../logger";
+import { inject, injectable } from "inversify";
+import { TYPES } from "../../../types";
 
-@Injectable(chevron, {
-    dependencies: [
-        LisaStateController,
-        LisaStatusService,
-        LisaTextService,
-        DiscordService
-    ]
-})
+@injectable()
 class DiscordCommandController {
     private static readonly logger = rootLogger.child({
-        target: DiscordCommandController
+        target: DiscordCommandController,
     });
+
+    private readonly lisaStateController: StateController;
+    private readonly lisaStatusService: StatusService;
+    private readonly lisaTextService: StatusTextService;
+    private readonly lisaDiscordService: DiscordService;
+
     constructor(
-        private readonly lisaStateController: LisaStateController,
-        private readonly lisaStatusService: LisaStatusService,
-        private readonly lisaTextService: LisaTextService,
-        private readonly lisaDiscordService: DiscordService
-    ) {}
+        @inject(TYPES.LisaStateController)
+        lisaStateController: StateController,
+        @inject(TYPES.LisaStatusService) lisaStatusService: StatusService,
+        @inject(TYPES.LisaTextService) lisaTextService: StatusTextService,
+        @inject(TYPES.DiscordService) lisaDiscordService: DiscordService
+    ) {
+        this.lisaDiscordService = lisaDiscordService;
+        this.lisaTextService = lisaTextService;
+        this.lisaStatusService = lisaStatusService;
+        this.lisaStateController = lisaStateController;
+    }
 
     public performAction(
         author: User,

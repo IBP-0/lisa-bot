@@ -1,14 +1,15 @@
 import { Message } from "discord.js";
 import { Command, CommandoClient, CommandoMessage } from "discord.js-commando";
-import { chevron } from "../../../../chevron";
+import { container } from "../../../../inversify.config";
 import { DiscordCommandController } from "../../controller/DiscordCommandController";
+import { TYPES } from "../../../../types";
 
 const GOAT_IDS = [
     "169804264988868609",
     "178470784984023040",
     "143158243076734986",
     "128985967875850240",
-    "273221196001181697"
+    "273221196001181697",
 ];
 
 class BaaCommand extends Command {
@@ -21,11 +22,11 @@ class BaaCommand extends Command {
             group: "lisa",
             memberName: "baa",
             description: "Baa.",
-            hidden: true
+            hidden: true,
         });
-        this.lisaDiscordCommandController = chevron.getInjectableInstance(
+        this.lisaDiscordCommandController = container.get<
             DiscordCommandController
-        );
+        >(TYPES.DiscordCommandController);
     }
 
     run(message: CommandoMessage): Promise<Message | Message[]> {

@@ -1,7 +1,8 @@
 import { Message } from "discord.js";
 import { Command, CommandoClient, CommandoMessage } from "discord.js-commando";
-import { chevron } from "../../../../chevron";
+import { container } from "../../../../inversify.config";
 import { DiscordCommandController } from "../../controller/DiscordCommandController";
+import { TYPES } from "../../../../types";
 
 const HIGH_QUALITY_JOKES = [
     "Why do trees have so many friends? They branch out.",
@@ -23,7 +24,7 @@ const HIGH_QUALITY_JOKES = [
     "What kind of tree grows on your hand? A palm tree.",
     "After a cold winter, will deciduous trees be releaved?",
     "I saw something similar to moss the other day, but I didn't know what to lichen it to.",
-    "In some conifer forests, you can't cedar wood for the trees."
+    "In some conifer forests, you can't cedar wood for the trees.",
 ];
 
 class JokeCommand extends Command {
@@ -35,11 +36,11 @@ class JokeCommand extends Command {
             aliases: ["pun"],
             group: "lisa",
             memberName: "joke",
-            description: "Tell Lisa a joke."
+            description: "Tell Lisa a joke.",
         });
-        this.lisaDiscordCommandController = chevron.getInjectableInstance(
+        this.lisaDiscordCommandController = container.get<
             DiscordCommandController
-        );
+        >(TYPES.DiscordCommandController);
     }
 
     run(message: CommandoMessage): Promise<Message | Message[]> {

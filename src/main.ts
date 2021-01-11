@@ -1,21 +1,23 @@
+import "reflect-metadata";
 import { isNil } from "lodash";
-import { chevron } from "./chevron";
+import { container } from "./inversify.config";
 import { DiscordEventController } from "./clients/discord/controller/DiscordEventController";
 import { DiscordClient } from "./clients/discord/DiscordClient";
-import { LisaStateController } from "./lisa/controller/LisaStateController";
-import { LisaStateStorageController } from "./lisa/controller/LisaStateStorageController";
-import { LisaTickController } from "./lisa/controller/LisaTickController";
+import { StateController } from "./core/controller/StateController";
+import { StateStorageController } from "./core/controller/StateStorageController";
+import { TickController } from "./core/controller/TickController";
 import { rootLogger } from "./logger";
+import { TYPES } from "./types";
 
 const logger = rootLogger.child({ target: "main" });
 
 const startLisaMainClient = async (): Promise<void> => {
-    const lisaStateController: LisaStateController = chevron.getInjectableInstance(
-        LisaStateController
+    const lisaStateController = container.get<StateController>(
+        TYPES.LisaStateController
     );
 
-    const lisaStorageController: LisaStateStorageController = chevron.getInjectableInstance(
-        LisaStateStorageController
+    const lisaStorageController = container.get<StateStorageController>(
+        TYPES.LisaStateStorageController
     );
     if (await lisaStorageController.hasStoredState()) {
         logger.info("Found stored Lisa state, loading it.");
@@ -29,9 +31,7 @@ const startLisaMainClient = async (): Promise<void> => {
         lisaStateController.stateChangeSubject
     );
 
-    const lisaTimer: LisaTickController = chevron.getInjectableInstance(
-        LisaTickController
-    );
+    const lisaTimer = container.get<TickController>(TYPES.LisaTickController);
     lisaTimer.tickObservable.subscribe(
         ({ waterModifier, happinessModifier, byUser }) =>
             lisaStateController.modifyLisaStatus(
@@ -42,17 +42,7 @@ const startLisaMainClient = async (): Promise<void> => {
     );
 };
 const startLisaDiscordClient = async (): Promise<void> => {
-    chevron.registerInjectable(
-        {
-            commandPrefix: "$",
-            owner: "128985967875850240"
-        },
-        { name: "discordOptions" }
-    );
-
-    const lisaDiscordClient: DiscordClient = chevron.getInjectableInstance(
-        DiscordClient
-    );
+    const lisaDiscordClient = container.get<DiscordClient>(TYPES.DiscordClient);
     const discordToken = process.env.DISCORD_TOKEN;
     if (isNil(discordToken)) {
         throw new Error("No secret set.");
@@ -60,8 +50,8 @@ const startLisaDiscordClient = async (): Promise<void> => {
 
     await lisaDiscordClient.login(discordToken);
 
-    const lisaDiscordController: DiscordEventController = chevron.getInjectableInstance(
-        DiscordEventController
+    const lisaDiscordController = container.get<DiscordEventController>(
+        TYPES.DiscordEventController
     );
     lisaDiscordController.bindListeners();
 };
@@ -69,9 +59,9 @@ const startLisaDiscordClient = async (): Promise<void> => {
 logger.info("Starting Lisa main client...");
 startLisaMainClient()
     .then(() => logger.info("Started Lisa main client."))
-    .catch(e => console.error("Could not start Lisa main client.", e));
+    .catch((e) => console.error("Could not start Lisa main client.", e));
 
 logger.info("Starting Lisa discord client...");
 startLisaDiscordClient()
     .then(() => logger.info("Started Lisa discord client."))
-    .catch(e => console.error("Could not start Lisa discord client.", e));
+    .catch((e) => console.error("Could not start Lisa discord client.", e));

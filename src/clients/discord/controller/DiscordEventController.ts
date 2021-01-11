@@ -1,44 +1,51 @@
-import { Injectable } from "chevronjs";
 import { PresenceData } from "discord.js";
 import { filter, throttleTime } from "rxjs/operators";
-import { chevron } from "../../../chevron";
-import { LisaStateController } from "../../../lisa/controller/LisaStateController";
-import { LisaState } from "../../../lisa/LisaState";
-import { LisaTextService } from "../../../lisa/service/LisaTextService";
+import { StateController } from "../../../core/controller/StateController";
+import { LisaState } from "../../../core/LisaState";
+import { StatusTextService } from "../../../core/service/StatusTextService";
 import { rootLogger } from "../../../logger";
 import { DiscordClient } from "../DiscordClient";
+import { inject, injectable } from "inversify";
+import { TYPES } from "../../../types";
 
 const createPresence = (name: string): PresenceData => {
     return {
         activity: {
-            name
-        }
+            name,
+        },
     };
 };
 
-@Injectable(chevron, {
-    dependencies: [LisaStateController, DiscordClient, LisaTextService]
-})
+@injectable()
 class DiscordEventController {
     private static readonly logger = rootLogger.child({
-        target: DiscordEventController
+        target: DiscordEventController,
     });
     private static readonly PRESENCE_UPDATE_THROTTLE_TIMEOUT = 10000;
     private static readonly MESSAGE_THROTTLE_TIMEOUT = 1000;
     private static readonly MESSAGE_HAPPINESS_MODIFIER = 0.25;
     private static readonly USER_DISCORD_ACTIVITY = "Discord activity";
 
+    private readonly lisaStateController: StateController;
+    private readonly lisaDiscordClient: DiscordClient;
+    private readonly lisaTextService: StatusTextService;
+
     constructor(
-        private readonly lisaStateController: LisaStateController,
-        private readonly lisaDiscordClient: DiscordClient,
-        private readonly lisaTextService: LisaTextService
-    ) {}
+        @inject(TYPES.LisaStateController)
+        lisaStateController: StateController,
+        @inject(TYPES.DiscordClient) lisaDiscordClient: DiscordClient,
+        @inject(TYPES.LisaTextService) lisaTextService: StatusTextService
+    ) {
+        this.lisaTextService = lisaTextService;
+        this.lisaDiscordClient = lisaDiscordClient;
+        this.lisaStateController = lisaStateController;
+    }
 
     public bindListeners(): void {
         this.lisaDiscordClient
             .getMessageObservable()
             .pipe(
-                filter(message => !message.system && !message.author.bot),
+                filter((message) => !message.system && !message.author.bot),
                 throttleTime(DiscordEventController.MESSAGE_THROTTLE_TIMEOUT)
             )
             .subscribe(() => this.onMessage());
@@ -49,7 +56,7 @@ class DiscordEventController {
                     DiscordEventController.PRESENCE_UPDATE_THROTTLE_TIMEOUT
                 )
             )
-            .subscribe(state => this.onStateChange(state));
+            .subscribe((state) => this.onStateChange(state));
         this.onStateChange(this.lisaStateController.getStateCopy());
     }
 
@@ -74,7 +81,7 @@ class DiscordEventController {
             .then(() =>
                 DiscordEventController.logger.debug("Updated presence.")
             )
-            .catch(e =>
+            .catch((e) =>
                 DiscordEventController.logger.error(
                     "Could not update presence.",
                     e

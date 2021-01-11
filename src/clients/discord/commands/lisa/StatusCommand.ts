@@ -1,7 +1,8 @@
 import { Message } from "discord.js";
 import { Command, CommandoClient, CommandoMessage } from "discord.js-commando";
-import { chevron } from "../../../../chevron";
+import { container } from "../../../../inversify.config";
 import { DiscordCommandController } from "../../controller/DiscordCommandController";
+import { TYPES } from "../../../../types";
 
 class StatusCommand extends Command {
     private readonly lisaDiscordCommandController: DiscordCommandController;
@@ -12,11 +13,11 @@ class StatusCommand extends Command {
             aliases: [],
             group: "lisa",
             memberName: "status",
-            description: "Shows the status of Lisa."
+            description: "Shows the status of Lisa.",
         });
-        this.lisaDiscordCommandController = chevron.getInjectableInstance(
+        this.lisaDiscordCommandController = container.get<
             DiscordCommandController
-        );
+        >(TYPES.DiscordCommandController);
     }
 
     run(message: CommandoMessage): Promise<Message | Message[]> {

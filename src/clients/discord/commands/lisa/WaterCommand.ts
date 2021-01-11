@@ -1,7 +1,8 @@
 import { Message } from "discord.js";
 import { Command, CommandoClient, CommandoMessage } from "discord.js-commando";
-import { chevron } from "../../../../chevron";
+import { container } from "../../../../inversify.config";
 import { DiscordCommandController } from "../../controller/DiscordCommandController";
+import { TYPES } from "../../../../types";
 
 class WaterCommand extends Command {
     private readonly lisaDiscordCommandController: DiscordCommandController;
@@ -12,11 +13,11 @@ class WaterCommand extends Command {
             aliases: [],
             group: "lisa",
             memberName: "water",
-            description: "Water Lisa."
+            description: "Water Lisa.",
         });
-        this.lisaDiscordCommandController = chevron.getInjectableInstance(
+        this.lisaDiscordCommandController = container.get<
             DiscordCommandController
-        );
+        >(TYPES.DiscordCommandController);
     }
 
     run(message: CommandoMessage): Promise<Message | Message[]> {
@@ -30,7 +31,7 @@ class WaterCommand extends Command {
                     "_Is being watered_",
                     "_Water splashes._",
                     "_Watering noises._",
-                    "_You hear Lisa sucking up the water._"
+                    "_You hear Lisa sucking up the water._",
                 ],
                 ["It's too late to water poor Lisa..."]
             )

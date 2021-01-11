@@ -1,7 +1,8 @@
 import { Message } from "discord.js";
 import { Command, CommandoClient, CommandoMessage } from "discord.js-commando";
-import { chevron } from "../../../../chevron";
+import { container } from "../../../../inversify.config";
 import { DiscordCommandController } from "../../controller/DiscordCommandController";
+import { TYPES } from "../../../../types";
 
 class ReplantCommand extends Command {
     private readonly lisaDiscordCommandController: DiscordCommandController;
@@ -12,11 +13,11 @@ class ReplantCommand extends Command {
             aliases: ["reset", "plant"],
             group: "lisa",
             memberName: "replant",
-            description: "Replant Lisa."
+            description: "Replant Lisa.",
         });
-        this.lisaDiscordCommandController = chevron.getInjectableInstance(
+        this.lisaDiscordCommandController = container.get<
             DiscordCommandController
-        );
+        >(TYPES.DiscordCommandController);
     }
 
     run(message: CommandoMessage): Promise<Message | Message[]> {
@@ -25,11 +26,11 @@ class ReplantCommand extends Command {
                 message.author,
                 null,
                 [
-                    "_Is being ripped out and thrown away while still alive, watching you plant the next Lisa._"
+                    "_Is being ripped out and thrown away while still alive, watching you plant the next Lisa._",
                 ],
                 [
                     "_Plants new Lisa on top of the remnants of her ancestors._",
-                    "_Plants the next generation of Lisa._"
+                    "_Plants the next generation of Lisa._",
                 ]
             )
         );
