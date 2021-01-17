@@ -10,7 +10,7 @@ class InviteCommand extends Command {
             aliases: ["join"],
             group: "util",
             memberName: "invite",
-            description: "Add Lisa to your server.",
+            description: "Add this bot to your server.",
         });
     }
 

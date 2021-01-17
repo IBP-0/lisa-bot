@@ -56,10 +56,8 @@ class DiscordClient {
         /*
          * Groups
          */
-        this.commandoClient.registry.registerGroups([
-            ["util", "Utility"],
-            ["lisa", "Lisa"],
-        ]);
+        this.commandoClient.registry.registerDefaultGroups();
+        this.commandoClient.registry.registerGroup("lisa", "Lisa");
 
         /*
          * Commands
@@ -68,7 +66,7 @@ class DiscordClient {
             help: true,
             eval: false,
             ping: true,
-            prefix: false,
+            prefix: true,
             commandState: false,
             unknownCommand: false,
         });
