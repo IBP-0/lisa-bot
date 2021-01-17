@@ -22,11 +22,11 @@ interface LisaState extends Record<string, unknown> {
     };
     birth: {
         timestamp: Date;
-        byUser: string;
+        initiator: string;
     };
     death: {
         timestamp: Date | null;
-        byUser: string | null;
+        initiator: string | null;
         cause: LisaDeathCause | null;
     };
     bestLifetimeDuration: Duration;

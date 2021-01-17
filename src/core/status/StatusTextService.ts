@@ -24,7 +24,7 @@ class StatusTextService {
                 .humanize();
 
             text = `Lisa died ${timeSinceDeathLabel} ago, she was killed by ${
-                state.death.byUser ?? "anonymous"
+                state.death.initiator ?? "anonymous"
             } through ${state.death.cause ?? "unknown cause"}.`;
         } else {
             const waterLevel = state.status.water.toFixed(2);

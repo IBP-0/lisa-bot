@@ -7,7 +7,7 @@ import { injectable } from "inversify";
 interface TickData {
     waterModifier: number;
     happinessModifier: number;
-    byUser: string;
+    initiator: string;
 }
 
 @injectable()
@@ -19,7 +19,7 @@ class TickController {
     private static readonly TIMEOUT = 60000;
     private static readonly WATER_MODIFIER = -0.5;
     private static readonly HAPPINESS_MODIFIER = -0.75;
-    private static readonly USER_TICK = "Time";
+    private static readonly INITIATOR_TICK = "Time";
 
     public readonly tickObservable: Observable<TickData>;
 
@@ -37,7 +37,7 @@ class TickController {
                 return {
                     waterModifier: TickController.WATER_MODIFIER,
                     happinessModifier: TickController.HAPPINESS_MODIFIER,
-                    byUser: TickController.USER_TICK,
+                    initiator: TickController.INITIATOR_TICK,
                 };
             })
         );

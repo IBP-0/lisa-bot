@@ -16,11 +16,11 @@ const createState = (): LisaState => {
         },
         birth: {
             timestamp: new Date(),
-            byUser: "none",
+            initiator: "none",
         },
         death: {
             timestamp: null,
-            byUser: null,
+            initiator: null,
             cause: null,
         },
     };

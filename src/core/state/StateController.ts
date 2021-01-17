@@ -23,7 +23,7 @@ class StateController {
         target: StateController,
     });
 
-    private static readonly USER_SYSTEM = "System";
+    private static readonly INITIATOR_SYSTEM = "System";
     private static readonly BEST_LIFETIME_CHECK_TIMEOUT = 5000;
     public readonly stateChangeSubject: Subject<LisaState>;
     private readonly lisaStatusService: StatusService;
@@ -34,7 +34,7 @@ class StateController {
     ) {
         this.lisaStatusService = lisaStatusService;
         this.state = StateController.createNewLisaState(
-            StateController.USER_SYSTEM,
+            StateController.INITIATOR_SYSTEM,
             duration(0)
         );
         this.stateChangeSubject = new Subject<LisaState>();
@@ -45,7 +45,7 @@ class StateController {
     }
 
     private static createNewLisaState(
-        createdByUser: string,
+        birthInitiator: string,
         bestLifetime: Duration
     ): LisaState {
         return {
@@ -56,11 +56,11 @@ class StateController {
             },
             birth: {
                 timestamp: new Date(),
-                byUser: createdByUser,
+                initiator: birthInitiator,
             },
             death: {
                 timestamp: null,
-                byUser: null,
+                initiator: null,
                 cause: null,
             },
         };
@@ -85,24 +85,24 @@ class StateController {
         this.stateChanged();
     }
 
-    public replantLisa(byUser: string = StateController.USER_SYSTEM): void {
-        StateController.logger.info(`'${byUser}' replanted lisa.`);
+    public replantLisa(initiator: string = StateController.INITIATOR_SYSTEM): void {
+        StateController.logger.info(`'${initiator}' replanted lisa.`);
 
-        this.performReplant(byUser);
+        this.performReplant(initiator);
         this.stateChanged();
     }
 
     public killLisa(
         cause: LisaDeathCause,
-        byUser: string = StateController.USER_SYSTEM
+        initiator: string = StateController.INITIATOR_SYSTEM
     ): void {
         if (!this.lisaStatusService.isAlive(this.getStateCopy())) {
             StateController.logger.debug("Lisa is already dead, skip kill.");
             return;
         }
 
-        StateController.logger.info(`'${byUser}' killed lisa by ${cause}.`);
-        this.performKill(cause, byUser);
+        StateController.logger.info(`'${initiator}' killed lisa by ${cause}.`);
+        this.performKill(cause, initiator);
 
         this.stateChanged();
     }
@@ -110,7 +110,7 @@ class StateController {
     public modifyLisaStatus(
         waterModifier: number,
         happinessModifier: number,
-        byUser: string = StateController.USER_SYSTEM
+        initiator: string = StateController.INITIATOR_SYSTEM
     ): void {
         if (!this.lisaStatusService.isAlive(this.getStateCopy())) {
             StateController.logger.debug("Lisa is dead, skip status change.");
@@ -118,48 +118,48 @@ class StateController {
         }
 
         StateController.logger.debug(
-            `'${byUser}' modified status; water modifier ${waterModifier}, happiness modifier ${happinessModifier}.`
+            `'${initiator}' modified status; water modifier ${waterModifier}, happiness modifier ${happinessModifier}.`
         );
-        this.performModifyStatus(waterModifier, happinessModifier, byUser);
+        this.performModifyStatus(waterModifier, happinessModifier, initiator);
 
         this.stateChanged();
     }
 
-    private performReplant(byUser: string): void {
+    private performReplant(initiator: string): void {
         this.state = StateController.createNewLisaState(
-            byUser,
+            initiator,
             this.state.bestLifetimeDuration
         );
     }
 
-    private performKill(cause: LisaDeathCause, byUser: string): void {
-        this.state.death = { timestamp: new Date(), byUser, cause };
+    private performKill(cause: LisaDeathCause, initiator: string): void {
+        this.state.death = { timestamp: new Date(), initiator: initiator, cause };
     }
 
     private performModifyStatus(
         waterModifier: number,
         happinessModifier: number,
-        byUser: string
+        initiator: string
     ): void {
         this.state.status.water += waterModifier;
         this.state.status.happiness += happinessModifier;
 
-        this.checkStats(byUser);
+        this.checkStats(initiator);
     }
 
-    private checkStats(byUser: string): void {
+    private checkStats(initiator: string): void {
         if (this.state.status.water > WATER_MAX) {
             StateController.logger.silly(
                 `Water level ${this.state.status.water} is above limit of ${WATER_MAX} -> ${LisaDeathCause.DROWNING}.`
             );
 
-            this.performKill(LisaDeathCause.DROWNING, byUser);
+            this.performKill(LisaDeathCause.DROWNING, initiator);
         } else if (this.state.status.water < WATER_MIN) {
             StateController.logger.silly(
                 `Water level ${this.state.status.water} is below limit of ${WATER_MIN} -> ${LisaDeathCause.DEHYDRATION}.`
             );
 
-            this.performKill(LisaDeathCause.DEHYDRATION, byUser);
+            this.performKill(LisaDeathCause.DEHYDRATION, initiator);
         }
 
         if (this.state.status.happiness > HAPPINESS_MAX) {
@@ -173,7 +173,7 @@ class StateController {
                 `Happiness level ${this.state.status.happiness} is below limit of ${HAPPINESS_MIN} -> ${LisaDeathCause.SADNESS}.`
             );
 
-            this.performKill(LisaDeathCause.SADNESS, byUser);
+            this.performKill(LisaDeathCause.SADNESS, initiator);
         }
     }
 

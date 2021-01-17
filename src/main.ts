@@ -44,11 +44,11 @@ const startLisaMainClient = async (): Promise<void> => {
 
     const lisaTimer = container.get<TickController>(TYPES.LisaTickController);
     lisaTimer.tickObservable.subscribe(
-        ({ waterModifier, happinessModifier, byUser }) =>
+        ({ waterModifier, happinessModifier, initiator }) =>
             lisaStateController.modifyLisaStatus(
                 waterModifier,
                 happinessModifier,
-                byUser
+                initiator
             )
     );
 };

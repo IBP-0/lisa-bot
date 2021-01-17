@@ -11,8 +11,10 @@ interface LisaStateRow {
     readonly current_happiness: number;
 
     readonly birth_timestamp: number;
+    readonly birth_initiator: string;
 
     readonly death_timestamp: number | null;
+    readonly death_initiator: string | null;
     readonly death_cause: string | null;
 
     readonly best_lifetime_duration: number;
@@ -40,7 +42,7 @@ export class LisaStateRepository {
         const database = this.storageProvider.getDb()!;
 
         await database.run(
-            "INSERT INTO lisa_state(current_water, current_happiness, birth_timestamp, death_timestamp, death_cause, best_lifetime_duration) VALUES(:current_water, :current_happiness, :birth_timestamp, :death_timestamp, :death_cause, :best_lifetime_duration)",
+            "INSERT INTO lisa_state(current_water, current_happiness, birth_timestamp, birth_initiator, death_timestamp, death_initiator, death_cause, best_lifetime_duration) VALUES(:current_water, :current_happiness, :birth_timestamp, :birth_initiator, :death_timestamp, :death_initiator,:death_cause, :best_lifetime_duration)",
             this.serializeStateToParameters(state)
         );
     }
@@ -48,7 +50,7 @@ export class LisaStateRepository {
     public async update(state: LisaState): Promise<void> {
         const database = this.storageProvider.getDb()!;
         await database.run(
-            "UPDATE lisa_state SET current_water=:current_water, current_happiness=:current_happiness, birth_timestamp=:birth_timestamp, death_timestamp=:death_timestamp, death_cause=:death_cause, best_lifetime_duration=:best_lifetime_duration WHERE id = 1",
+            "UPDATE lisa_state SET current_water=:current_water, current_happiness=:current_happiness, birth_timestamp=:birth_timestamp, birth_initiator=:birth_initiator, death_timestamp=:death_timestamp, death_initiator=:death_initiator, death_cause=:death_cause, best_lifetime_duration=:best_lifetime_duration WHERE id = 1",
             this.serializeStateToParameters(state)
         );
     }
@@ -56,7 +58,7 @@ export class LisaStateRepository {
     public async load(): Promise<LisaState> {
         const database = this.storageProvider.getDb()!;
         const lisaStateRow = await database.get<LisaStateRow>(
-            "SELECT current_water, current_happiness, birth_timestamp, death_timestamp, death_cause, best_lifetime_duration FROM lisa_state WHERE id = 1"
+            "SELECT current_water, current_happiness, birth_timestamp, birth_initiator, death_timestamp, death_initiator, death_cause, best_lifetime_duration FROM lisa_state WHERE id = 1"
         );
         if (lisaStateRow == null) {
             throw new TypeError("No state found!");
@@ -72,9 +74,11 @@ export class LisaStateRepository {
             ":current_happiness": state.status.happiness,
 
             ":birth_timestamp": state.birth.timestamp.getMilliseconds(),
+            ":birth_initiator": state.birth.initiator,
 
             ":death_timestamp":
                 state.death.timestamp?.getMilliseconds() ?? null,
+            ":death_initiator": state.death.initiator,
             ":death_cause": state.death.cause,
 
             ":best_lifetime_duration": state.bestLifetimeDuration.asMilliseconds(),
@@ -89,14 +93,14 @@ export class LisaStateRepository {
             },
             birth: {
                 timestamp: new Date(lisaStateRow.birth_timestamp),
-                byUser: "NONE",
+                initiator: lisaStateRow.birth_initiator,
             },
             death: {
                 timestamp:
                     lisaStateRow.death_timestamp != null
                         ? new Date(lisaStateRow.death_timestamp)
                         : null,
-                byUser: "NONE",
+                initiator: lisaStateRow.death_initiator,
                 cause: lisaStateRow.death_cause as LisaDeathCause,
             },
             bestLifetimeDuration: duration(lisaStateRow.best_lifetime_duration),
