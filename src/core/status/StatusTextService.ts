@@ -56,7 +56,7 @@ class StatusTextService {
         const lifetimeLabel = this.lisaStatusService
             .getLifetime(state)
             .humanize();
-        const highScoreLabel = state.bestLifetime.humanize();
+        const highScoreLabel = state.bestLifetimeDuration.humanize();
         const currentLabel = this.lisaStatusService.isAlive(state)
             ? "Current lifetime"
             : "Lifetime";

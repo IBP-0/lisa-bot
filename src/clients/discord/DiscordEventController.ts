@@ -1,12 +1,12 @@
 import type { PresenceData } from "discord.js";
 import { filter, throttleTime } from "rxjs/operators";
-import type { StateController } from "../../../core/state/StateController";
-import type { LisaState } from "../../../core/state/LisaState";
-import type { StatusTextService } from "../../../core/status/StatusTextService";
-import { rootLogger } from "../../../logger";
-import type { DiscordClient } from "../DiscordClient";
+import type { StateController } from "../../core/state/StateController";
+import type { LisaState } from "../../core/state/LisaState";
+import type { StatusTextService } from "../../core/status/StatusTextService";
+import { rootLogger } from "../../logger";
+import type { DiscordClient } from "./DiscordClient";
 import { inject, injectable } from "inversify";
-import { TYPES } from "../../../types";
+import { TYPES } from "../../types";
 
 const createPresence = (name: string): PresenceData => {
     return {

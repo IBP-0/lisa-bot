@@ -3,7 +3,7 @@ import type { CommandoClient, CommandoMessage } from "discord.js-commando";
 import { Command } from "discord.js-commando";
 import { container } from "../../../../inversify.config";
 import { LisaDeathCause } from "../../../../core/state/LisaState";
-import type { DiscordCommandController } from "../../controller/DiscordCommandController";
+import type { DiscordCommandController } from "../../DiscordCommandController";
 import { TYPES } from "../../../../types";
 
 class BurnCommand extends Command {

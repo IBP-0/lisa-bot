@@ -1,13 +1,13 @@
 import type { User } from "discord.js";
 import { sample } from "lodash";
-import type { StateController } from "../../../core/state/StateController";
-import type { LisaDeathCause } from "../../../core/state/LisaState";
-import type { StatusService } from "../../../core/status/StatusService";
-import type { StatusTextService } from "../../../core/status/StatusTextService";
-import type { DiscordService } from "../service/DiscordService";
-import { rootLogger } from "../../../logger";
+import type { StateController } from "../../core/state/StateController";
+import type { LisaDeathCause } from "../../core/state/LisaState";
+import type { StatusService } from "../../core/status/StatusService";
+import type { StatusTextService } from "../../core/status/StatusTextService";
+import type { DiscordService } from "./DiscordService";
+import { rootLogger } from "../../logger";
 import { inject, injectable } from "inversify";
-import { TYPES } from "../../../types";
+import { TYPES } from "../../types";
 
 @injectable()
 class DiscordCommandController {

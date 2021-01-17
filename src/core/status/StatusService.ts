@@ -12,14 +12,14 @@ class StatusService {
     });
 
     public isAlive(state: LisaState): boolean {
-        return state.death.time == null;
+        return state.death.timestamp == null;
     }
 
     public getLifetime(state: LisaState): Duration {
-        const birth = state.life.time.getTime();
+        const birth = state.birth.timestamp.getTime();
 
         if (!this.isAlive(state)) {
-            const death = state.death.time!.getTime();
+            const death = state.death.timestamp!.getTime();
             return duration(death - birth);
         }
 
@@ -32,7 +32,7 @@ class StatusService {
             return null;
         }
 
-        const death = state.death.time!.getTime();
+        const death = state.death.timestamp!.getTime();
         const now = Date.now();
         return duration(death - now);
     }

@@ -2,7 +2,7 @@ import type { Message } from "discord.js";
 import type { CommandoClient, CommandoMessage } from "discord.js-commando";
 import { Command } from "discord.js-commando";
 import { container } from "../../../../inversify.config";
-import type { DiscordCommandController } from "../../controller/DiscordCommandController";
+import type { DiscordCommandController } from "../../DiscordCommandController";
 import { TYPES } from "../../../../types";
 
 class HugCommand extends Command {

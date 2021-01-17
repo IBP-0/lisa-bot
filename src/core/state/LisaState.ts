@@ -20,16 +20,16 @@ interface LisaState extends Record<string, unknown> {
         water: number;
         happiness: number;
     };
-    life: {
-        time: Date;
+    birth: {
+        timestamp: Date;
         byUser: string;
     };
     death: {
-        time: Date | null;
+        timestamp: Date | null;
         byUser: string | null;
         cause: LisaDeathCause | null;
     };
-    bestLifetime: Duration;
+    bestLifetimeDuration: Duration;
 }
 
 export {

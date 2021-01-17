@@ -9,17 +9,17 @@ import { TYPES } from "../../../src/types";
 
 const createState = (): LisaState => {
     return {
-        bestLifetime: duration(0),
+        bestLifetimeDuration: duration(0),
         status: {
             water: WATER_INITIAL,
             happiness: HAPPINESS_INITIAL,
         },
-        life: {
-            time: new Date(),
+        birth: {
+            timestamp: new Date(),
             byUser: "none",
         },
         death: {
-            time: null,
+            timestamp: null,
             byUser: null,
             cause: null,
         },

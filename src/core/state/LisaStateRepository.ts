@@ -71,12 +71,13 @@ export class LisaStateRepository {
             ":current_water": state.status.water,
             ":current_happiness": state.status.happiness,
 
-            ":birth_timestamp": state.life.time.getMilliseconds(),
+            ":birth_timestamp": state.birth.timestamp.getMilliseconds(),
 
-            ":death_timestamp": state.death.time?.getMilliseconds() ?? null,
+            ":death_timestamp":
+                state.death.timestamp?.getMilliseconds() ?? null,
             ":death_cause": state.death.cause,
 
-            ":best_lifetime_duration": state.bestLifetime.asMilliseconds(),
+            ":best_lifetime_duration": state.bestLifetimeDuration.asMilliseconds(),
         };
     }
 
@@ -86,19 +87,19 @@ export class LisaStateRepository {
                 water: lisaStateRow.current_water,
                 happiness: lisaStateRow.current_happiness,
             },
-            life: {
-                time: new Date(lisaStateRow.birth_timestamp),
+            birth: {
+                timestamp: new Date(lisaStateRow.birth_timestamp),
                 byUser: "NONE",
             },
             death: {
-                time:
+                timestamp:
                     lisaStateRow.death_timestamp != null
                         ? new Date(lisaStateRow.death_timestamp)
                         : null,
                 byUser: "NONE",
                 cause: lisaStateRow.death_cause as LisaDeathCause,
             },
-            bestLifetime: duration(lisaStateRow.best_lifetime_duration),
+            bestLifetimeDuration: duration(lisaStateRow.best_lifetime_duration),
         };
     }
 }

@@ -49,17 +49,17 @@ class StateController {
         bestLifetime: Duration
     ): LisaState {
         return {
-            bestLifetime,
+            bestLifetimeDuration: bestLifetime,
             status: {
                 water: WATER_INITIAL,
                 happiness: HAPPINESS_INITIAL,
             },
-            life: {
-                time: new Date(),
+            birth: {
+                timestamp: new Date(),
                 byUser: createdByUser,
             },
             death: {
-                time: null,
+                timestamp: null,
                 byUser: null,
                 cause: null,
             },
@@ -128,12 +128,12 @@ class StateController {
     private performReplant(byUser: string): void {
         this.state = StateController.createNewLisaState(
             byUser,
-            this.state.bestLifetime
+            this.state.bestLifetimeDuration
         );
     }
 
     private performKill(cause: LisaDeathCause, byUser: string): void {
-        this.state.death = { time: new Date(), byUser, cause };
+        this.state.death = { timestamp: new Date(), byUser, cause };
     }
 
     private performModifyStatus(
@@ -187,11 +187,11 @@ class StateController {
         const lifetime = this.lisaStatusService.getLifetime(
             this.getStateCopy()
         );
-        if (lifetime > this.state.bestLifetime) {
+        if (lifetime > this.state.bestLifetimeDuration) {
             StateController.logger.silly(
-                `Increasing high score from ${this.state.bestLifetime.asMilliseconds()} to ${lifetime.asMilliseconds()}.`
+                `Increasing high score from ${this.state.bestLifetimeDuration.asMilliseconds()} to ${lifetime.asMilliseconds()}.`
             );
-            this.state.bestLifetime = lifetime;
+            this.state.bestLifetimeDuration = lifetime;
         }
     }
 }

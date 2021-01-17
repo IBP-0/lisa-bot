@@ -4,7 +4,7 @@ import { rootLogger } from "./logger";
 import { TYPES } from "./types";
 import type { PersistenceProvider } from "./core/PersistenceProvider";
 import type { LisaStateRepository } from "./core/state/LisaStateRepository";
-import type { DiscordEventController } from "./clients/discord/controller/DiscordEventController";
+import type { DiscordEventController } from "./clients/discord/DiscordEventController";
 import { isNil } from "lodash";
 import type { DiscordClient } from "./clients/discord/DiscordClient";
 import type { StateController } from "./core/state/StateController";

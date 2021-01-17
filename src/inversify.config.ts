@@ -5,12 +5,12 @@ import { StatusService } from "./core/status/StatusService";
 import { StatusTextService } from "./core/status/StatusTextService";
 import { StateController } from "./core/state/StateController";
 import type { CommandoClientOptions } from "discord.js-commando";
-import { DiscordCommandController } from "./clients/discord/controller/DiscordCommandController";
+import { DiscordCommandController } from "./clients/discord/DiscordCommandController";
 import { DISCORD_CLIENT_CONFIG } from "./config";
 import { TickController } from "./core/time/TickController";
-import { DiscordService } from "./clients/discord/service/DiscordService";
+import { DiscordService } from "./clients/discord/DiscordService";
 import { DiscordClient } from "./clients/discord/DiscordClient";
-import { DiscordEventController } from "./clients/discord/controller/DiscordEventController";
+import { DiscordEventController } from "./clients/discord/DiscordEventController";
 import { PersistenceProvider } from "./core/PersistenceProvider";
 import { StateStorageController } from "./core/state/StateStorageController";
 
