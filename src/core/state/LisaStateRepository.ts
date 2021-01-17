@@ -5,6 +5,7 @@ import type { LisaDeathCause, LisaState } from "./LisaState";
 import { inject, injectable } from "inversify";
 import type { PersistenceProvider } from "../PersistenceProvider";
 import { TYPES } from "../../types";
+import { rootLogger } from "../../logger";
 
 interface LisaStateRow {
     readonly current_water: number;
@@ -22,6 +23,9 @@ interface LisaStateRow {
 
 @injectable()
 export class LisaStateRepository {
+    private static readonly logger = rootLogger.child({
+        target: LisaStateRepository,
+    });
     private readonly storageProvider: PersistenceProvider;
 
     constructor(
@@ -40,18 +44,27 @@ export class LisaStateRepository {
 
     public async insert(state: LisaState): Promise<void> {
         const database = this.storageProvider.getDb()!;
-
+        const serializedParams = this.serializeStateToParameters(state);
+        LisaStateRepository.logger.silly(
+            "Inserting lisa state.",
+            serializedParams
+        );
         await database.run(
             "INSERT INTO lisa_state(current_water, current_happiness, birth_timestamp, birth_initiator, death_timestamp, death_initiator, death_cause, best_lifetime_duration) VALUES(:current_water, :current_happiness, :birth_timestamp, :birth_initiator, :death_timestamp, :death_initiator,:death_cause, :best_lifetime_duration)",
-            this.serializeStateToParameters(state)
+            serializedParams
         );
     }
 
     public async update(state: LisaState): Promise<void> {
         const database = this.storageProvider.getDb()!;
+        const serializedParams = this.serializeStateToParameters(state);
+        LisaStateRepository.logger.silly(
+            "Updating lisa state.",
+            serializedParams
+        );
         await database.run(
             "UPDATE lisa_state SET current_water=:current_water, current_happiness=:current_happiness, birth_timestamp=:birth_timestamp, birth_initiator=:birth_initiator, death_timestamp=:death_timestamp, death_initiator=:death_initiator, death_cause=:death_cause, best_lifetime_duration=:best_lifetime_duration WHERE id = 1",
-            this.serializeStateToParameters(state)
+            serializedParams
         );
     }
 
@@ -63,6 +76,7 @@ export class LisaStateRepository {
         if (lisaStateRow == null) {
             throw new TypeError("No state found!");
         }
+        LisaStateRepository.logger.silly("Loading lisa state.", lisaStateRow);
         return this.deserializeState(lisaStateRow);
     }
 
@@ -73,11 +87,10 @@ export class LisaStateRepository {
             ":current_water": state.status.water,
             ":current_happiness": state.status.happiness,
 
-            ":birth_timestamp": state.birth.timestamp.getMilliseconds(),
+            ":birth_timestamp": state.birth.timestamp.getTime(),
             ":birth_initiator": state.birth.initiator,
 
-            ":death_timestamp":
-                state.death.timestamp?.getMilliseconds() ?? null,
+            ":death_timestamp": state.death.timestamp?.getTime() ?? null,
             ":death_initiator": state.death.initiator,
             ":death_cause": state.death.cause,
 
