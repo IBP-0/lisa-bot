@@ -8,10 +8,16 @@ import type { StateStorageController } from "./core/controller/StateStorageContr
 import type { TickController } from "./core/controller/TickController";
 import { rootLogger } from "./logger";
 import { TYPES } from "./types";
+import type { StorageProvider } from "./core/StorageProvider";
 
 const logger = rootLogger.child({ target: "main" });
 
 const startLisaMainClient = async (): Promise<void> => {
+    const storageProvider = container.get<StorageProvider>(
+        TYPES.StorageProvider
+    );
+    await storageProvider.init();
+
     const lisaStateController = container.get<StateController>(
         TYPES.LisaStateController
     );
@@ -43,6 +49,8 @@ const startLisaMainClient = async (): Promise<void> => {
 };
 const startLisaDiscordClient = async (): Promise<void> => {
     const lisaDiscordClient = container.get<DiscordClient>(TYPES.DiscordClient);
+    await lisaDiscordClient.init();
+
     const discordToken = process.env.DISCORD_TOKEN;
     if (isNil(discordToken)) {
         throw new Error("No secret set.");

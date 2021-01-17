@@ -1,6 +1,6 @@
 import type { Message, PresenceData } from "discord.js";
 import type { CommandoClientOptions } from "discord.js-commando";
-import { CommandoClient } from "discord.js-commando";
+import { CommandoClient, SQLiteProvider } from "discord.js-commando";
 import { Observable } from "rxjs";
 import { AboutCommand } from "./commands/core/AboutCommand";
 import { InviteCommand } from "./commands/core/InviteCommand";
@@ -17,27 +17,35 @@ import { StatusCommand } from "./commands/lisa/StatusCommand";
 import { WaterCommand } from "./commands/lisa/WaterCommand";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../types";
+import type { StorageProvider } from "../../core/StorageProvider";
 
 @injectable()
 class DiscordClient {
     private readonly commandoClient: CommandoClient;
+    private readonly storageProvider: StorageProvider;
 
     constructor(
-        @inject(TYPES.DiscordConfig) discordConfig: CommandoClientOptions
+        @inject(TYPES.DiscordConfig) discordConfig: CommandoClientOptions,
+        @inject(TYPES.StorageProvider) storageProvider: StorageProvider
     ) {
+        this.storageProvider = storageProvider;
         this.commandoClient = new CommandoClient(discordConfig);
+    }
 
-        const commandRegistry = this.commandoClient.registry;
+    public async init(): Promise<void> {
+        await this.commandoClient.setProvider(
+            new SQLiteProvider(this.storageProvider.getDb())
+        );
 
         /*
          * Types
          */
-        commandRegistry.registerDefaultTypes();
+        this.commandoClient.registry.registerDefaultTypes();
 
         /*
          * Groups
          */
-        commandRegistry.registerGroups([
+        this.commandoClient.registry.registerGroups([
             ["util", "Utility"],
             ["lisa", "Lisa"],
         ]);
@@ -45,7 +53,7 @@ class DiscordClient {
         /*
          * Commands
          */
-        commandRegistry.registerDefaultCommands({
+        this.commandoClient.registry.registerDefaultCommands({
             help: true,
             eval: false,
             ping: true,
@@ -53,7 +61,7 @@ class DiscordClient {
             commandState: false,
             unknownCommand: false,
         });
-        commandRegistry.registerCommands([
+        this.commandoClient.registry.registerCommands([
             AboutCommand,
             InviteCommand,
             ServersCommand,

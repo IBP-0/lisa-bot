@@ -1,5 +1,7 @@
 export const TYPES = {
     LisaStateStorageService: Symbol.for("LisaStateStorageService"),
+    StorageProvider: Symbol.for("StorageProvider"),
+
     JsonStorageService: Symbol.for("JsonStorageService"),
     LisaStatusService: Symbol.for("LisaStatusService"),
     LisaTextService: Symbol.for("LisaTextService"),

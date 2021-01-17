@@ -13,12 +13,15 @@ import { TickController } from "./core/controller/TickController";
 import { DiscordService } from "./clients/discord/service/DiscordService";
 import { DiscordClient } from "./clients/discord/DiscordClient";
 import { DiscordEventController } from "./clients/discord/controller/DiscordEventController";
+import { StorageProvider } from "./core/StorageProvider";
 
 export const container = new Container();
 
 container
     .bind<StateStorageService>(TYPES.LisaStateStorageService)
     .to(StateStorageService);
+container.bind<StorageProvider>(TYPES.StorageProvider).to(StorageProvider);
+
 container
     .bind<JsonStorageService>(TYPES.JsonStorageService)
     .to(JsonStorageService);
