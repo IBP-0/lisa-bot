@@ -14,6 +14,7 @@ class DiscordCommandController {
     private static readonly logger = rootLogger.child({
         target: DiscordCommandController,
     });
+    private static readonly DISCORD_USER_INITIATOR = "Discord user";
 
     private readonly lisaStateController: StateController;
     private readonly lisaStatusService: StatusService;
@@ -49,14 +50,13 @@ class DiscordCommandController {
             return sample(textDead)!;
         }
 
-        const byUser = this.lisaDiscordService.getFullUserName(author);
         DiscordCommandController.logger.info(
-            `Discord user '${byUser}' modified status; water modifier ${waterModifier}, happiness modifier ${happinessModifier}.`
+            `Discord user modified status; water modifier ${waterModifier}, happiness modifier ${happinessModifier}.`
         );
         this.lisaStateController.modifyLisaStatus(
             waterModifier,
             happinessModifier,
-            byUser
+            DiscordCommandController.DISCORD_USER_INITIATOR
         );
 
         return [sample(textSuccess)!, this.createStatusText()].join("\n");
@@ -79,7 +79,7 @@ class DiscordCommandController {
 
         this.lisaStateController.killLisa(
             cause,
-            this.lisaDiscordService.getFullUserName(author)
+            DiscordCommandController.DISCORD_USER_INITIATOR
         );
 
         return [sample(textSuccess)!, this.createStatusText()].join("\n");
@@ -98,7 +98,7 @@ class DiscordCommandController {
 
         const wasAlive = this.isAlive();
         this.lisaStateController.replantLisa(
-            this.lisaDiscordService.getFullUserName(author)
+            DiscordCommandController.DISCORD_USER_INITIATOR
         );
 
         return sample(wasAlive ? textWasAlive : textWasDead)!;

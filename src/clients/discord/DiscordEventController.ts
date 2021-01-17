@@ -24,7 +24,7 @@ class DiscordEventController {
     private static readonly PRESENCE_UPDATE_THROTTLE_TIMEOUT = 10000;
     private static readonly MESSAGE_THROTTLE_TIMEOUT = 1000;
     private static readonly MESSAGE_HAPPINESS_MODIFIER = 0.25;
-    private static readonly USER_DISCORD_ACTIVITY = "Discord activity";
+    private static readonly DISCORD_ACTIVITY_INITIATOR = "Discord activity";
 
     private readonly lisaStateController: StateController;
     private readonly lisaDiscordClient: DiscordClient;
@@ -67,7 +67,7 @@ class DiscordEventController {
         this.lisaStateController.modifyLisaStatus(
             0,
             DiscordEventController.MESSAGE_HAPPINESS_MODIFIER,
-            DiscordEventController.USER_DISCORD_ACTIVITY
+            DiscordEventController.DISCORD_ACTIVITY_INITIATOR
         );
     }
 
