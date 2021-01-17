@@ -30,7 +30,6 @@
     "dependencies": {
         "discord.js": "github:discordjs/discord.js#8a7abc9f06d44bf693e35a615bb6ba2c3eb1d6e7",
         "discord.js-commando": "github:discordjs/Commando#198d7604e3725ee88dceab9b5f296edb1b7580a5",
-        "fs-extra": "^9.0.1",
         "inversify": "^5.0.5",
         "lightdash": "^13.0.0",
         "lodash": "^4.17.20",
@@ -42,7 +41,6 @@
         "winston": "^3.3.3"
     },
     "devDependencies": {
-        "@types/fs-extra": "^9.0.6",
         "@types/jasmine": "^3.6.2",
         "@types/lodash": "^4.14.167",
         "@types/node": "^14.14.21",

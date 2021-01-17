@@ -3,7 +3,7 @@ import type { Duration } from "moment";
 import { duration } from "moment";
 import { interval, Subject } from "rxjs";
 import { rootLogger } from "../../logger";
-import type { LisaState } from "../LisaState";
+import type { LisaState } from "./LisaState";
 import {
     HAPPINESS_INITIAL,
     HAPPINESS_MAX,
@@ -12,8 +12,8 @@ import {
     WATER_INITIAL,
     WATER_MAX,
     WATER_MIN,
-} from "../LisaState";
-import type { StatusService } from "../service/StatusService";
+} from "./LisaState";
+import type { StatusService } from "../status/StatusService";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../types";
 
@@ -189,7 +189,7 @@ class StateController {
         );
         if (lifetime > this.state.bestLifetime) {
             StateController.logger.silly(
-                `Increasing high score from ${this.state.bestLifetime.milliseconds()} to ${lifetime.milliseconds()}.`
+                `Increasing high score from ${this.state.bestLifetime.asMilliseconds()} to ${lifetime.asMilliseconds()}.`
             );
             this.state.bestLifetime = lifetime;
         }

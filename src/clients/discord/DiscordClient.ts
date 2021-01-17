@@ -17,25 +17,36 @@ import { StatusCommand } from "./commands/lisa/StatusCommand";
 import { WaterCommand } from "./commands/lisa/WaterCommand";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../types";
-import type { StorageProvider } from "../../core/StorageProvider";
+import type { PersistenceProvider } from "../../core/PersistenceProvider";
+import { rootLogger } from "../../logger";
 
 @injectable()
 class DiscordClient {
+    private static readonly logger = rootLogger.child({
+        target: DiscordClient,
+    });
+
     private readonly commandoClient: CommandoClient;
-    private readonly storageProvider: StorageProvider;
+    private readonly persistenceProvider: PersistenceProvider;
 
     constructor(
         @inject(TYPES.DiscordConfig) discordConfig: CommandoClientOptions,
-        @inject(TYPES.StorageProvider) storageProvider: StorageProvider
+        @inject(TYPES.PersistenceProvider)
+        persistenceProvider: PersistenceProvider
     ) {
-        this.storageProvider = storageProvider;
+        this.persistenceProvider = persistenceProvider;
         this.commandoClient = new CommandoClient(discordConfig);
     }
 
-    public async init(): Promise<void> {
-        await this.commandoClient.setProvider(
-            new SQLiteProvider(this.storageProvider.getDb())
-        );
+    public init(): void {
+        this.commandoClient
+            .setProvider(new SQLiteProvider(this.persistenceProvider.getDb()!))
+            .catch((e) =>
+                DiscordClient.logger.error(
+                    "Could not bind storage provider.",
+                    e
+                )
+            );
 
         /*
          * Types

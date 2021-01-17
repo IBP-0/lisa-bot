@@ -1,8 +1,8 @@
 import type { Duration } from "moment";
 import { duration } from "moment";
 import { rootLogger } from "../../logger";
-import type { LisaState } from "../LisaState";
-import { HAPPINESS_INITIAL, WATER_INITIAL } from "../LisaState";
+import type { LisaState } from "../state/LisaState";
+import { HAPPINESS_INITIAL, WATER_INITIAL } from "../state/LisaState";
 import { injectable } from "inversify";
 
 @injectable()

@@ -2,7 +2,7 @@ import type { Message } from "discord.js";
 import type { CommandoClient, CommandoMessage } from "discord.js-commando";
 import { Command } from "discord.js-commando";
 import { container } from "../../../../inversify.config";
-import { LisaDeathCause } from "../../../../core/LisaState";
+import { LisaDeathCause } from "../../../../core/state/LisaState";
 import type { DiscordCommandController } from "../../controller/DiscordCommandController";
 import { TYPES } from "../../../../types";
 
