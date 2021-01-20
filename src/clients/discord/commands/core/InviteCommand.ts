@@ -15,11 +15,13 @@ class InviteCommand extends Command {
     }
 
     async run(message: CommandoMessage): Promise<Message | Message[]> {
-        const invite = await this.client.generateInvite([
-            Permissions.FLAGS.SEND_MESSAGES,
-            Permissions.FLAGS.EMBED_LINKS,
-            Permissions.FLAGS.ATTACH_FILES,
-        ]);
+        const invite = await this.client.generateInvite({
+            permissions: [
+                Permissions.FLAGS.SEND_MESSAGES,
+                Permissions.FLAGS.EMBED_LINKS,
+                Permissions.FLAGS.ATTACH_FILES,
+            ],
+        });
         return message.say(`I'm always happy to join new servers!
 If you want me to join your server, follow this link:
 ${invite}`);

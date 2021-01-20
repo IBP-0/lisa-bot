@@ -28,8 +28,8 @@
     "repository": "https://github.com/FelixRilling/lisa-bot",
     "license": "MIT",
     "dependencies": {
-        "discord.js": "github:discordjs/discord.js#8a7abc9f06d44bf693e35a615bb6ba2c3eb1d6e7",
-        "discord.js-commando": "github:discordjs/Commando#198d7604e3725ee88dceab9b5f296edb1b7580a5",
+        "discord.js": "github:discordjs/discord.js#c4c817116f868cedb4ec20bcbf90b9b3d382621e",
+        "discord.js-commando": "github:discordjs/Commando#84213a7ec0b67184fb5e8c228d1a6d6bbbd0dea9",
         "inversify": "^5.0.5",
         "lightdash": "^13.0.0",
         "lodash": "^4.17.20",
