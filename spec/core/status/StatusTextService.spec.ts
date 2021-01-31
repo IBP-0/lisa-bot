@@ -1,7 +1,10 @@
 import "reflect-metadata";
 import { duration } from "moment";
 import type { LisaState } from "../../../src/core/state/LisaState";
-import { HAPPINESS_INITIAL, WATER_INITIAL } from "../../../src/core/state/LisaState";
+import {
+    HAPPINESS_INITIAL,
+    WATER_INITIAL,
+} from "../../../src/core/state/LisaState";
 import { StatusService } from "../../../src/core/status/StatusService";
 import type { StatusTextService } from "../../../src/core/status/StatusTextService";
 import { container } from "../../../src/inversify.config";

@@ -4,7 +4,7 @@ import { rootLogger } from "../../logger";
 import type { LisaState } from "./LisaState";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../types";
-import type { LisaStateRepository } from "./LisaStateRepository";
+import { LisaStateRepository } from "./LisaStateRepository";
 
 @injectable()
 class StateStorageController {

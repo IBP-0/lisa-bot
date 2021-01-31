@@ -1,6 +1,10 @@
 import type { Message, PresenceData } from "discord.js";
-import type { CommandoClientOptions } from "discord.js-commando";
-import { CommandoClient, SQLiteProvider } from "discord.js-commando";
+import {
+    CommandoClientOptions,
+    CommandoClient,
+    SQLiteProvider,
+} from "discord.js-commando";
+
 import { Observable } from "rxjs";
 import { AboutCommand } from "./commands/core/AboutCommand";
 import { InviteCommand } from "./commands/core/InviteCommand";
@@ -17,7 +21,7 @@ import { StatusCommand } from "./commands/lisa/StatusCommand";
 import { WaterCommand } from "./commands/lisa/WaterCommand";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../types";
-import type { PersistenceProvider } from "../../core/PersistenceProvider";
+import { PersistenceProvider } from "../../core/PersistenceProvider";
 import { rootLogger } from "../../logger";
 
 @injectable()

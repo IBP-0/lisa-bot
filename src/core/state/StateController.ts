@@ -13,7 +13,7 @@ import {
     WATER_MAX,
     WATER_MIN,
 } from "./LisaState";
-import type { StatusService } from "../status/StatusService";
+import { StatusService } from "../status/StatusService";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../types";
 
@@ -85,7 +85,9 @@ class StateController {
         this.stateChanged();
     }
 
-    public replantLisa(initiator: string = StateController.INITIATOR_SYSTEM): void {
+    public replantLisa(
+        initiator: string = StateController.INITIATOR_SYSTEM
+    ): void {
         StateController.logger.info(`'${initiator}' replanted lisa.`);
 
         this.performReplant(initiator);
@@ -133,7 +135,11 @@ class StateController {
     }
 
     private performKill(cause: LisaDeathCause, initiator: string): void {
-        this.state.death = { timestamp: new Date(), initiator: initiator, cause };
+        this.state.death = {
+            timestamp: new Date(),
+            initiator: initiator,
+            cause,
+        };
     }
 
     private performModifyStatus(

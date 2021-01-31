@@ -3,7 +3,7 @@ import { duration } from "moment";
 import type { LisaDeathCause, LisaState } from "./LisaState";
 
 import { inject, injectable } from "inversify";
-import type { PersistenceProvider } from "../PersistenceProvider";
+import { PersistenceProvider } from "../PersistenceProvider";
 import { TYPES } from "../../types";
 import { rootLogger } from "../../logger";
 

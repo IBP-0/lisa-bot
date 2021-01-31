@@ -1,5 +1,5 @@
 import type { LisaState } from "../state/LisaState";
-import type { StatusService } from "./StatusService";
+import { StatusService } from "./StatusService";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../types";
 
