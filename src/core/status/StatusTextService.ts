@@ -5,12 +5,12 @@ import { TYPES } from "../../types";
 
 @injectable()
 class StatusTextService {
-    private readonly lisaStatusService: StatusService;
+    readonly #lisaStatusService: StatusService;
 
     constructor(
         @inject(TYPES.LisaStatusService) lisaStatusService: StatusService
     ) {
-        this.lisaStatusService = lisaStatusService;
+        this.#lisaStatusService = lisaStatusService;
     }
 
     public createStatusText(state: LisaState): string {
@@ -18,8 +18,8 @@ class StatusTextService {
         const scoreText = this.createScoreText(state);
         let text: string;
 
-        if (!this.lisaStatusService.isAlive(state)) {
-            const timeSinceDeathLabel = this.lisaStatusService
+        if (!this.#lisaStatusService.isAlive(state)) {
+            const timeSinceDeathLabel = this.#lisaStatusService
                 .getTimeSinceDeath(state)!
                 .humanize();
 
@@ -37,11 +37,11 @@ class StatusTextService {
     }
 
     public createStatusLabel(state: LisaState): string {
-        if (!this.lisaStatusService.isAlive(state)) {
+        if (!this.#lisaStatusService.isAlive(state)) {
             return "is dead";
         }
 
-        const relativeIndex = this.lisaStatusService.calculateRelativeIndex(
+        const relativeIndex = this.#lisaStatusService.calculateRelativeIndex(
             state
         );
         if (relativeIndex > 0.666) {
@@ -53,11 +53,11 @@ class StatusTextService {
     }
 
     private createScoreText(state: LisaState): string {
-        const lifetimeLabel = this.lisaStatusService
+        const lifetimeLabel = this.#lisaStatusService
             .getLifetime(state)
             .humanize();
         const highScoreLabel = state.bestLifetimeDuration.humanize();
-        const currentLabel = this.lisaStatusService.isAlive(state)
+        const currentLabel = this.#lisaStatusService.isAlive(state)
             ? "Current lifetime"
             : "Lifetime";
 

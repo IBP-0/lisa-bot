@@ -25,15 +25,16 @@ class StateController {
 
     private static readonly INITIATOR_SYSTEM = "System";
     private static readonly BEST_LIFETIME_CHECK_TIMEOUT = 5000;
+
     public readonly stateChangeSubject: Subject<LisaState>;
-    private readonly lisaStatusService: StatusService;
-    private state: LisaState;
+    readonly #lisaStatusService: StatusService;
+    #state: LisaState;
 
     constructor(
         @inject(TYPES.LisaStatusService) lisaStatusService: StatusService
     ) {
-        this.lisaStatusService = lisaStatusService;
-        this.state = StateController.createNewLisaState(
+        this.#lisaStatusService = lisaStatusService;
+        this.#state = StateController.createNewLisaState(
             StateController.INITIATOR_SYSTEM,
             duration(0)
         );
@@ -72,7 +73,7 @@ class StateController {
      * @return copy of the current state.
      */
     public getStateCopy(): LisaState {
-        return cloneDeep(this.state);
+        return cloneDeep(this.#state);
     }
 
     /**
@@ -81,7 +82,7 @@ class StateController {
      * @param state State to load.
      */
     public loadState(state: LisaState): void {
-        this.state = state;
+        this.#state = state;
         this.stateChanged();
     }
 
@@ -98,7 +99,7 @@ class StateController {
         cause: LisaDeathCause,
         initiator: string = StateController.INITIATOR_SYSTEM
     ): void {
-        if (!this.lisaStatusService.isAlive(this.getStateCopy())) {
+        if (!this.#lisaStatusService.isAlive(this.getStateCopy())) {
             StateController.logger.debug("Lisa is already dead, skip kill.");
             return;
         }
@@ -114,7 +115,7 @@ class StateController {
         happinessModifier: number,
         initiator: string = StateController.INITIATOR_SYSTEM
     ): void {
-        if (!this.lisaStatusService.isAlive(this.getStateCopy())) {
+        if (!this.#lisaStatusService.isAlive(this.getStateCopy())) {
             StateController.logger.debug("Lisa is dead, skip status change.");
             return;
         }
@@ -128,14 +129,14 @@ class StateController {
     }
 
     private performReplant(initiator: string): void {
-        this.state = StateController.createNewLisaState(
+        this.#state = StateController.createNewLisaState(
             initiator,
-            this.state.bestLifetimeDuration
+            this.#state.bestLifetimeDuration
         );
     }
 
     private performKill(cause: LisaDeathCause, initiator: string): void {
-        this.state.death = {
+        this.#state.death = {
             timestamp: new Date(),
             initiator: initiator,
             cause,
@@ -147,36 +148,48 @@ class StateController {
         happinessModifier: number,
         initiator: string
     ): void {
-        this.state.status.water += waterModifier;
-        this.state.status.happiness += happinessModifier;
+        this.#state.status.water += waterModifier;
+        this.#state.status.happiness += happinessModifier;
 
         this.checkStats(initiator);
     }
 
     private checkStats(initiator: string): void {
-        if (this.state.status.water > WATER_MAX) {
+        if (this.#state.status.water > WATER_MAX) {
             StateController.logger.silly(
-                `Water level ${this.state.status.water} is above limit of ${WATER_MAX} -> ${LisaDeathCause.DROWNING}.`
+                `Water level ${
+                    this.#state.status.water
+                } is above limit of ${WATER_MAX} -> ${LisaDeathCause.DROWNING}.`
             );
 
             this.performKill(LisaDeathCause.DROWNING, initiator);
-        } else if (this.state.status.water < WATER_MIN) {
+        } else if (this.#state.status.water < WATER_MIN) {
             StateController.logger.silly(
-                `Water level ${this.state.status.water} is below limit of ${WATER_MIN} -> ${LisaDeathCause.DEHYDRATION}.`
+                `Water level ${
+                    this.#state.status.water
+                } is below limit of ${WATER_MIN} -> ${
+                    LisaDeathCause.DEHYDRATION
+                }.`
             );
 
             this.performKill(LisaDeathCause.DEHYDRATION, initiator);
         }
 
-        if (this.state.status.happiness > HAPPINESS_MAX) {
+        if (this.#state.status.happiness > HAPPINESS_MAX) {
             StateController.logger.silly(
-                `Happiness level ${this.state.status.happiness} is above limit of ${HAPPINESS_MAX} -> reducing to limit.`
+                `Happiness level ${
+                    this.#state.status.happiness
+                } is above limit of ${HAPPINESS_MAX} -> reducing to limit.`
             );
 
-            this.state.status.happiness = HAPPINESS_MAX;
-        } else if (this.state.status.happiness < HAPPINESS_MIN) {
+            this.#state.status.happiness = HAPPINESS_MAX;
+        } else if (this.#state.status.happiness < HAPPINESS_MIN) {
             StateController.logger.silly(
-                `Happiness level ${this.state.status.happiness} is below limit of ${HAPPINESS_MIN} -> ${LisaDeathCause.SADNESS}.`
+                `Happiness level ${
+                    this.#state.status.happiness
+                } is below limit of ${HAPPINESS_MIN} -> ${
+                    LisaDeathCause.SADNESS
+                }.`
             );
 
             this.performKill(LisaDeathCause.SADNESS, initiator);
@@ -190,14 +203,14 @@ class StateController {
     }
 
     private updateBestLifetimeIfRequired(): void {
-        const lifetime = this.lisaStatusService.getLifetime(
+        const lifetime = this.#lisaStatusService.getLifetime(
             this.getStateCopy()
         );
-        if (lifetime > this.state.bestLifetimeDuration) {
+        if (lifetime > this.#state.bestLifetimeDuration) {
             StateController.logger.silly(
-                `Increasing high score from ${this.state.bestLifetimeDuration.asMilliseconds()} to ${lifetime.asMilliseconds()}.`
+                `Increasing high score from ${this.#state.bestLifetimeDuration.asMilliseconds()} to ${lifetime.asMilliseconds()}.`
             );
-            this.state.bestLifetimeDuration = lifetime;
+            this.#state.bestLifetimeDuration = lifetime;
         }
     }
 }

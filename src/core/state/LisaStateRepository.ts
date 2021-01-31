@@ -26,16 +26,17 @@ export class LisaStateRepository {
     private static readonly logger = rootLogger.child({
         target: LisaStateRepository,
     });
-    private readonly storageProvider: PersistenceProvider;
+
+    readonly #storageProvider: PersistenceProvider;
 
     constructor(
         @inject(TYPES.PersistenceProvider) storageProvider: PersistenceProvider
     ) {
-        this.storageProvider = storageProvider;
+        this.#storageProvider = storageProvider;
     }
 
     public async count(): Promise<number> {
-        const database = this.storageProvider.getDb()!;
+        const database = this.#storageProvider.getDb()!;
         const countResult = await database.get<{ "COUNT(*)": number }>(
             "SELECT COUNT(*) FROM lisa_state"
         );
@@ -43,7 +44,7 @@ export class LisaStateRepository {
     }
 
     public async insert(state: LisaState): Promise<void> {
-        const database = this.storageProvider.getDb()!;
+        const database = this.#storageProvider.getDb()!;
         const serializedParams = this.serializeStateToParameters(state);
         LisaStateRepository.logger.silly(
             "Inserting lisa state.",
@@ -56,7 +57,7 @@ export class LisaStateRepository {
     }
 
     public async update(state: LisaState): Promise<void> {
-        const database = this.storageProvider.getDb()!;
+        const database = this.#storageProvider.getDb()!;
         const serializedParams = this.serializeStateToParameters(state);
         LisaStateRepository.logger.silly(
             "Updating lisa state.",
@@ -69,7 +70,7 @@ export class LisaStateRepository {
     }
 
     public async load(): Promise<LisaState> {
-        const database = this.storageProvider.getDb()!;
+        const database = this.#storageProvider.getDb()!;
         const lisaStateRow = await database.get<LisaStateRow>(
             "SELECT current_water, current_happiness, birth_timestamp, birth_initiator, death_timestamp, death_initiator, death_cause, best_lifetime_duration FROM lisa_state WHERE id = 1"
         );

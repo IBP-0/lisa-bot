@@ -14,13 +14,13 @@ class StateStorageController {
         target: StateStorageController,
     });
 
-    private readonly lisaStateRepository: LisaStateRepository;
+    readonly #lisaStateRepository: LisaStateRepository;
 
     constructor(
         @inject(TYPES.LisaStateRepository)
         lisaStateRepository: LisaStateRepository
     ) {
-        this.lisaStateRepository = lisaStateRepository;
+        this.#lisaStateRepository = lisaStateRepository;
     }
 
     public bindStateChangeSubscription(
@@ -29,7 +29,7 @@ class StateStorageController {
         stateChangeSubject
             .pipe(throttleTime(StateStorageController.STORAGE_THROTTLE_TIMEOUT))
             .subscribe((state) => {
-                this.lisaStateRepository
+                this.#lisaStateRepository
                     .update(state)
                     .catch((e) =>
                         StateStorageController.logger.error(
