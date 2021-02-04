@@ -1,6 +1,6 @@
 {
     "name": "lisa-bot",
-    "version": "8.0.2",
+    "version": "9.0.0",
     "private": true,
     "description": "A discord bot with miscellaneous features",
     "main": "./dist/src/main.js",
