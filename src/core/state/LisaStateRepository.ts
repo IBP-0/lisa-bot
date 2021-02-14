@@ -44,7 +44,10 @@ export class LisaStateRepository {
         const countResult = await database.get<{ "COUNT(*)": number }>(
             "SELECT COUNT(*) FROM lisa_state"
         );
-        return countResult?.["COUNT(*)"] ?? 0;
+        if (countResult == null) {
+            throw new TypeError("Could not count rows!");
+        }
+        return countResult["COUNT(*)"];
     }
 
     public async insert(state: LisaState): Promise<void> {
@@ -119,8 +122,9 @@ export class LisaStateRepository {
         if (lisaStateRow == null) {
             throw new TypeError("No state found!");
         }
-        LisaStateRepository.logger.silly("Loading lisa state.", lisaStateRow);
-        return this.deserializeState(lisaStateRow);
+        const lisaState = this.deserializeState(lisaStateRow);
+        LisaStateRepository.logger.silly("Loading lisa state.", lisaState);
+        return lisaState;
     }
 
     private serializeStateToParameters(
