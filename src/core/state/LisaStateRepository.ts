@@ -52,10 +52,12 @@ export class LisaStateRepository {
 
     public async insert(state: LisaState): Promise<void> {
         const database = this.#storageProvider.getDb()!;
+        LisaStateRepository.logger.silly(
+            `Inserting lisa state: ${JSON.stringify(state)}.`
+        );
         const serializedParams = this.serializeStateToParameters(state);
         LisaStateRepository.logger.silly(
-            "Inserting lisa state.",
-            serializedParams
+            `Serialized lisa state: ${JSON.stringify(serializedParams)}.`
         );
         await database.run(
             `
@@ -72,14 +74,17 @@ export class LisaStateRepository {
                 ...serializedParams,
             }
         );
+        LisaStateRepository.logger.silly(`Inserted lisa state.`);
     }
 
     public async update(state: LisaState): Promise<void> {
         const database = this.#storageProvider.getDb()!;
+        LisaStateRepository.logger.silly(
+            `Updating lisa state: ${JSON.stringify(state)}.`
+        );
         const serializedParams = this.serializeStateToParameters(state);
         LisaStateRepository.logger.silly(
-            "Updating lisa state.",
-            serializedParams
+            `Serialized lisa state: ${JSON.stringify(serializedParams)}.`
         );
         await database.run(
             `
@@ -99,10 +104,13 @@ export class LisaStateRepository {
                 ...serializedParams,
             }
         );
+        LisaStateRepository.logger.silly(`Updated lisa state.`);
     }
 
     public async select(): Promise<LisaState> {
         const database = this.#storageProvider.getDb()!;
+
+        LisaStateRepository.logger.silly(`Loading lisa state.`);
         const lisaStateRow = await database.get<LisaStateRow>(
             `
                 SELECT id,
@@ -122,8 +130,13 @@ export class LisaStateRepository {
         if (lisaStateRow == null) {
             throw new TypeError("No state found!");
         }
+        LisaStateRepository.logger.silly(
+            `Deserializing lisa state: '${JSON.stringify(lisaStateRow)}'.`
+        );
         const lisaState = this.deserializeState(lisaStateRow);
-        LisaStateRepository.logger.silly("Loading lisa state.", lisaState);
+        LisaStateRepository.logger.silly(
+            `Loaded lisa state: '${JSON.stringify(lisaState)}'.`
+        );
         return lisaState;
     }
 
