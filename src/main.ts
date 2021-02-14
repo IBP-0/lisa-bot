@@ -30,7 +30,7 @@ const startLisaMainClient = async (): Promise<void> => {
     );
     if ((await lisaStateRepository.count()) != 0) {
         logger.info("Found stored Lisa state, loading it.");
-        lisaStateController.loadState(await lisaStateRepository.load());
+        lisaStateController.loadState(await lisaStateRepository.select());
     } else {
         logger.info("No stored state found, creating it.");
         await lisaStateRepository.insert(lisaStateController.getStateCopy());

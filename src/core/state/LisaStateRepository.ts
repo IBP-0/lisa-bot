@@ -8,6 +8,8 @@ import { TYPES } from "../../types";
 import { rootLogger } from "../../logger";
 
 interface LisaStateRow {
+    readonly id: number;
+
     readonly current_water: number;
     readonly current_happiness: number;
 
@@ -20,6 +22,8 @@ interface LisaStateRow {
 
     readonly best_lifetime_duration: number;
 }
+
+const GLOBAL_STATE_ID = 1;
 
 @injectable()
 export class LisaStateRepository {
@@ -51,8 +55,19 @@ export class LisaStateRepository {
             serializedParams
         );
         await database.run(
-            "INSERT INTO lisa_state(current_water, current_happiness, birth_timestamp, birth_initiator, death_timestamp, death_initiator, death_cause, best_lifetime_duration) VALUES(:current_water, :current_happiness, :birth_timestamp, :birth_initiator, :death_timestamp, :death_initiator,:death_cause, :best_lifetime_duration)",
-            serializedParams
+            `
+                INSERT INTO lisa_state(id, current_water, current_happiness, birth_timestamp,
+                                       birth_initiator,
+                                       death_timestamp, death_initiator, death_cause,
+                                       best_lifetime_duration)
+                VALUES (:id, :current_water, :current_happiness, :birth_timestamp, :birth_initiator,
+                        :death_timestamp,
+                        :death_initiator, :death_cause, :best_lifetime_duration)
+            `,
+            {
+                ":id": GLOBAL_STATE_ID,
+                ...serializedParams,
+            }
         );
     }
 
@@ -64,15 +79,42 @@ export class LisaStateRepository {
             serializedParams
         );
         await database.run(
-            "UPDATE lisa_state SET current_water=:current_water, current_happiness=:current_happiness, birth_timestamp=:birth_timestamp, birth_initiator=:birth_initiator, death_timestamp=:death_timestamp, death_initiator=:death_initiator, death_cause=:death_cause, best_lifetime_duration=:best_lifetime_duration WHERE id = 1",
-            serializedParams
+            `
+                UPDATE lisa_state
+                SET current_water=:current_water,
+                    current_happiness=:current_happiness,
+                    birth_timestamp=:birth_timestamp,
+                    birth_initiator=:birth_initiator,
+                    death_timestamp=:death_timestamp,
+                    death_initiator=:death_initiator,
+                    death_cause=:death_cause,
+                    best_lifetime_duration=:best_lifetime_duration
+                WHERE id = :id
+            `,
+            {
+                ":id": GLOBAL_STATE_ID,
+                ...serializedParams,
+            }
         );
     }
 
-    public async load(): Promise<LisaState> {
+    public async select(): Promise<LisaState> {
         const database = this.#storageProvider.getDb()!;
         const lisaStateRow = await database.get<LisaStateRow>(
-            "SELECT current_water, current_happiness, birth_timestamp, birth_initiator, death_timestamp, death_initiator, death_cause, best_lifetime_duration FROM lisa_state WHERE id = 1"
+            `
+                SELECT id,
+                       current_water,
+                       current_happiness,
+                       birth_timestamp,
+                       birth_initiator,
+                       death_timestamp,
+                       death_initiator,
+                       death_cause,
+                       best_lifetime_duration
+                FROM lisa_state
+                WHERE id = :id
+            `,
+            { ":id": GLOBAL_STATE_ID }
         );
         if (lisaStateRow == null) {
             throw new TypeError("No state found!");
