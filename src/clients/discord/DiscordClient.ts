@@ -1,7 +1,7 @@
 import type { Message, PresenceData } from "discord.js";
 import {
-    CommandoClientOptions,
     CommandoClient,
+    CommandoClientOptions,
     SQLiteProvider,
 } from "discord.js-commando";
 
@@ -92,6 +92,14 @@ class DiscordClient {
             MissyCommand,
             NiklasCommand,
         ]);
+
+        this.commandoClient.on("error", (err) =>
+            DiscordClient.logger.error(
+                `An unhandled error occurred: '${JSON.stringify(
+                    err
+                )}'. Attempting to continue.`
+            )
+        );
     }
 
     public async login(token: string): Promise<void> {
