@@ -1,27 +1,30 @@
 import { Container } from "inversify";
-import { StateStorageService } from "./core/service/StateStorageService";
+import { LisaStateRepository } from "./core/state/LisaStateRepository";
 import { TYPES } from "./types";
-import { JsonStorageService } from "./core/service/JsonStorageService";
-import { StatusService } from "./core/service/StatusService";
-import { StatusTextService } from "./core/service/StatusTextService";
-import { StateController } from "./core/controller/StateController";
-import { CommandoClientOptions } from "discord.js-commando";
-import { DiscordCommandController } from "./clients/discord/controller/DiscordCommandController";
+import { StatusService } from "./core/status/StatusService";
+import { StatusTextService } from "./core/status/StatusTextService";
+import { StateController } from "./core/state/StateController";
+import type { CommandoClientOptions } from "discord.js-commando";
+import { DiscordCommandController } from "./clients/discord/DiscordCommandController";
 import { DISCORD_CLIENT_CONFIG } from "./config";
-import { StateStorageController } from "./core/controller/StateStorageController";
-import { TickController } from "./core/controller/TickController";
-import { DiscordService } from "./clients/discord/service/DiscordService";
+import { TickController } from "./core/time/TickController";
+import { DiscordService } from "./clients/discord/DiscordService";
 import { DiscordClient } from "./clients/discord/DiscordClient";
-import { DiscordEventController } from "./clients/discord/controller/DiscordEventController";
+import { DiscordEventController } from "./clients/discord/DiscordEventController";
+import { PersistenceProvider } from "./core/PersistenceProvider";
+import { StateStorageController } from "./core/state/StateStorageController";
 
 export const container = new Container();
 
 container
-    .bind<StateStorageService>(TYPES.LisaStateStorageService)
-    .to(StateStorageService);
+    .bind<PersistenceProvider>(TYPES.PersistenceProvider)
+    .to(PersistenceProvider)
+    .inSingletonScope();
+
 container
-    .bind<JsonStorageService>(TYPES.JsonStorageService)
-    .to(JsonStorageService);
+    .bind<LisaStateRepository>(TYPES.LisaStateRepository)
+    .to(LisaStateRepository);
+
 container.bind<StatusService>(TYPES.LisaStatusService).to(StatusService);
 container.bind<StatusTextService>(TYPES.LisaTextService).to(StatusTextService);
 
@@ -30,12 +33,12 @@ container
     .to(StateController)
     .inSingletonScope();
 container
-    .bind<StateStorageController>(TYPES.LisaStateStorageController)
-    .to(StateStorageController)
-    .inSingletonScope();
-container
     .bind<TickController>(TYPES.LisaTickController)
     .to(TickController)
+    .inSingletonScope();
+container
+    .bind<StateStorageController>(TYPES.StateStorageController)
+    .to(StateStorageController)
     .inSingletonScope();
 
 container.bind<DiscordService>(TYPES.DiscordService).to(DiscordService);

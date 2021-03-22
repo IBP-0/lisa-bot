@@ -1,4 +1,4 @@
-import { CommandoClientOptions } from "discord.js-commando";
+import type { CommandoClientOptions } from "discord.js-commando";
 
 export const DISCORD_CLIENT_CONFIG: CommandoClientOptions = {
     commandPrefix: "$",

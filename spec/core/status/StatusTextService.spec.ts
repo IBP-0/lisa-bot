@@ -1,29 +1,29 @@
 import "reflect-metadata";
 import { duration } from "moment";
+import type { LisaState } from "../../../src/core/state/LisaState";
 import {
     HAPPINESS_INITIAL,
-    LisaState,
     WATER_INITIAL,
-} from "../../../src/core/LisaState";
-import { StatusService } from "../../../src/core/service/StatusService";
-import { StatusTextService } from "../../../src/core/service/StatusTextService";
+} from "../../../src/core/state/LisaState";
+import { StatusService } from "../../../src/core/status/StatusService";
+import type { StatusTextService } from "../../../src/core/status/StatusTextService";
 import { container } from "../../../src/inversify.config";
 import { TYPES } from "../../../src/types";
 
 const createState = (): LisaState => {
     return {
-        bestLifetime: duration(0),
+        bestLifetimeDuration: duration(0),
         status: {
             water: WATER_INITIAL,
             happiness: HAPPINESS_INITIAL,
         },
-        life: {
-            time: new Date(),
-            byUser: "none",
+        birth: {
+            timestamp: new Date(),
+            initiator: "none",
         },
         death: {
-            time: null,
-            byUser: null,
+            timestamp: null,
+            initiator: null,
             cause: null,
         },
     };

@@ -1,5 +1,6 @@
-import { Message } from "discord.js";
-import { Command, CommandoClient, CommandoMessage } from "discord.js-commando";
+import type { Message } from "discord.js";
+import type { CommandoClient, CommandoMessage } from "discord.js-commando";
+import { Command } from "discord.js-commando";
 
 const IMAGE_LINK =
     "http://static.tumblr.com/df323b732955715fe3fb5a506999afc7/" +

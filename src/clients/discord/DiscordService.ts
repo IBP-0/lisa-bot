@@ -1,12 +1,8 @@
-import { User } from "discord.js";
+import type { User } from "discord.js";
 import { injectable } from "inversify";
 
 @injectable()
 class DiscordService {
-    public getFullUserName(user: User): string {
-        return `${user.username}#${user.discriminator}`;
-    }
-
     public isUserAllowed(
         allowedUserIds: string[] | null,
         author: User

@@ -1,5 +1,10 @@
-import { Message, PresenceData } from "discord.js";
-import { CommandoClient, CommandoClientOptions } from "discord.js-commando";
+import type { Message, PresenceData } from "discord.js";
+import {
+    CommandoClientOptions,
+    CommandoClient,
+    SQLiteProvider,
+} from "discord.js-commando";
+
 import { Observable } from "rxjs";
 import { AboutCommand } from "./commands/core/AboutCommand";
 import { InviteCommand } from "./commands/core/InviteCommand";
@@ -16,43 +21,60 @@ import { StatusCommand } from "./commands/lisa/StatusCommand";
 import { WaterCommand } from "./commands/lisa/WaterCommand";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../types";
+import { PersistenceProvider } from "../../core/PersistenceProvider";
+import { rootLogger } from "../../logger";
 
 @injectable()
 class DiscordClient {
+    private static readonly logger = rootLogger.child({
+        target: DiscordClient,
+    });
+
     private readonly commandoClient: CommandoClient;
+    private readonly persistenceProvider: PersistenceProvider;
 
     constructor(
-        @inject(TYPES.DiscordConfig) discordConfig: CommandoClientOptions
+        @inject(TYPES.DiscordConfig) discordConfig: CommandoClientOptions,
+        @inject(TYPES.PersistenceProvider)
+        persistenceProvider: PersistenceProvider
     ) {
+        this.persistenceProvider = persistenceProvider;
         this.commandoClient = new CommandoClient(discordConfig);
+    }
 
-        const commandRegistry = this.commandoClient.registry;
+    public init(): void {
+        this.commandoClient
+            .setProvider(new SQLiteProvider(this.persistenceProvider.getDb()!))
+            .catch((e) =>
+                DiscordClient.logger.error(
+                    "Could not bind storage provider.",
+                    e
+                )
+            );
 
         /*
          * Types
          */
-        commandRegistry.registerDefaultTypes();
+        this.commandoClient.registry.registerDefaultTypes();
 
         /*
          * Groups
          */
-        commandRegistry.registerGroups([
-            ["util", "Utility"],
-            ["lisa", "Lisa"],
-        ]);
+        this.commandoClient.registry.registerDefaultGroups();
+        this.commandoClient.registry.registerGroup("lisa", "Lisa");
 
         /*
          * Commands
          */
-        commandRegistry.registerDefaultCommands({
+        this.commandoClient.registry.registerDefaultCommands({
             help: true,
             eval: false,
             ping: true,
-            prefix: false,
+            prefix: true,
             commandState: false,
             unknownCommand: false,
         });
-        commandRegistry.registerCommands([
+        this.commandoClient.registry.registerCommands([
             AboutCommand,
             InviteCommand,
             ServersCommand,

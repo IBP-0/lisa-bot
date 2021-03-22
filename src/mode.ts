@@ -1,3 +1,3 @@
-const isProductionMode = (): boolean => process.env.NODE_ENV !== "development";
+const DEVELOPMENT = process.env.NODE_ENV === "development";
 
-export { isProductionMode };
+export { DEVELOPMENT };

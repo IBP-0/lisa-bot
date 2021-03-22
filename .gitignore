@@ -35,3 +35,7 @@ tsconfig.*.tsbuildinfo
 # Build Output files
 dist/
 data/
+
+
+### CUSTOM
+deploy.sh

@@ -1,16 +1,16 @@
-import { LisaState } from "../LisaState";
+import type { LisaState } from "../state/LisaState";
 import { StatusService } from "./StatusService";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../types";
 
 @injectable()
 class StatusTextService {
-    private readonly lisaStatusService: StatusService;
+    readonly #lisaStatusService: StatusService;
 
     constructor(
         @inject(TYPES.LisaStatusService) lisaStatusService: StatusService
     ) {
-        this.lisaStatusService = lisaStatusService;
+        this.#lisaStatusService = lisaStatusService;
     }
 
     public createStatusText(state: LisaState): string {
@@ -18,13 +18,13 @@ class StatusTextService {
         const scoreText = this.createScoreText(state);
         let text: string;
 
-        if (!this.lisaStatusService.isAlive(state)) {
-            const timeSinceDeathLabel = this.lisaStatusService
+        if (!this.#lisaStatusService.isAlive(state)) {
+            const timeSinceDeathLabel = this.#lisaStatusService
                 .getTimeSinceDeath(state)!
                 .humanize();
 
             text = `Lisa died ${timeSinceDeathLabel} ago, she was killed by ${
-                state.death.byUser ?? "anonymous"
+                state.death.initiator ?? "anonymous"
             } through ${state.death.cause ?? "unknown cause"}.`;
         } else {
             const waterLevel = state.status.water.toFixed(2);
@@ -37,11 +37,11 @@ class StatusTextService {
     }
 
     public createStatusLabel(state: LisaState): string {
-        if (!this.lisaStatusService.isAlive(state)) {
+        if (!this.#lisaStatusService.isAlive(state)) {
             return "is dead";
         }
 
-        const relativeIndex = this.lisaStatusService.calculateRelativeIndex(
+        const relativeIndex = this.#lisaStatusService.calculateRelativeIndex(
             state
         );
         if (relativeIndex > 0.666) {
@@ -53,11 +53,11 @@ class StatusTextService {
     }
 
     private createScoreText(state: LisaState): string {
-        const lifetimeLabel = this.lisaStatusService
+        const lifetimeLabel = this.#lisaStatusService
             .getLifetime(state)
             .humanize();
-        const highScoreLabel = state.bestLifetime.humanize();
-        const currentLabel = this.lisaStatusService.isAlive(state)
+        const highScoreLabel = state.bestLifetimeDuration.humanize();
+        const currentLabel = this.#lisaStatusService.isAlive(state)
             ? "Current lifetime"
             : "Lifetime";
 

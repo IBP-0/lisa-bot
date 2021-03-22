@@ -1,4 +1,4 @@
-import { Duration } from "moment";
+import type { Duration } from "moment";
 
 const WATER_INITIAL = 100;
 const WATER_MIN = 0.1;
@@ -20,16 +20,16 @@ interface LisaState extends Record<string, unknown> {
         water: number;
         happiness: number;
     };
-    life: {
-        time: Date;
-        byUser: string;
+    birth: {
+        timestamp: Date;
+        initiator: string;
     };
     death: {
-        time: Date | null;
-        byUser: string | null;
+        timestamp: Date | null;
+        initiator: string | null;
         cause: LisaDeathCause | null;
     };
-    bestLifetime: Duration;
+    bestLifetimeDuration: Duration;
 }
 
 export {

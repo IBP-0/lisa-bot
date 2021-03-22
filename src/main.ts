@@ -1,48 +1,61 @@
 import "reflect-metadata";
-import { isNil } from "lodash";
 import { container } from "./inversify.config";
-import { DiscordEventController } from "./clients/discord/controller/DiscordEventController";
-import { DiscordClient } from "./clients/discord/DiscordClient";
-import { StateController } from "./core/controller/StateController";
-import { StateStorageController } from "./core/controller/StateStorageController";
-import { TickController } from "./core/controller/TickController";
 import { rootLogger } from "./logger";
 import { TYPES } from "./types";
+import type { PersistenceProvider } from "./core/PersistenceProvider";
+import type { LisaStateRepository } from "./core/state/LisaStateRepository";
+import type { DiscordEventController } from "./clients/discord/DiscordEventController";
+import { isNil } from "lodash";
+import type { DiscordClient } from "./clients/discord/DiscordClient";
+import type { StateController } from "./core/state/StateController";
+import type { TickController } from "./core/time/TickController";
+import type { StateStorageController } from "./core/state/StateStorageController";
 
 const logger = rootLogger.child({ target: "main" });
+
+const startStorage = async (): Promise<void> => {
+    const storageProvider = container.get<PersistenceProvider>(
+        TYPES.PersistenceProvider
+    );
+    await storageProvider.init();
+    await storageProvider.executeScript("./sql/schema.sql");
+};
 
 const startLisaMainClient = async (): Promise<void> => {
     const lisaStateController = container.get<StateController>(
         TYPES.LisaStateController
     );
-
-    const lisaStorageController = container.get<StateStorageController>(
-        TYPES.LisaStateStorageController
+    const lisaStateRepository = container.get<LisaStateRepository>(
+        TYPES.LisaStateRepository
     );
-    if (await lisaStorageController.hasStoredState()) {
+    if ((await lisaStateRepository.count()) != 0) {
         logger.info("Found stored Lisa state, loading it.");
-        lisaStateController.loadState(
-            await lisaStorageController.loadStoredState()
-        );
+        lisaStateController.loadState(await lisaStateRepository.load());
     } else {
-        logger.info("No stored state found, skipping loading.");
+        logger.info("No stored state found, creating it.");
+        await lisaStateRepository.insert(lisaStateController.getStateCopy());
     }
+    const lisaStorageController = container.get<StateStorageController>(
+        TYPES.StateStorageController
+    );
     lisaStorageController.bindStateChangeSubscription(
         lisaStateController.stateChangeSubject
     );
 
     const lisaTimer = container.get<TickController>(TYPES.LisaTickController);
     lisaTimer.tickObservable.subscribe(
-        ({ waterModifier, happinessModifier, byUser }) =>
+        ({ waterModifier, happinessModifier, initiator }) =>
             lisaStateController.modifyLisaStatus(
                 waterModifier,
                 happinessModifier,
-                byUser
+                initiator
             )
     );
 };
 const startLisaDiscordClient = async (): Promise<void> => {
     const lisaDiscordClient = container.get<DiscordClient>(TYPES.DiscordClient);
+    lisaDiscordClient.init();
+
     const discordToken = process.env.DISCORD_TOKEN;
     if (isNil(discordToken)) {
         throw new Error("No secret set.");
@@ -56,12 +69,11 @@ const startLisaDiscordClient = async (): Promise<void> => {
     lisaDiscordController.bindListeners();
 };
 
-logger.info("Starting Lisa main client...");
-startLisaMainClient()
+logger.info("Starting Lisa...");
+startStorage()
+    .then(() => logger.info("Started storage."))
+    .then(() => startLisaMainClient())
     .then(() => logger.info("Started Lisa main client."))
-    .catch((e) => console.error("Could not start Lisa main client.", e));
-
-logger.info("Starting Lisa discord client...");
-startLisaDiscordClient()
+    .then(() => startLisaDiscordClient())
     .then(() => logger.info("Started Lisa discord client."))
-    .catch((e) => console.error("Could not start Lisa discord client.", e));
+    .catch((e) => logger.error("Unexpected error.", e));

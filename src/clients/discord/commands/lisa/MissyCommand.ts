@@ -1,7 +1,8 @@
-import { Message } from "discord.js";
-import { Command, CommandoClient, CommandoMessage } from "discord.js-commando";
+import type { Message } from "discord.js";
+import type { CommandoClient, CommandoMessage } from "discord.js-commando";
+import { Command } from "discord.js-commando";
 import { container } from "../../../../inversify.config";
-import { DiscordCommandController } from "../../controller/DiscordCommandController";
+import type { DiscordCommandController } from "../../DiscordCommandController";
 import { TYPES } from "../../../../types";
 
 const MISSY_ID = ["273221196001181697"];
@@ -18,9 +19,9 @@ class MissyCommand extends Command {
             description: "baaff",
             hidden: true,
         });
-        this.lisaDiscordCommandController = container.get<
-            DiscordCommandController
-        >(TYPES.DiscordCommandController);
+        this.lisaDiscordCommandController = container.get<DiscordCommandController>(
+            TYPES.DiscordCommandController
+        );
     }
 
     run(message: CommandoMessage): Promise<Message | Message[]> {
