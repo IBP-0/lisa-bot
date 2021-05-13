@@ -16,9 +16,10 @@ class PunchCommand extends Command {
             memberName: "punch",
             description: "Punch Lisa.",
         });
-        this.lisaDiscordCommandController = container.get<DiscordCommandController>(
-            TYPES.DiscordCommandController
-        );
+        this.lisaDiscordCommandController =
+            container.get<DiscordCommandController>(
+                TYPES.DiscordCommandController
+            );
     }
 
     run(message: CommandoMessage): Promise<Message | Message[]> {

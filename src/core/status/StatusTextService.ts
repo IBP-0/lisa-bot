@@ -41,9 +41,8 @@ class StatusTextService {
             return "is dead";
         }
 
-        const relativeIndex = this.#lisaStatusService.calculateRelativeIndex(
-            state
-        );
+        const relativeIndex =
+            this.#lisaStatusService.calculateRelativeIndex(state);
         if (relativeIndex > 0.666) {
             return "doing great";
         } else if (relativeIndex > 0.333) {

@@ -17,9 +17,10 @@ class BurnCommand extends Command {
             memberName: "burn",
             description: "Burn Lisa (you monster).",
         });
-        this.lisaDiscordCommandController = container.get<DiscordCommandController>(
-            TYPES.DiscordCommandController
-        );
+        this.lisaDiscordCommandController =
+            container.get<DiscordCommandController>(
+                TYPES.DiscordCommandController
+            );
     }
 
     run(message: CommandoMessage): Promise<Message | Message[]> {

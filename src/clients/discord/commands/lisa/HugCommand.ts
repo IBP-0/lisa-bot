@@ -16,9 +16,10 @@ class HugCommand extends Command {
             memberName: "hug",
             description: "Hug Lisa.",
         });
-        this.lisaDiscordCommandController = container.get<DiscordCommandController>(
-            TYPES.DiscordCommandController
-        );
+        this.lisaDiscordCommandController =
+            container.get<DiscordCommandController>(
+                TYPES.DiscordCommandController
+            );
     }
 
     run(message: CommandoMessage): Promise<Message | Message[]> {

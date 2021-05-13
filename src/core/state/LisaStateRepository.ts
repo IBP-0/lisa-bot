@@ -154,7 +154,8 @@ export class LisaStateRepository {
             ":death_initiator": state.death.initiator,
             ":death_cause": state.death.cause,
 
-            ":best_lifetime_duration": state.bestLifetimeDuration.asMilliseconds(),
+            ":best_lifetime_duration":
+                state.bestLifetimeDuration.asMilliseconds(),
         };
     }
 

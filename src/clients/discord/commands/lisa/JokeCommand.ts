@@ -39,9 +39,10 @@ class JokeCommand extends Command {
             memberName: "joke",
             description: "Tell Lisa a joke.",
         });
-        this.lisaDiscordCommandController = container.get<DiscordCommandController>(
-            TYPES.DiscordCommandController
-        );
+        this.lisaDiscordCommandController =
+            container.get<DiscordCommandController>(
+                TYPES.DiscordCommandController
+            );
     }
 
     run(message: CommandoMessage): Promise<Message | Message[]> {

@@ -16,9 +16,10 @@ class StatusCommand extends Command {
             memberName: "status",
             description: "Shows the status of Lisa.",
         });
-        this.lisaDiscordCommandController = container.get<DiscordCommandController>(
-            TYPES.DiscordCommandController
-        );
+        this.lisaDiscordCommandController =
+            container.get<DiscordCommandController>(
+                TYPES.DiscordCommandController
+            );
     }
 
     run(message: CommandoMessage): Promise<Message | Message[]> {
