@@ -6,7 +6,7 @@ import { readFile } from "fs/promises";
 
 @injectable()
 export class PersistenceProvider {
-    #db: Database<sqlite3.Database, sqlite3.Statement> | null;
+    #db: Database | null;
 
     constructor() {
         this.#db = null;
@@ -24,7 +24,7 @@ export class PersistenceProvider {
         await this.#db!.run(script);
     }
 
-    public getDb(): Database<sqlite3.Database, sqlite3.Statement> | null {
+    public getDb(): Database | null {
         return this.#db;
     }
 }

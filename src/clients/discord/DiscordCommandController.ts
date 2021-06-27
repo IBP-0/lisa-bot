@@ -1,7 +1,7 @@
 import type { User } from "discord.js";
 import { sample } from "lodash";
 import { StateController } from "../../core/state/StateController";
-import type { LisaDeathCause } from "../../core/state/LisaState";
+import type { DeathCause } from "../../core/state/State";
 import { StatusService } from "../../core/status/StatusService";
 import { StatusTextService } from "../../core/status/StatusTextService";
 import { DiscordService } from "./DiscordService";
@@ -16,22 +16,22 @@ class DiscordCommandController {
     });
     private static readonly DISCORD_USER_INITIATOR = "Discord user";
 
-    private readonly lisaStateController: StateController;
-    private readonly lisaStatusService: StatusService;
-    private readonly lisaTextService: StatusTextService;
-    private readonly lisaDiscordService: DiscordService;
+    private readonly stateController: StateController;
+    private readonly statusService: StatusService;
+    private readonly statusTextService: StatusTextService;
+    private readonly discordService: DiscordService;
 
     constructor(
-        @inject(TYPES.LisaStateController)
-        lisaStateController: StateController,
-        @inject(TYPES.LisaStatusService) lisaStatusService: StatusService,
-        @inject(TYPES.LisaTextService) lisaTextService: StatusTextService,
-        @inject(TYPES.DiscordService) lisaDiscordService: DiscordService
+        @inject(TYPES.StateController)
+        stateController: StateController,
+        @inject(TYPES.StatusService) statusService: StatusService,
+        @inject(TYPES.StatusTextService) statusTextService: StatusTextService,
+        @inject(TYPES.DiscordService) discordService: DiscordService
     ) {
-        this.lisaDiscordService = lisaDiscordService;
-        this.lisaTextService = lisaTextService;
-        this.lisaStatusService = lisaStatusService;
-        this.lisaStateController = lisaStateController;
+        this.discordService = discordService;
+        this.statusTextService = statusTextService;
+        this.statusService = statusService;
+        this.stateController = stateController;
     }
 
     public performAction(
@@ -43,7 +43,7 @@ class DiscordCommandController {
         textDead: string[],
         textNotAllowed: string[] = []
     ): string {
-        if (!this.lisaDiscordService.isUserAllowed(allowedUserIds, author)) {
+        if (!this.discordService.isUserAllowed(allowedUserIds, author)) {
             return sample(textNotAllowed)!;
         }
         if (!this.isAlive()) {
@@ -53,7 +53,7 @@ class DiscordCommandController {
         DiscordCommandController.logger.info(
             `Discord user modified status; water modifier ${waterModifier}, happiness modifier ${happinessModifier}.`
         );
-        this.lisaStateController.modifyLisaStatus(
+        this.stateController.modifyLisaStatus(
             waterModifier,
             happinessModifier,
             DiscordCommandController.DISCORD_USER_INITIATOR
@@ -64,20 +64,20 @@ class DiscordCommandController {
 
     public performKill(
         author: User,
-        cause: LisaDeathCause,
+        cause: DeathCause,
         allowedUserIds: string[] | null,
         textSuccess: string[],
         textAlreadyDead: string[],
         textNotAllowed: string[] = []
     ): string {
-        if (!this.lisaDiscordService.isUserAllowed(allowedUserIds, author)) {
+        if (!this.discordService.isUserAllowed(allowedUserIds, author)) {
             return sample(textNotAllowed)!;
         }
         if (!this.isAlive()) {
             return sample(textAlreadyDead)!;
         }
 
-        this.lisaStateController.killLisa(
+        this.stateController.killLisa(
             cause,
             DiscordCommandController.DISCORD_USER_INITIATOR
         );
@@ -92,12 +92,12 @@ class DiscordCommandController {
         textWasDead: string[],
         textNotAllowed: string[] = []
     ): string {
-        if (!this.lisaDiscordService.isUserAllowed(allowedUserIds, author)) {
+        if (!this.discordService.isUserAllowed(allowedUserIds, author)) {
             return sample(textNotAllowed)!;
         }
 
         const wasAlive = this.isAlive();
-        this.lisaStateController.replantLisa(
+        this.stateController.replantLisa(
             DiscordCommandController.DISCORD_USER_INITIATOR
         );
 
@@ -105,15 +105,13 @@ class DiscordCommandController {
     }
 
     public createStatusText(): string {
-        return this.lisaTextService.createStatusText(
-            this.lisaStateController.getStateCopy()
+        return this.statusTextService.createStatusText(
+            this.stateController.getStateCopy()
         );
     }
 
     private isAlive(): boolean {
-        return this.lisaStatusService.isAlive(
-            this.lisaStateController.getStateCopy()
-        );
+        return this.statusService.isAlive(this.stateController.getStateCopy());
     }
 }
 

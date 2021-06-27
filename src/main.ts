@@ -3,7 +3,7 @@ import { container } from "./inversify.config";
 import { rootLogger } from "./logger";
 import { TYPES } from "./types";
 import type { PersistenceProvider } from "./core/PersistenceProvider";
-import type { LisaStateRepository } from "./core/state/LisaStateRepository";
+import type { StateRepository } from "./core/state/StateRepository";
 import type { DiscordEventController } from "./clients/discord/DiscordEventController";
 import { isNil } from "lodash";
 import type { DiscordClient } from "./clients/discord/DiscordClient";
@@ -22,30 +22,30 @@ const startStorage = async (): Promise<void> => {
 };
 
 const startLisaMainClient = async (): Promise<void> => {
-    const lisaStateController = container.get<StateController>(
-        TYPES.LisaStateController
+    const stateController = container.get<StateController>(
+        TYPES.StateController
     );
-    const lisaStateRepository = container.get<LisaStateRepository>(
-        TYPES.LisaStateRepository
+    const stateRepository = container.get<StateRepository>(
+        TYPES.StateRepository
     );
-    if ((await lisaStateRepository.count()) != 0) {
+    if ((await stateRepository.count()) != 0) {
         logger.info("Found stored Lisa state, loading it.");
-        lisaStateController.loadState(await lisaStateRepository.select());
+        stateController.loadState(await stateRepository.select());
     } else {
         logger.info("No stored state found, creating it.");
-        await lisaStateRepository.insert(lisaStateController.getStateCopy());
+        await stateRepository.insert(stateController.getStateCopy());
     }
-    const lisaStorageController = container.get<StateStorageController>(
-        TYPES.StateStorageController
+    const storageController = container.get<StateStorageController>(
+        TYPES.StorageController
     );
-    lisaStorageController.bindStateChangeSubscription(
-        lisaStateController.stateChangeSubject
+    storageController.bindStateChangeSubscription(
+        stateController.stateChangeSubject
     );
 
-    const lisaTimer = container.get<TickController>(TYPES.LisaTickController);
-    lisaTimer.tickObservable.subscribe(
+    const tickController = container.get<TickController>(TYPES.TickController);
+    tickController.tickObservable.subscribe(
         ({ waterModifier, happinessModifier, initiator }) =>
-            lisaStateController.modifyLisaStatus(
+            stateController.modifyLisaStatus(
                 waterModifier,
                 happinessModifier,
                 initiator
@@ -53,20 +53,20 @@ const startLisaMainClient = async (): Promise<void> => {
     );
 };
 const startLisaDiscordClient = async (): Promise<void> => {
-    const lisaDiscordClient = container.get<DiscordClient>(TYPES.DiscordClient);
-    lisaDiscordClient.init();
+    const discordClient = container.get<DiscordClient>(TYPES.DiscordClient);
+    discordClient.init();
 
     const discordToken = process.env.DISCORD_TOKEN;
     if (isNil(discordToken)) {
         throw new Error("No secret set.");
     }
 
-    await lisaDiscordClient.login(discordToken);
+    await discordClient.login(discordToken);
 
-    const lisaDiscordController = container.get<DiscordEventController>(
+    const discordEventController = container.get<DiscordEventController>(
         TYPES.DiscordEventController
     );
-    lisaDiscordController.bindListeners();
+    discordEventController.bindListeners();
 };
 
 logger.info("Starting Lisa...");

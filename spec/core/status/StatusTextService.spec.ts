@@ -1,16 +1,16 @@
 import "reflect-metadata";
 import { duration } from "moment";
-import type { LisaState } from "../../../src/core/state/LisaState";
+import type { State } from "../../../src/core/state/State";
 import {
     HAPPINESS_INITIAL,
     WATER_INITIAL,
-} from "../../../src/core/state/LisaState";
+} from "../../../src/core/state/State";
 import { StatusService } from "../../../src/core/status/StatusService";
 import type { StatusTextService } from "../../../src/core/status/StatusTextService";
 import { container } from "../../../src/inversify.config";
 import { TYPES } from "../../../src/types";
 
-const createState = (): LisaState => {
+const createState = (): State => {
     return {
         bestLifetimeDuration: duration(0),
         status: {
@@ -29,21 +29,21 @@ const createState = (): LisaState => {
     };
 };
 
-describe("LisaTextService", () => {
-    let lisaTextService: StatusTextService;
+describe("StatusTextService", () => {
+    let statusTextService: StatusTextService;
 
-    let mockLisaStatusService: StatusService;
+    let mockStatusService: StatusService;
 
     beforeEach(() => {
         container.snapshot();
 
-        mockLisaStatusService = new StatusService();
+        mockStatusService = new StatusService();
         container
-            .rebind<StatusService>(TYPES.LisaStatusService)
-            .toConstantValue(mockLisaStatusService);
+            .rebind<StatusService>(TYPES.StatusService)
+            .toConstantValue(mockStatusService);
 
-        lisaTextService = container.get<StatusTextService>(
-            TYPES.LisaTextService
+        statusTextService = container.get<StatusTextService>(
+            TYPES.StatusTextService
         );
     });
     afterEach(() => {
@@ -52,42 +52,39 @@ describe("LisaTextService", () => {
 
     describe("createStatusLabel", () => {
         it("returns 'is dead' when dead.", () => {
-            spyOn(mockLisaStatusService, "isAlive").and.returnValue(false);
+            spyOn(mockStatusService, "isAlive").and.returnValue(false);
 
-            expect(lisaTextService.createStatusLabel(createState())).toEqual(
+            expect(statusTextService.createStatusLabel(createState())).toEqual(
                 "is dead"
             );
         });
         it("returns 'doing great' when a high relative score is returned.", () => {
-            spyOn(mockLisaStatusService, "isAlive").and.returnValue(true);
-            spyOn(
-                mockLisaStatusService,
-                "calculateRelativeIndex"
-            ).and.returnValue(0.75);
+            spyOn(mockStatusService, "isAlive").and.returnValue(true);
+            spyOn(mockStatusService, "calculateRelativeIndex").and.returnValue(
+                0.75
+            );
 
-            expect(lisaTextService.createStatusLabel(createState())).toEqual(
+            expect(statusTextService.createStatusLabel(createState())).toEqual(
                 "doing great"
             );
         });
         it("returns 'doing fine' when a medium relative score is returned.", () => {
-            spyOn(mockLisaStatusService, "isAlive").and.returnValue(true);
-            spyOn(
-                mockLisaStatusService,
-                "calculateRelativeIndex"
-            ).and.returnValue(0.5);
+            spyOn(mockStatusService, "isAlive").and.returnValue(true);
+            spyOn(mockStatusService, "calculateRelativeIndex").and.returnValue(
+                0.5
+            );
 
-            expect(lisaTextService.createStatusLabel(createState())).toEqual(
+            expect(statusTextService.createStatusLabel(createState())).toEqual(
                 "doing fine"
             );
         });
         it("returns 'close to dying' when a low relative score is returned.", () => {
-            spyOn(mockLisaStatusService, "isAlive").and.returnValue(true);
-            spyOn(
-                mockLisaStatusService,
-                "calculateRelativeIndex"
-            ).and.returnValue(0.25);
+            spyOn(mockStatusService, "isAlive").and.returnValue(true);
+            spyOn(mockStatusService, "calculateRelativeIndex").and.returnValue(
+                0.25
+            );
 
-            expect(lisaTextService.createStatusLabel(createState())).toEqual(
+            expect(statusTextService.createStatusLabel(createState())).toEqual(
                 "close to dying"
             );
         });

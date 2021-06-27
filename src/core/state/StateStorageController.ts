@@ -1,10 +1,10 @@
 import type { Subject } from "rxjs";
 import { throttleTime } from "rxjs/operators";
 import { rootLogger } from "../../logger";
-import type { LisaState } from "./LisaState";
+import type { State } from "./State";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../types";
-import { LisaStateRepository } from "./LisaStateRepository";
+import { StateRepository } from "./StateRepository";
 
 @injectable()
 class StateStorageController {
@@ -14,22 +14,22 @@ class StateStorageController {
         target: StateStorageController,
     });
 
-    readonly #lisaStateRepository: LisaStateRepository;
+    readonly #stateRepository: StateRepository;
 
     constructor(
-        @inject(TYPES.LisaStateRepository)
-        lisaStateRepository: LisaStateRepository
+        @inject(TYPES.StateRepository)
+        stateRepository: StateRepository
     ) {
-        this.#lisaStateRepository = lisaStateRepository;
+        this.#stateRepository = stateRepository;
     }
 
     public bindStateChangeSubscription(
-        stateChangeSubject: Subject<LisaState>
+        stateChangeSubject: Subject<State>
     ): void {
         stateChangeSubject
             .pipe(throttleTime(StateStorageController.STORAGE_THROTTLE_TIMEOUT))
             .subscribe((state) => {
-                this.#lisaStateRepository
+                this.#stateRepository
                     .update(state)
                     .catch((e) =>
                         StateStorageController.logger.error(

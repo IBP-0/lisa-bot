@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { duration } from "moment";
-import type { LisaDeathCause, LisaState } from "./LisaState";
+import type { DeathCause, State } from "./State";
 
 import { inject, injectable } from "inversify";
 import { PersistenceProvider } from "../PersistenceProvider";
 import { TYPES } from "../../types";
 import { rootLogger } from "../../logger";
 
-interface LisaStateRow {
+interface StateRow {
     readonly id: number;
 
     readonly current_water: number;
@@ -26,9 +26,9 @@ interface LisaStateRow {
 const GLOBAL_STATE_ID = 1;
 
 @injectable()
-export class LisaStateRepository {
+export class StateRepository {
     private static readonly logger = rootLogger.child({
-        target: LisaStateRepository,
+        target: StateRepository,
     });
 
     readonly #storageProvider: PersistenceProvider;
@@ -50,13 +50,13 @@ export class LisaStateRepository {
         return countResult["COUNT(*)"];
     }
 
-    public async insert(state: LisaState): Promise<void> {
+    public async insert(state: State): Promise<void> {
         const database = this.#storageProvider.getDb()!;
-        LisaStateRepository.logger.silly(
+        StateRepository.logger.silly(
             `Inserting lisa state: ${JSON.stringify(state)}.`
         );
         const serializedParams = this.serializeStateToParameters(state);
-        LisaStateRepository.logger.silly(
+        StateRepository.logger.silly(
             `Serialized lisa state: ${JSON.stringify(serializedParams)}.`
         );
         await database.run(
@@ -74,16 +74,16 @@ export class LisaStateRepository {
                 ...serializedParams,
             }
         );
-        LisaStateRepository.logger.silly(`Inserted lisa state.`);
+        StateRepository.logger.silly(`Inserted lisa state.`);
     }
 
-    public async update(state: LisaState): Promise<void> {
+    public async update(state: State): Promise<void> {
         const database = this.#storageProvider.getDb()!;
-        LisaStateRepository.logger.silly(
+        StateRepository.logger.silly(
             `Updating lisa state: ${JSON.stringify(state)}.`
         );
         const serializedParams = this.serializeStateToParameters(state);
-        LisaStateRepository.logger.silly(
+        StateRepository.logger.silly(
             `Serialized lisa state: ${JSON.stringify(serializedParams)}.`
         );
         await database.run(
@@ -104,14 +104,14 @@ export class LisaStateRepository {
                 ...serializedParams,
             }
         );
-        LisaStateRepository.logger.silly(`Updated lisa state.`);
+        StateRepository.logger.silly(`Updated lisa state.`);
     }
 
-    public async select(): Promise<LisaState> {
+    public async select(): Promise<State> {
         const database = this.#storageProvider.getDb()!;
 
-        LisaStateRepository.logger.silly(`Loading lisa state.`);
-        const lisaStateRow = await database.get<LisaStateRow>(
+        StateRepository.logger.silly(`Loading lisa state.`);
+        const stateRow = await database.get<StateRow>(
             `
                 SELECT id,
                        current_water,
@@ -127,21 +127,21 @@ export class LisaStateRepository {
             `,
             { ":id": GLOBAL_STATE_ID }
         );
-        if (lisaStateRow == null) {
+        if (stateRow == null) {
             throw new TypeError("No state found!");
         }
-        LisaStateRepository.logger.silly(
-            `Deserializing lisa state: '${JSON.stringify(lisaStateRow)}'.`
+        StateRepository.logger.silly(
+            `Deserializing lisa state: '${JSON.stringify(stateRow)}'.`
         );
-        const lisaState = this.deserializeState(lisaStateRow);
-        LisaStateRepository.logger.silly(
-            `Loaded lisa state: '${JSON.stringify(lisaState)}'.`
+        const state = this.deserializeState(stateRow);
+        StateRepository.logger.silly(
+            `Loaded lisa state: '${JSON.stringify(state)}'.`
         );
-        return lisaState;
+        return state;
     }
 
     private serializeStateToParameters(
-        state: LisaState
+        state: State
     ): Record<string, string | number | null> {
         return {
             ":current_water": state.status.water,
@@ -159,25 +159,25 @@ export class LisaStateRepository {
         };
     }
 
-    private deserializeState(lisaStateRow: LisaStateRow): LisaState {
+    private deserializeState(stateRow: StateRow): State {
         return {
             status: {
-                water: lisaStateRow.current_water,
-                happiness: lisaStateRow.current_happiness,
+                water: stateRow.current_water,
+                happiness: stateRow.current_happiness,
             },
             birth: {
-                timestamp: new Date(lisaStateRow.birth_timestamp),
-                initiator: lisaStateRow.birth_initiator,
+                timestamp: new Date(stateRow.birth_timestamp),
+                initiator: stateRow.birth_initiator,
             },
             death: {
                 timestamp:
-                    lisaStateRow.death_timestamp != null
-                        ? new Date(lisaStateRow.death_timestamp)
+                    stateRow.death_timestamp != null
+                        ? new Date(stateRow.death_timestamp)
                         : null,
-                initiator: lisaStateRow.death_initiator,
-                cause: lisaStateRow.death_cause as LisaDeathCause,
+                initiator: stateRow.death_initiator,
+                cause: stateRow.death_cause as DeathCause,
             },
-            bestLifetimeDuration: duration(lisaStateRow.best_lifetime_duration),
+            bestLifetimeDuration: duration(stateRow.best_lifetime_duration),
         };
     }
 }

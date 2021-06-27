@@ -1,5 +1,5 @@
 import { Container } from "inversify";
-import { LisaStateRepository } from "./core/state/LisaStateRepository";
+import { StateRepository } from "./core/state/StateRepository";
 import { TYPES } from "./types";
 import { StatusService } from "./core/status/StatusService";
 import { StatusTextService } from "./core/status/StatusTextService";
@@ -21,23 +21,23 @@ container
     .to(PersistenceProvider)
     .inSingletonScope();
 
-container
-    .bind<LisaStateRepository>(TYPES.LisaStateRepository)
-    .to(LisaStateRepository);
+container.bind<StateRepository>(TYPES.StateRepository).to(StateRepository);
 
-container.bind<StatusService>(TYPES.LisaStatusService).to(StatusService);
-container.bind<StatusTextService>(TYPES.LisaTextService).to(StatusTextService);
+container.bind<StatusService>(TYPES.StatusService).to(StatusService);
+container
+    .bind<StatusTextService>(TYPES.StatusTextService)
+    .to(StatusTextService);
 
 container
-    .bind<StateController>(TYPES.LisaStateController)
+    .bind<StateController>(TYPES.StateController)
     .to(StateController)
     .inSingletonScope();
 container
-    .bind<TickController>(TYPES.LisaTickController)
+    .bind<TickController>(TYPES.TickController)
     .to(TickController)
     .inSingletonScope();
 container
-    .bind<StateStorageController>(TYPES.StateStorageController)
+    .bind<StateStorageController>(TYPES.StorageController)
     .to(StateStorageController)
     .inSingletonScope();
 

@@ -1,8 +1,8 @@
 import type { Duration } from "moment";
 import { duration } from "moment";
 import { rootLogger } from "../../logger";
-import type { LisaState } from "../state/LisaState";
-import { HAPPINESS_INITIAL, WATER_INITIAL } from "../state/LisaState";
+import type { State } from "../state/State";
+import { HAPPINESS_INITIAL, WATER_INITIAL } from "../state/State";
 import { injectable } from "inversify";
 
 @injectable()
@@ -11,11 +11,11 @@ class StatusService {
         target: StatusService,
     });
 
-    public isAlive(state: LisaState): boolean {
+    public isAlive(state: State): boolean {
         return state.death.timestamp == null;
     }
 
-    public getLifetime(state: LisaState): Duration {
+    public getLifetime(state: State): Duration {
         const birth = state.birth.timestamp.getTime();
 
         if (!this.isAlive(state)) {
@@ -27,7 +27,7 @@ class StatusService {
         return duration(now - birth);
     }
 
-    public getTimeSinceDeath(state: LisaState): Duration | null {
+    public getTimeSinceDeath(state: State): Duration | null {
         if (this.isAlive(state)) {
             return null;
         }
@@ -42,7 +42,7 @@ class StatusService {
      *
      * @return relative index.
      */
-    public calculateRelativeIndex(state: LisaState): number {
+    public calculateRelativeIndex(state: State): number {
         let relativeWater = state.status.water / WATER_INITIAL;
         if (relativeWater > 1) {
             relativeWater = 1;

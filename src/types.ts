@@ -1,13 +1,13 @@
 export const TYPES = {
     PersistenceProvider: Symbol.for("PersistenceProvider"),
-    LisaStateRepository: Symbol.for("LisaStateRepository"),
-    StateStorageController: Symbol.for("StateStorageController"),
+    StateRepository: Symbol.for("StateRepository"),
+    StorageController: Symbol.for("StorageController"),
 
-    LisaStatusService: Symbol.for("LisaStatusService"),
-    LisaTextService: Symbol.for("LisaTextService"),
+    StatusService: Symbol.for("StatusService"),
+    StatusTextService: Symbol.for("StatusTextService"),
 
-    LisaStateController: Symbol.for("LisaStateController"),
-    LisaTickController: Symbol.for("LisaTickController"),
+    StateController: Symbol.for("StateController"),
+    TickController: Symbol.for("TickController"),
 
     DiscordService: Symbol.for("DiscordService"),
 

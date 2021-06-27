@@ -8,14 +8,14 @@ const HAPPINESS_INITIAL = 100;
 const HAPPINESS_MIN = 0.1;
 const HAPPINESS_MAX = 100;
 
-enum LisaDeathCause {
+enum DeathCause {
     DROWNING = "drowning",
     DEHYDRATION = "dehydration",
     SADNESS = "sadness",
     FIRE = "fire",
 }
 
-interface LisaState extends Record<string, unknown> {
+interface State {
     status: {
         water: number;
         happiness: number;
@@ -27,14 +27,14 @@ interface LisaState extends Record<string, unknown> {
     death: {
         timestamp: Date | null;
         initiator: string | null;
-        cause: LisaDeathCause | null;
+        cause: DeathCause | null;
     };
     bestLifetimeDuration: Duration;
 }
 
 export {
-    LisaState,
-    LisaDeathCause,
+    State,
+    DeathCause,
     WATER_INITIAL,
     WATER_MIN,
     WATER_MAX,
