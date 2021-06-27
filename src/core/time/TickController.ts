@@ -24,13 +24,13 @@ class TickController {
     public readonly tickObservable: Observable<TickData>;
 
     constructor() {
-        this.tickObservable = this.createTickObservable();
+        this.tickObservable = this.#createTickObservable();
         TickController.logger.debug(
             `Started Lisa timer with an interval of ${TickController.TIMEOUT}.`
         );
     }
 
-    private createTickObservable(): Observable<TickData> {
+    #createTickObservable(): Observable<TickData> {
         return interval(TickController.TIMEOUT).pipe(
             map(() => {
                 TickController.logger.debug("Running tick.");

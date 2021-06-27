@@ -39,7 +39,7 @@ class StateController {
         this.stateChangeSubject = new Subject<State>();
 
         interval(StateController.BEST_LIFETIME_CHECK_TIMEOUT).subscribe(() =>
-            this.updateBestLifetimeIfRequired()
+            this.#updateBestLifetimeIfRequired()
         );
     }
 
@@ -81,7 +81,7 @@ class StateController {
      */
     public loadState(state: State): void {
         this.#state = state;
-        this.stateChanged();
+        this.#stateChanged();
     }
 
     public replantLisa(
@@ -89,8 +89,8 @@ class StateController {
     ): void {
         StateController.logger.info(`'${initiator}' replanted lisa.`);
 
-        this.performReplant(initiator);
-        this.stateChanged();
+        this.#performReplant(initiator);
+        this.#stateChanged();
     }
 
     public killLisa(
@@ -103,9 +103,9 @@ class StateController {
         }
 
         StateController.logger.info(`'${initiator}' killed lisa by ${cause}.`);
-        this.performKill(cause, initiator);
+        this.#performKill(cause, initiator);
 
-        this.stateChanged();
+        this.#stateChanged();
     }
 
     public modifyLisaStatus(
@@ -121,19 +121,19 @@ class StateController {
         StateController.logger.debug(
             `'${initiator}' modified status; water modifier ${waterModifier}, happiness modifier ${happinessModifier}.`
         );
-        this.performModifyStatus(waterModifier, happinessModifier, initiator);
+        this.#performModifyStatus(waterModifier, happinessModifier, initiator);
 
-        this.stateChanged();
+        this.#stateChanged();
     }
 
-    private performReplant(initiator: string): void {
+    #performReplant(initiator: string): void {
         this.#state = StateController.createNewLisaState(
             initiator,
             this.#state.bestLifetimeDuration
         );
     }
 
-    private performKill(cause: DeathCause, initiator: string): void {
+    #performKill(cause: DeathCause, initiator: string): void {
         this.#state.death = {
             timestamp: new Date(),
             initiator: initiator,
@@ -141,7 +141,7 @@ class StateController {
         };
     }
 
-    private performModifyStatus(
+    #performModifyStatus(
         waterModifier: number,
         happinessModifier: number,
         initiator: string
@@ -149,10 +149,10 @@ class StateController {
         this.#state.status.water += waterModifier;
         this.#state.status.happiness += happinessModifier;
 
-        this.checkStats(initiator);
+        this.#checkStats(initiator);
     }
 
-    private checkStats(initiator: string): void {
+    #checkStats(initiator: string): void {
         if (this.#state.status.water > WATER_MAX) {
             StateController.logger.silly(
                 `Water level ${
@@ -160,7 +160,7 @@ class StateController {
                 } is above limit of ${WATER_MAX} -> ${DeathCause.DROWNING}.`
             );
 
-            this.performKill(DeathCause.DROWNING, initiator);
+            this.#performKill(DeathCause.DROWNING, initiator);
         } else if (this.#state.status.water < WATER_MIN) {
             StateController.logger.silly(
                 `Water level ${
@@ -168,7 +168,7 @@ class StateController {
                 } is below limit of ${WATER_MIN} -> ${DeathCause.DEHYDRATION}.`
             );
 
-            this.performKill(DeathCause.DEHYDRATION, initiator);
+            this.#performKill(DeathCause.DEHYDRATION, initiator);
         }
 
         if (this.#state.status.happiness > HAPPINESS_MAX) {
@@ -186,17 +186,17 @@ class StateController {
                 } is below limit of ${HAPPINESS_MIN} -> ${DeathCause.SADNESS}.`
             );
 
-            this.performKill(DeathCause.SADNESS, initiator);
+            this.#performKill(DeathCause.SADNESS, initiator);
         }
     }
 
-    private stateChanged(): void {
+    #stateChanged(): void {
         StateController.logger.silly("Lisa state changed.");
 
         this.stateChangeSubject.next(this.getStateCopy());
     }
 
-    private updateBestLifetimeIfRequired(): void {
+    #updateBestLifetimeIfRequired(): void {
         const lifetime = this.#statusService.getLifetime(this.getStateCopy());
         if (lifetime > this.#state.bestLifetimeDuration) {
             StateController.logger.silly(

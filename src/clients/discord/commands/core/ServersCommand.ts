@@ -15,10 +15,10 @@ class ServersCommand extends Command {
     }
 
     run(message: CommandoMessage): Promise<Message | Message[]> {
-        return message.say(this.getServers());
+        return message.say(this.#getServers());
     }
 
-    private getServers(): string {
+    #getServers(): string {
         return this.client.guilds.cache
             .array()
             .map((guild) => `${guild.id}: ${guild.name}`)

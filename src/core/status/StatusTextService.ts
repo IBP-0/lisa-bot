@@ -13,7 +13,7 @@ class StatusTextService {
 
     public createStatusText(state: State): string {
         const statusLabel = `Lisa is ${this.createStatusLabel(state)}.`;
-        const scoreText = this.createScoreText(state);
+        const scoreText = this.#createScoreText(state);
         let text: string;
 
         if (!this.#statusService.isAlive(state)) {
@@ -48,7 +48,7 @@ class StatusTextService {
         return "close to dying";
     }
 
-    private createScoreText(state: State): string {
+    #createScoreText(state: State): string {
         const lifetimeLabel = this.#statusService.getLifetime(state).humanize();
         const highScoreLabel = state.bestLifetimeDuration.humanize();
         const currentLabel = this.#statusService.isAlive(state)

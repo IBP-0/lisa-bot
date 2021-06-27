@@ -48,7 +48,7 @@ class DiscordEventController {
                 filter((message) => !message.system && !message.author.bot),
                 throttleTime(DiscordEventController.MESSAGE_THROTTLE_TIMEOUT)
             )
-            .subscribe(() => this.onMessage());
+            .subscribe(() => this.#onMessage());
 
         this.#stateController.stateChangeSubject
             .pipe(
@@ -56,11 +56,11 @@ class DiscordEventController {
                     DiscordEventController.PRESENCE_UPDATE_THROTTLE_TIMEOUT
                 )
             )
-            .subscribe((state) => this.onStateChange(state));
-        this.onStateChange(this.#stateController.getStateCopy());
+            .subscribe((state) => this.#onStateChange(state));
+        this.#onStateChange(this.#stateController.getStateCopy());
     }
 
-    private onMessage(): void {
+    #onMessage(): void {
         DiscordEventController.logger.silly(
             "A message was sent, increasing happiness."
         );
@@ -71,7 +71,7 @@ class DiscordEventController {
         );
     }
 
-    private onStateChange(state: State): void {
+    #onStateChange(state: State): void {
         const statusLabel = `${this.#statusTextService.createStatusLabel(
             state
         )}.`;

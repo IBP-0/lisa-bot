@@ -55,7 +55,7 @@ export class StateRepository {
         StateRepository.logger.silly(
             `Inserting lisa state: ${JSON.stringify(state)}.`
         );
-        const serializedParams = this.serializeStateToParameters(state);
+        const serializedParams = this.#serializeStateToParameters(state);
         StateRepository.logger.silly(
             `Serialized lisa state: ${JSON.stringify(serializedParams)}.`
         );
@@ -82,7 +82,7 @@ export class StateRepository {
         StateRepository.logger.silly(
             `Updating lisa state: ${JSON.stringify(state)}.`
         );
-        const serializedParams = this.serializeStateToParameters(state);
+        const serializedParams = this.#serializeStateToParameters(state);
         StateRepository.logger.silly(
             `Serialized lisa state: ${JSON.stringify(serializedParams)}.`
         );
@@ -133,14 +133,14 @@ export class StateRepository {
         StateRepository.logger.silly(
             `Deserializing lisa state: '${JSON.stringify(stateRow)}'.`
         );
-        const state = this.deserializeState(stateRow);
+        const state = this.#deserializeState(stateRow);
         StateRepository.logger.silly(
             `Loaded lisa state: '${JSON.stringify(state)}'.`
         );
         return state;
     }
 
-    private serializeStateToParameters(
+    #serializeStateToParameters(
         state: State
     ): Record<string, string | number | null> {
         return {
@@ -159,7 +159,7 @@ export class StateRepository {
         };
     }
 
-    private deserializeState(stateRow: StateRow): State {
+    #deserializeState(stateRow: StateRow): State {
         return {
             status: {
                 water: stateRow.current_water,

@@ -46,7 +46,7 @@ class DiscordCommandController {
         if (!this.#discordService.isUserAllowed(allowedUserIds, author)) {
             return sample(textNotAllowed)!;
         }
-        if (!this.isAlive()) {
+        if (!this.#isAlive()) {
             return sample(textDead)!;
         }
 
@@ -73,7 +73,7 @@ class DiscordCommandController {
         if (!this.#discordService.isUserAllowed(allowedUserIds, author)) {
             return sample(textNotAllowed)!;
         }
-        if (!this.isAlive()) {
+        if (!this.#isAlive()) {
             return sample(textAlreadyDead)!;
         }
 
@@ -96,7 +96,7 @@ class DiscordCommandController {
             return sample(textNotAllowed)!;
         }
 
-        const wasAlive = this.isAlive();
+        const wasAlive = this.#isAlive();
         this.#stateController.replantLisa(
             DiscordCommandController.DISCORD_USER_INITIATOR
         );
@@ -110,7 +110,7 @@ class DiscordCommandController {
         );
     }
 
-    private isAlive(): boolean {
+    #isAlive(): boolean {
         return this.#statusService.isAlive(
             this.#stateController.getStateCopy()
         );
