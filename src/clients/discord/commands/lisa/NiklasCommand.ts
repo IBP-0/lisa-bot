@@ -8,7 +8,7 @@ import { TYPES } from "../../../../types";
 const NIKLAS_ID = ["178470784984023040"];
 
 class NiklasCommand extends Command {
-    private readonly discordCommandController: DiscordCommandController;
+    readonly #discordCommandController: DiscordCommandController;
 
     constructor(client: CommandoClient) {
         super(client, {
@@ -19,14 +19,15 @@ class NiklasCommand extends Command {
             description: "^w^",
             hidden: true,
         });
-        this.discordCommandController = container.get<DiscordCommandController>(
-            TYPES.DiscordCommandController
-        );
+        this.#discordCommandController =
+            container.get<DiscordCommandController>(
+                TYPES.DiscordCommandController
+            );
     }
 
     run(message: CommandoMessage): Promise<Message | Message[]> {
         return message.say(
-            this.discordCommandController.performAction(
+            this.#discordCommandController.performAction(
                 message.author,
                 0,
                 40,

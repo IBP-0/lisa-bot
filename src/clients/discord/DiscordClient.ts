@@ -30,21 +30,21 @@ class DiscordClient {
         target: DiscordClient,
     });
 
-    private readonly commandoClient: CommandoClient;
-    private readonly persistenceProvider: PersistenceProvider;
+    readonly #commandoClient: CommandoClient;
+    readonly #persistenceProvider: PersistenceProvider;
 
     constructor(
         @inject(TYPES.DiscordConfig) discordConfig: CommandoClientOptions,
         @inject(TYPES.PersistenceProvider)
         persistenceProvider: PersistenceProvider
     ) {
-        this.persistenceProvider = persistenceProvider;
-        this.commandoClient = new CommandoClient(discordConfig);
+        this.#persistenceProvider = persistenceProvider;
+        this.#commandoClient = new CommandoClient(discordConfig);
     }
 
     public init(): void {
-        this.commandoClient
-            .setProvider(new SQLiteProvider(this.persistenceProvider.getDb()!))
+        this.#commandoClient
+            .setProvider(new SQLiteProvider(this.#persistenceProvider.getDb()!))
             .catch((e) =>
                 DiscordClient.logger.error(
                     "Could not bind storage provider.",
@@ -55,18 +55,18 @@ class DiscordClient {
         /*
          * Types
          */
-        this.commandoClient.registry.registerDefaultTypes();
+        this.#commandoClient.registry.registerDefaultTypes();
 
         /*
          * Groups
          */
-        this.commandoClient.registry.registerDefaultGroups();
-        this.commandoClient.registry.registerGroup("lisa", "Lisa");
+        this.#commandoClient.registry.registerDefaultGroups();
+        this.#commandoClient.registry.registerGroup("lisa", "Lisa");
 
         /*
          * Commands
          */
-        this.commandoClient.registry.registerDefaultCommands({
+        this.#commandoClient.registry.registerDefaultCommands({
             help: true,
             eval: false,
             ping: true,
@@ -74,7 +74,7 @@ class DiscordClient {
             commandState: false,
             unknownCommand: false,
         });
-        this.commandoClient.registry.registerCommands([
+        this.#commandoClient.registry.registerCommands([
             AboutCommand,
             InviteCommand,
             ServersCommand,
@@ -93,7 +93,7 @@ class DiscordClient {
             NiklasCommand,
         ]);
 
-        this.commandoClient.on("error", (err) =>
+        this.#commandoClient.on("error", (err) =>
             DiscordClient.logger.error(
                 `An unhandled error occurred: '${JSON.stringify(
                     err
@@ -103,16 +103,16 @@ class DiscordClient {
     }
 
     public async login(token: string): Promise<void> {
-        await this.commandoClient.login(token);
+        await this.#commandoClient.login(token);
     }
 
     public async setPresence(data: PresenceData): Promise<void> {
-        await this.commandoClient.user!.setPresence(data);
+        await this.#commandoClient.user!.setPresence(data);
     }
 
     public getMessageObservable(): Observable<Message> {
         return new Observable((subscriber) => {
-            this.commandoClient.on("message", (message) => {
+            this.#commandoClient.on("message", (message) => {
                 subscriber.next(message);
             });
         });

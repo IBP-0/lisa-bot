@@ -6,7 +6,7 @@ import type { DiscordCommandController } from "../../DiscordCommandController";
 import { TYPES } from "../../../../types";
 
 class ReplantCommand extends Command {
-    private readonly discordCommandController: DiscordCommandController;
+    readonly #discordCommandController: DiscordCommandController;
 
     constructor(client: CommandoClient) {
         super(client, {
@@ -16,14 +16,15 @@ class ReplantCommand extends Command {
             memberName: "replant",
             description: "Replant Lisa.",
         });
-        this.discordCommandController = container.get<DiscordCommandController>(
-            TYPES.DiscordCommandController
-        );
+        this.#discordCommandController =
+            container.get<DiscordCommandController>(
+                TYPES.DiscordCommandController
+            );
     }
 
     run(message: CommandoMessage): Promise<Message | Message[]> {
         return message.say(
-            this.discordCommandController.performReplant(
+            this.#discordCommandController.performReplant(
                 message.author,
                 null,
                 [

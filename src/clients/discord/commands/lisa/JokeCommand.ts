@@ -29,7 +29,7 @@ const HIGH_QUALITY_JOKES = [
 ];
 
 class JokeCommand extends Command {
-    private readonly discordCommandController: DiscordCommandController;
+    readonly #discordCommandController: DiscordCommandController;
 
     constructor(client: CommandoClient) {
         super(client, {
@@ -39,16 +39,17 @@ class JokeCommand extends Command {
             memberName: "joke",
             description: "Tell Lisa a joke.",
         });
-        this.discordCommandController = container.get<DiscordCommandController>(
-            TYPES.DiscordCommandController
-        );
+        this.#discordCommandController =
+            container.get<DiscordCommandController>(
+                TYPES.DiscordCommandController
+            );
     }
 
     run(message: CommandoMessage): Promise<Message | Message[]> {
         const goodJoke = Math.random() > 0.5;
 
         return message.say(
-            this.discordCommandController.performAction(
+            this.#discordCommandController.performAction(
                 message.author,
                 0,
                 goodJoke ? 15 : -15,

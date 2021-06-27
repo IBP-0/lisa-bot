@@ -26,9 +26,9 @@ class DiscordEventController {
     private static readonly MESSAGE_HAPPINESS_MODIFIER = 0.25;
     private static readonly DISCORD_ACTIVITY_INITIATOR = "Discord activity";
 
-    private readonly stateController: StateController;
-    private readonly discordClient: DiscordClient;
-    private readonly statusTextService: StatusTextService;
+    readonly #stateController: StateController;
+    readonly #discordClient: DiscordClient;
+    readonly #statusTextService: StatusTextService;
 
     constructor(
         @inject(TYPES.StateController)
@@ -36,13 +36,13 @@ class DiscordEventController {
         @inject(TYPES.DiscordClient) discordClient: DiscordClient,
         @inject(TYPES.StatusTextService) statusTextService: StatusTextService
     ) {
-        this.statusTextService = statusTextService;
-        this.discordClient = discordClient;
-        this.stateController = stateController;
+        this.#statusTextService = statusTextService;
+        this.#discordClient = discordClient;
+        this.#stateController = stateController;
     }
 
     public bindListeners(): void {
-        this.discordClient
+        this.#discordClient
             .getMessageObservable()
             .pipe(
                 filter((message) => !message.system && !message.author.bot),
@@ -50,21 +50,21 @@ class DiscordEventController {
             )
             .subscribe(() => this.onMessage());
 
-        this.stateController.stateChangeSubject
+        this.#stateController.stateChangeSubject
             .pipe(
                 throttleTime(
                     DiscordEventController.PRESENCE_UPDATE_THROTTLE_TIMEOUT
                 )
             )
             .subscribe((state) => this.onStateChange(state));
-        this.onStateChange(this.stateController.getStateCopy());
+        this.onStateChange(this.#stateController.getStateCopy());
     }
 
     private onMessage(): void {
         DiscordEventController.logger.silly(
             "A message was sent, increasing happiness."
         );
-        this.stateController.modifyLisaStatus(
+        this.#stateController.modifyLisaStatus(
             0,
             DiscordEventController.MESSAGE_HAPPINESS_MODIFIER,
             DiscordEventController.DISCORD_ACTIVITY_INITIATOR
@@ -72,13 +72,13 @@ class DiscordEventController {
     }
 
     private onStateChange(state: State): void {
-        const statusLabel = `${this.statusTextService.createStatusLabel(
+        const statusLabel = `${this.#statusTextService.createStatusLabel(
             state
         )}.`;
         DiscordEventController.logger.debug(
             `Updating presence to '${statusLabel}'...`
         );
-        this.discordClient
+        this.#discordClient
             .setPresence(createPresence(statusLabel))
             .then(() =>
                 DiscordEventController.logger.debug("Updated presence.")

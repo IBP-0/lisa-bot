@@ -7,7 +7,7 @@ import type { DiscordCommandController } from "../../DiscordCommandController";
 import { TYPES } from "../../../../types";
 
 class BurnCommand extends Command {
-    private readonly discordCommandController: DiscordCommandController;
+    readonly #discordCommandController: DiscordCommandController;
 
     constructor(client: CommandoClient) {
         super(client, {
@@ -17,14 +17,15 @@ class BurnCommand extends Command {
             memberName: "burn",
             description: "Burn Lisa (you monster).",
         });
-        this.discordCommandController = container.get<DiscordCommandController>(
-            TYPES.DiscordCommandController
-        );
+        this.#discordCommandController =
+            container.get<DiscordCommandController>(
+                TYPES.DiscordCommandController
+            );
     }
 
     run(message: CommandoMessage): Promise<Message | Message[]> {
         return message.say(
-            this.discordCommandController.performKill(
+            this.#discordCommandController.performKill(
                 message.author,
                 DeathCause.FIRE,
                 null,

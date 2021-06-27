@@ -16,10 +16,10 @@ class DiscordCommandController {
     });
     private static readonly DISCORD_USER_INITIATOR = "Discord user";
 
-    private readonly stateController: StateController;
-    private readonly statusService: StatusService;
-    private readonly statusTextService: StatusTextService;
-    private readonly discordService: DiscordService;
+    readonly #stateController: StateController;
+    readonly #statusService: StatusService;
+    readonly #statusTextService: StatusTextService;
+    readonly #discordService: DiscordService;
 
     constructor(
         @inject(TYPES.StateController)
@@ -28,10 +28,10 @@ class DiscordCommandController {
         @inject(TYPES.StatusTextService) statusTextService: StatusTextService,
         @inject(TYPES.DiscordService) discordService: DiscordService
     ) {
-        this.discordService = discordService;
-        this.statusTextService = statusTextService;
-        this.statusService = statusService;
-        this.stateController = stateController;
+        this.#discordService = discordService;
+        this.#statusTextService = statusTextService;
+        this.#statusService = statusService;
+        this.#stateController = stateController;
     }
 
     public performAction(
@@ -43,7 +43,7 @@ class DiscordCommandController {
         textDead: string[],
         textNotAllowed: string[] = []
     ): string {
-        if (!this.discordService.isUserAllowed(allowedUserIds, author)) {
+        if (!this.#discordService.isUserAllowed(allowedUserIds, author)) {
             return sample(textNotAllowed)!;
         }
         if (!this.isAlive()) {
@@ -53,7 +53,7 @@ class DiscordCommandController {
         DiscordCommandController.logger.info(
             `Discord user modified status; water modifier ${waterModifier}, happiness modifier ${happinessModifier}.`
         );
-        this.stateController.modifyLisaStatus(
+        this.#stateController.modifyLisaStatus(
             waterModifier,
             happinessModifier,
             DiscordCommandController.DISCORD_USER_INITIATOR
@@ -70,14 +70,14 @@ class DiscordCommandController {
         textAlreadyDead: string[],
         textNotAllowed: string[] = []
     ): string {
-        if (!this.discordService.isUserAllowed(allowedUserIds, author)) {
+        if (!this.#discordService.isUserAllowed(allowedUserIds, author)) {
             return sample(textNotAllowed)!;
         }
         if (!this.isAlive()) {
             return sample(textAlreadyDead)!;
         }
 
-        this.stateController.killLisa(
+        this.#stateController.killLisa(
             cause,
             DiscordCommandController.DISCORD_USER_INITIATOR
         );
@@ -92,12 +92,12 @@ class DiscordCommandController {
         textWasDead: string[],
         textNotAllowed: string[] = []
     ): string {
-        if (!this.discordService.isUserAllowed(allowedUserIds, author)) {
+        if (!this.#discordService.isUserAllowed(allowedUserIds, author)) {
             return sample(textNotAllowed)!;
         }
 
         const wasAlive = this.isAlive();
-        this.stateController.replantLisa(
+        this.#stateController.replantLisa(
             DiscordCommandController.DISCORD_USER_INITIATOR
         );
 
@@ -105,13 +105,15 @@ class DiscordCommandController {
     }
 
     public createStatusText(): string {
-        return this.statusTextService.createStatusText(
-            this.stateController.getStateCopy()
+        return this.#statusTextService.createStatusText(
+            this.#stateController.getStateCopy()
         );
     }
 
     private isAlive(): boolean {
-        return this.statusService.isAlive(this.stateController.getStateCopy());
+        return this.#statusService.isAlive(
+            this.#stateController.getStateCopy()
+        );
     }
 }
 
