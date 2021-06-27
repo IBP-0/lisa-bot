@@ -1,21 +1,21 @@
+import { inject, injectable } from "inversify";
 import { cloneDeep } from "lodash";
 import type { Duration } from "moment";
 import { duration } from "moment";
 import { interval, Subject } from "rxjs";
 import { rootLogger } from "../../logger";
+import { TYPES } from "../../types";
+import { StatusService } from "../status/StatusService";
 import type { State } from "./State";
 import {
+    DeathCause,
     HAPPINESS_INITIAL,
     HAPPINESS_MAX,
     HAPPINESS_MIN,
-    DeathCause,
     WATER_INITIAL,
     WATER_MAX,
     WATER_MIN,
 } from "./State";
-import { StatusService } from "../status/StatusService";
-import { inject, injectable } from "inversify";
-import { TYPES } from "../../types";
 
 @injectable()
 class StateController {
@@ -28,18 +28,18 @@ class StateController {
 
     public readonly stateChangeSubject: Subject<State>;
     readonly #statusService: StatusService;
-    #state: State;
+    #globalState: State;
 
     constructor(@inject(TYPES.StatusService) statusService: StatusService) {
         this.#statusService = statusService;
-        this.#state = StateController.createNewLisaState(
+        this.#globalState = StateController.createNewLisaState(
             StateController.INITIATOR_SYSTEM,
             duration(0)
         );
         this.stateChangeSubject = new Subject<State>();
 
         interval(StateController.BEST_LIFETIME_CHECK_TIMEOUT).subscribe(() =>
-            this.#updateBestLifetimeIfRequired()
+            this.#updateBestLifetimeIfRequired(this.#globalState)
         );
     }
 
@@ -71,7 +71,7 @@ class StateController {
      * @return copy of the current state.
      */
     public getStateCopy(): State {
-        return cloneDeep(this.#state);
+        return cloneDeep(this.#globalState);
     }
 
     /**
@@ -80,32 +80,34 @@ class StateController {
      * @param state State to load.
      */
     public loadState(state: State): void {
-        this.#state = state;
-        this.#stateChanged();
+        this.#globalState = state;
+        this.#stateChanged(state);
     }
 
     public replantLisa(
         initiator: string = StateController.INITIATOR_SYSTEM
     ): void {
+        const state = this.#globalState;
         StateController.logger.info(`'${initiator}' replanted lisa.`);
 
-        this.#performReplant(initiator);
-        this.#stateChanged();
+        this.#performReplant(state, initiator);
+        this.#stateChanged(state);
     }
 
     public killLisa(
         cause: DeathCause,
         initiator: string = StateController.INITIATOR_SYSTEM
     ): void {
-        if (!this.#statusService.isAlive(this.getStateCopy())) {
+        const state = this.#globalState;
+        if (!this.#statusService.isAlive(state)) {
             StateController.logger.debug("Lisa is already dead, skip kill.");
             return;
         }
 
         StateController.logger.info(`'${initiator}' killed lisa by ${cause}.`);
-        this.#performKill(cause, initiator);
+        this.#performKill(state, initiator, cause);
 
-        this.#stateChanged();
+        this.#stateChanged(state);
     }
 
     public modifyLisaStatus(
@@ -113,7 +115,8 @@ class StateController {
         happinessModifier: number,
         initiator: string = StateController.INITIATOR_SYSTEM
     ): void {
-        if (!this.#statusService.isAlive(this.getStateCopy())) {
+        const state = this.#globalState;
+        if (!this.#statusService.isAlive(state)) {
             StateController.logger.debug("Lisa is dead, skip status change.");
             return;
         }
@@ -121,20 +124,28 @@ class StateController {
         StateController.logger.debug(
             `'${initiator}' modified status; water modifier ${waterModifier}, happiness modifier ${happinessModifier}.`
         );
-        this.#performModifyStatus(waterModifier, happinessModifier, initiator);
+        this.#performModifyStatus(
+            state,
+            initiator,
+            waterModifier,
+            happinessModifier
+        );
 
-        this.#stateChanged();
+        this.#stateChanged(state);
     }
 
-    #performReplant(initiator: string): void {
-        this.#state = StateController.createNewLisaState(
-            initiator,
-            this.#state.bestLifetimeDuration
+    #performReplant(state: State, initiator: string): void {
+        Object.assign(
+            state,
+            StateController.createNewLisaState(
+                initiator,
+                state.bestLifetimeDuration
+            )
         );
     }
 
-    #performKill(cause: DeathCause, initiator: string): void {
-        this.#state.death = {
+    #performKill(state: State, initiator: string, cause: DeathCause): void {
+        state.death = {
             timestamp: new Date(),
             initiator: initiator,
             cause,
@@ -142,67 +153,60 @@ class StateController {
     }
 
     #performModifyStatus(
+        state: State,
+        initiator: string,
         waterModifier: number,
-        happinessModifier: number,
-        initiator: string
+        happinessModifier: number
     ): void {
-        this.#state.status.water += waterModifier;
-        this.#state.status.happiness += happinessModifier;
+        state.status.water += waterModifier;
+        state.status.happiness += happinessModifier;
 
-        this.#checkStats(initiator);
+        this.#checkStats(state, initiator);
     }
 
-    #checkStats(initiator: string): void {
-        if (this.#state.status.water > WATER_MAX) {
+    #checkStats(state: State, initiator: string): void {
+        if (state.status.water > WATER_MAX) {
             StateController.logger.silly(
-                `Water level ${
-                    this.#state.status.water
-                } is above limit of ${WATER_MAX} -> ${DeathCause.DROWNING}.`
+                `Water level ${state.status.water} is above limit of ${WATER_MAX} -> ${DeathCause.DROWNING}.`
             );
 
-            this.#performKill(DeathCause.DROWNING, initiator);
-        } else if (this.#state.status.water < WATER_MIN) {
+            this.#performKill(state, initiator, DeathCause.DROWNING);
+        } else if (state.status.water < WATER_MIN) {
             StateController.logger.silly(
-                `Water level ${
-                    this.#state.status.water
-                } is below limit of ${WATER_MIN} -> ${DeathCause.DEHYDRATION}.`
+                `Water level ${state.status.water} is below limit of ${WATER_MIN} -> ${DeathCause.DEHYDRATION}.`
             );
 
-            this.#performKill(DeathCause.DEHYDRATION, initiator);
+            this.#performKill(state, initiator, DeathCause.DEHYDRATION);
         }
 
-        if (this.#state.status.happiness > HAPPINESS_MAX) {
+        if (state.status.happiness > HAPPINESS_MAX) {
             StateController.logger.silly(
-                `Happiness level ${
-                    this.#state.status.happiness
-                } is above limit of ${HAPPINESS_MAX} -> reducing to limit.`
+                `Happiness level ${state.status.happiness} is above limit of ${HAPPINESS_MAX} -> reducing to limit.`
             );
 
-            this.#state.status.happiness = HAPPINESS_MAX;
-        } else if (this.#state.status.happiness < HAPPINESS_MIN) {
+            state.status.happiness = HAPPINESS_MAX;
+        } else if (state.status.happiness < HAPPINESS_MIN) {
             StateController.logger.silly(
-                `Happiness level ${
-                    this.#state.status.happiness
-                } is below limit of ${HAPPINESS_MIN} -> ${DeathCause.SADNESS}.`
+                `Happiness level ${state.status.happiness} is below limit of ${HAPPINESS_MIN} -> ${DeathCause.SADNESS}.`
             );
 
-            this.#performKill(DeathCause.SADNESS, initiator);
+            this.#performKill(state, initiator, DeathCause.SADNESS);
         }
     }
 
-    #stateChanged(): void {
+    #stateChanged(state: State): void {
         StateController.logger.silly("Lisa state changed.");
 
-        this.stateChangeSubject.next(this.getStateCopy());
+        this.stateChangeSubject.next(cloneDeep(state));
     }
 
-    #updateBestLifetimeIfRequired(): void {
-        const lifetime = this.#statusService.getLifetime(this.getStateCopy());
-        if (lifetime > this.#state.bestLifetimeDuration) {
+    #updateBestLifetimeIfRequired(state: State): void {
+        const lifetime = this.#statusService.getLifetime(state);
+        if (lifetime > state.bestLifetimeDuration) {
             StateController.logger.silly(
-                `Increasing high score from ${this.#state.bestLifetimeDuration.asMilliseconds()} to ${lifetime.asMilliseconds()}.`
+                `Increasing high score from ${state.bestLifetimeDuration.asMilliseconds()} to ${lifetime.asMilliseconds()}.`
             );
-            this.#state.bestLifetimeDuration = lifetime;
+            state.bestLifetimeDuration = lifetime;
         }
     }
 }
