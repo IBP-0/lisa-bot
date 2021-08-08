@@ -1,7 +1,6 @@
 import { inject, injectable } from "inversify";
 import { cloneDeep } from "lodash";
-import type { Duration } from "moment";
-import { duration } from "moment";
+import { Duration } from "luxon";
 import { interval, Subject } from "rxjs";
 import { rootLogger } from "../../logger";
 import { TYPES } from "../../types";
@@ -34,7 +33,7 @@ class StateController {
         this.#statusService = statusService;
         this.#globalState = StateController.createNewLisaState(
             StateController.INITIATOR_SYSTEM,
-            duration(0)
+            Duration.fromMillis(0)
         );
         this.stateChangeSubject = new Subject<State>();
 
@@ -204,7 +203,7 @@ class StateController {
         const lifetime = this.#statusService.getLifetime(state);
         if (lifetime > state.bestLifetimeDuration) {
             StateController.logger.silly(
-                `Increasing high score from ${state.bestLifetimeDuration.asMilliseconds()} to ${lifetime.asMilliseconds()}.`
+                `Increasing high score from ${state.bestLifetimeDuration.toMillis()} to ${lifetime.toMillis()}.`
             );
             state.bestLifetimeDuration = lifetime;
         }

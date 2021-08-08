@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import { duration } from "moment";
+import { Duration } from "luxon";
 import type { State } from "../../../src/core/state/State";
 import {
     HAPPINESS_INITIAL,
@@ -12,7 +12,7 @@ import { TYPES } from "../../../src/types";
 
 const createState = (): State => {
     return {
-        bestLifetimeDuration: duration(0),
+        bestLifetimeDuration: Duration.fromMillis(0),
         status: {
             water: WATER_INITIAL,
             happiness: HAPPINESS_INITIAL,

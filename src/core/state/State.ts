@@ -1,4 +1,4 @@
-import type { Duration } from "moment";
+import type { Duration } from "luxon";
 
 const WATER_INITIAL = 100;
 const WATER_MIN = 0.1;

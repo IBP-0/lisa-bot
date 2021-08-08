@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { duration } from "moment";
+import { Duration } from "luxon";
 import type { DeathCause, State } from "./State";
 
 import { inject, injectable } from "inversify";
@@ -154,8 +154,7 @@ export class StateRepository {
             ":death_initiator": state.death.initiator,
             ":death_cause": state.death.cause,
 
-            ":best_lifetime_duration":
-                state.bestLifetimeDuration.asMilliseconds(),
+            ":best_lifetime_duration": state.bestLifetimeDuration.toMillis(),
         };
     }
 
@@ -177,7 +176,9 @@ export class StateRepository {
                 initiator: stateRow.death_initiator,
                 cause: stateRow.death_cause as DeathCause,
             },
-            bestLifetimeDuration: duration(stateRow.best_lifetime_duration),
+            bestLifetimeDuration: Duration.fromMillis(
+                stateRow.best_lifetime_duration
+            ),
         };
     }
 }

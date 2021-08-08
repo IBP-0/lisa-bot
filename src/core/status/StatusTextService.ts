@@ -1,7 +1,13 @@
+import { inject, injectable } from "inversify";
+import type { Duration } from "luxon";
+import { duration as momentDuration } from "moment";
+import { TYPES } from "../../types";
 import type { State } from "../state/State";
 import { StatusService } from "./StatusService";
-import { inject, injectable } from "inversify";
-import { TYPES } from "../../types";
+
+// Luxon does not support duration localization yet.
+const humanize = (duration: Duration): string =>
+    momentDuration(duration.toMillis()).humanize();
 
 @injectable()
 class StatusTextService {
@@ -17,9 +23,9 @@ class StatusTextService {
         let text: string;
 
         if (!this.#statusService.isAlive(state)) {
-            const timeSinceDeathLabel = this.#statusService
-                .getTimeSinceDeath(state)!
-                .humanize();
+            const timeSinceDeathLabel = humanize(
+                this.#statusService.getTimeSinceDeath(state)!
+            );
 
             text = `Lisa died ${timeSinceDeathLabel} ago, she was killed by ${
                 state.death.initiator ?? "anonymous"
@@ -49,8 +55,8 @@ class StatusTextService {
     }
 
     #createScoreText(state: State): string {
-        const lifetimeLabel = this.#statusService.getLifetime(state).humanize();
-        const highScoreLabel = state.bestLifetimeDuration.humanize();
+        const lifetimeLabel = humanize(this.#statusService.getLifetime(state));
+        const highScoreLabel = humanize(state.bestLifetimeDuration);
         const currentLabel = this.#statusService.isAlive(state)
             ? "Current lifetime"
             : "Lifetime";
