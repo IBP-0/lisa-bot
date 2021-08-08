@@ -1,13 +1,13 @@
 import type { User } from "discord.js";
+import { inject, injectable } from "inversify";
 import { sample } from "lodash";
-import { StateController } from "../../core/state/StateController";
 import type { DeathCause } from "../../core/state/State";
+import { StateController } from "../../core/state/StateController";
 import { StatusService } from "../../core/status/StatusService";
 import { StatusTextService } from "../../core/status/StatusTextService";
-import { DiscordService } from "./DiscordService";
 import { rootLogger } from "../../logger";
-import { inject, injectable } from "inversify";
 import { TYPES } from "../../types";
+import { DiscordService } from "./DiscordService";
 
 @injectable()
 class DiscordCommandController {
@@ -34,7 +34,7 @@ class DiscordCommandController {
         this.#stateController = stateController;
     }
 
-    public performAction(
+    performAction(
         author: User,
         waterModifier: number,
         happinessModifier: number,
@@ -62,7 +62,7 @@ class DiscordCommandController {
         return [sample(textSuccess)!, this.createStatusText()].join("\n");
     }
 
-    public performKill(
+    performKill(
         author: User,
         cause: DeathCause,
         allowedUserIds: string[] | null,
@@ -104,7 +104,7 @@ class DiscordCommandController {
         return sample(wasAlive ? textWasAlive : textWasDead)!;
     }
 
-    public createStatusText(): string {
+    createStatusText(): string {
         return this.#statusTextService.createStatusText(
             this.#stateController.getStateCopy()
         );

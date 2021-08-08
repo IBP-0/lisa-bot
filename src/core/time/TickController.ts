@@ -1,8 +1,8 @@
+import { injectable } from "inversify";
 import type { Observable } from "rxjs";
 import { interval } from "rxjs";
 import { map } from "rxjs/operators";
 import { rootLogger } from "../../logger";
-import { injectable } from "inversify";
 
 interface TickData {
     waterModifier: number;
@@ -21,7 +21,7 @@ class TickController {
     private static readonly HAPPINESS_MODIFIER = -0.75;
     private static readonly INITIATOR_TICK = "Time";
 
-    public readonly tickObservable: Observable<TickData>;
+    readonly tickObservable: Observable<TickData>;
 
     constructor() {
         this.tickObservable = this.#createTickObservable();

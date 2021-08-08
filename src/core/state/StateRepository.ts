@@ -1,11 +1,10 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { DateTime, Duration } from "luxon";
-import type { DeathCause, State } from "./State";
-
 import { inject, injectable } from "inversify";
-import { PersistenceProvider } from "../PersistenceProvider";
-import { TYPES } from "../../types";
+import { DateTime, Duration } from "luxon";
 import { rootLogger } from "../../logger";
+import { TYPES } from "../../types";
+import { PersistenceProvider } from "../PersistenceProvider";
+import type { DeathCause, State } from "./State";
 
 interface StateRow {
     readonly id: number;
@@ -39,7 +38,7 @@ export class StateRepository {
         this.#storageProvider = storageProvider;
     }
 
-    public async count(): Promise<number> {
+    async count(): Promise<number> {
         const database = this.#storageProvider.getDb()!;
         const countResult = await database.get<{ "COUNT(*)": number }>(
             "SELECT COUNT(*) FROM lisa_state"
@@ -50,7 +49,7 @@ export class StateRepository {
         return countResult["COUNT(*)"];
     }
 
-    public async insert(state: State): Promise<void> {
+    async insert(state: State): Promise<void> {
         const database = this.#storageProvider.getDb()!;
         StateRepository.logger.silly(
             `Inserting lisa state: ${JSON.stringify(state)}.`
@@ -77,7 +76,7 @@ export class StateRepository {
         StateRepository.logger.silly(`Inserted lisa state.`);
     }
 
-    public async update(state: State): Promise<void> {
+    async update(state: State): Promise<void> {
         const database = this.#storageProvider.getDb()!;
         StateRepository.logger.silly(
             `Updating lisa state: ${JSON.stringify(state)}.`
@@ -107,7 +106,7 @@ export class StateRepository {
         StateRepository.logger.silly(`Updated lisa state.`);
     }
 
-    public async select(): Promise<State> {
+    async select(): Promise<State> {
         const database = this.#storageProvider.getDb()!;
 
         StateRepository.logger.silly(`Loading lisa state.`);

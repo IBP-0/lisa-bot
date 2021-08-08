@@ -18,11 +18,11 @@ class StatusService {
         this.#timeProvider = timeProvider;
     }
 
-    public isAlive(state: State): boolean {
+    isAlive(state: State): boolean {
         return state.death.timestamp == null;
     }
 
-    public getLifetime(state: State): Duration {
+    getLifetime(state: State): Duration {
         const birth = state.birth.timestamp;
 
         if (!this.isAlive(state)) {
@@ -32,7 +32,7 @@ class StatusService {
         return birth.diff(this.#timeProvider.now());
     }
 
-    public getTimeSinceDeath(state: State): Duration | null {
+    getTimeSinceDeath(state: State): Duration | null {
         if (this.isAlive(state)) {
             return null;
         }
@@ -46,7 +46,7 @@ class StatusService {
      *
      * @return relative index.
      */
-    public calculateRelativeIndex(state: State): number {
+    calculateRelativeIndex(state: State): number {
         let relativeWater = state.status.water / WATER_INITIAL;
         if (relativeWater > 1) {
             relativeWater = 1;

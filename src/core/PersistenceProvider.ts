@@ -1,8 +1,8 @@
+import { readFile } from "fs/promises";
 import { injectable } from "inversify";
-import sqlite3 from "sqlite3";
 import type { Database } from "sqlite";
 import { open } from "sqlite";
-import { readFile } from "fs/promises";
+import sqlite3 from "sqlite3";
 
 @injectable()
 export class PersistenceProvider {
@@ -12,19 +12,19 @@ export class PersistenceProvider {
         this.#db = null;
     }
 
-    public async init(): Promise<void> {
+    async init(): Promise<void> {
         this.#db = await open({
             filename: "./data/storage.sqlite3",
             driver: sqlite3.Database,
         });
     }
 
-    public async executeScript(path: string): Promise<void> {
+    async executeScript(path: string): Promise<void> {
         const script = await readFile(path, { encoding: "utf-8" });
         await this.#db!.run(script);
     }
 
-    public getDb(): Database | null {
+    getDb(): Database | null {
         return this.#db;
     }
 }

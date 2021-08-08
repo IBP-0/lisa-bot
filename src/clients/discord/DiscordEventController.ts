@@ -1,12 +1,12 @@
 import type { PresenceData } from "discord.js";
+import { inject, injectable } from "inversify";
 import { filter, throttleTime } from "rxjs/operators";
-import { StateController } from "../../core/state/StateController";
 import type { State } from "../../core/state/State";
+import { StateController } from "../../core/state/StateController";
 import { StatusTextService } from "../../core/status/StatusTextService";
 import { rootLogger } from "../../logger";
-import { DiscordClient } from "./DiscordClient";
-import { inject, injectable } from "inversify";
 import { TYPES } from "../../types";
+import { DiscordClient } from "./DiscordClient";
 
 const createPresence = (name: string): PresenceData => {
     return {
@@ -41,7 +41,7 @@ class DiscordEventController {
         this.#stateController = stateController;
     }
 
-    public bindListeners(): void {
+    bindListeners(): void {
         this.#discordClient
             .getMessageObservable()
             .pipe(

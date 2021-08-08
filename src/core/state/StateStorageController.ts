@@ -1,9 +1,9 @@
+import { inject, injectable } from "inversify";
 import type { Subject } from "rxjs";
 import { throttleTime } from "rxjs/operators";
 import { rootLogger } from "../../logger";
-import type { State } from "./State";
-import { inject, injectable } from "inversify";
 import { TYPES } from "../../types";
+import type { State } from "./State";
 import { StateRepository } from "./StateRepository";
 
 @injectable()
@@ -18,14 +18,12 @@ class StateStorageController {
 
     constructor(
         @inject(TYPES.StateRepository)
-        stateRepository: StateRepository
+            stateRepository: StateRepository
     ) {
         this.#stateRepository = stateRepository;
     }
 
-    public bindStateChangeSubscription(
-        stateChangeSubject: Subject<State>
-    ): void {
+    bindStateChangeSubscription(stateChangeSubject: Subject<State>): void {
         stateChangeSubject
             .pipe(throttleTime(StateStorageController.STORAGE_THROTTLE_TIMEOUT))
             .subscribe((state) => {

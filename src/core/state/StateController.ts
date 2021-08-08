@@ -28,7 +28,7 @@ class StateController {
 
     readonly #statusService: StatusService;
     readonly #timeProvider: TimeProvider;
-    public readonly stateChangeSubject: Subject<State>;
+    readonly stateChangeSubject: Subject<State>;
 
     #globalState: State;
 
@@ -39,7 +39,7 @@ class StateController {
         this.#statusService = statusService;
         this.#timeProvider = timeProvider;
 
-        this.#globalState = this.createNewLisaState(
+        this.#globalState = this.#createNewLisaState(
             StateController.INITIATOR_SYSTEM,
             Duration.fromMillis(0)
         );
@@ -51,34 +51,12 @@ class StateController {
         );
     }
 
-    private createNewLisaState(
-        birthInitiator: string,
-        bestLifetime: Duration
-    ): State {
-        return {
-            bestLifetimeDuration: bestLifetime,
-            status: {
-                water: WATER_INITIAL,
-                happiness: HAPPINESS_INITIAL,
-            },
-            birth: {
-                timestamp: this.#timeProvider.now(),
-                initiator: birthInitiator,
-            },
-            death: {
-                timestamp: null,
-                initiator: null,
-                cause: null,
-            },
-        };
-    }
-
     /**
      * Gets a copy of the state to process e.g. when creating text for the current status.
      *
      * @return copy of the current state.
      */
-    public getStateCopy(): State {
+    getStateCopy(): State {
         return cloneDeep(this.#globalState);
     }
 
@@ -87,14 +65,12 @@ class StateController {
      *
      * @param state State to load.
      */
-    public loadState(state: State): void {
+    loadState(state: State): void {
         this.#globalState = state;
         this.#stateChanged(state);
     }
 
-    public replantLisa(
-        initiator: string = StateController.INITIATOR_SYSTEM
-    ): void {
+    replantLisa(initiator: string = StateController.INITIATOR_SYSTEM): void {
         const state = this.#globalState;
         StateController.logger.info(`'${initiator}' replanted lisa.`);
 
@@ -102,7 +78,7 @@ class StateController {
         this.#stateChanged(state);
     }
 
-    public killLisa(
+    killLisa(
         cause: DeathCause,
         initiator: string = StateController.INITIATOR_SYSTEM
     ): void {
@@ -118,7 +94,7 @@ class StateController {
         this.#stateChanged(state);
     }
 
-    public modifyLisaStatus(
+    modifyLisaStatus(
         waterModifier: number,
         happinessModifier: number,
         initiator: string = StateController.INITIATOR_SYSTEM
@@ -142,10 +118,29 @@ class StateController {
         this.#stateChanged(state);
     }
 
+    #createNewLisaState(birthInitiator: string, bestLifetime: Duration): State {
+        return {
+            bestLifetimeDuration: bestLifetime,
+            status: {
+                water: WATER_INITIAL,
+                happiness: HAPPINESS_INITIAL,
+            },
+            birth: {
+                timestamp: this.#timeProvider.now(),
+                initiator: birthInitiator,
+            },
+            death: {
+                timestamp: null,
+                initiator: null,
+                cause: null,
+            },
+        };
+    }
+
     #performReplant(state: State, initiator: string): void {
         Object.assign(
             state,
-            this.createNewLisaState(initiator, state.bestLifetimeDuration)
+            this.#createNewLisaState(initiator, state.bestLifetimeDuration)
         );
     }
 

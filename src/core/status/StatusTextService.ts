@@ -22,7 +22,7 @@ class StatusTextService {
         this.#statusService = statusService;
     }
 
-    public createStatusText(state: State): string {
+    createStatusText(state: State): string {
         const statusLabel = `Lisa is ${this.createStatusLabel(state)}.`;
         const scoreText = this.#createScoreText(state);
         let text: string;
@@ -45,7 +45,7 @@ class StatusTextService {
         return [statusLabel, text, scoreText].join("\n");
     }
 
-    public createStatusLabel(state: State): string {
+    createStatusLabel(state: State): string {
         if (!this.#statusService.isAlive(state)) {
             return "is dead";
         }

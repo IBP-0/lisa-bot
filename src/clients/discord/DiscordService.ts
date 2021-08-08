@@ -3,10 +3,7 @@ import { injectable } from "inversify";
 
 @injectable()
 class DiscordService {
-    public isUserAllowed(
-        allowedUserIds: string[] | null,
-        author: User
-    ): boolean {
+    isUserAllowed(allowedUserIds: string[] | null, author: User): boolean {
         return allowedUserIds == null || allowedUserIds.includes(author.id);
     }
 }

@@ -1,11 +1,11 @@
 import type { Message, PresenceData } from "discord.js";
-import {
-    CommandoClient,
-    CommandoClientOptions,
-    SQLiteProvider,
-} from "discord.js-commando";
+import { CommandoClient, CommandoClientOptions, SQLiteProvider, } from "discord.js-commando";
+import { inject, injectable } from "inversify";
 
 import { Observable } from "rxjs";
+import { PersistenceProvider } from "../../core/PersistenceProvider";
+import { rootLogger } from "../../logger";
+import { TYPES } from "../../types";
 import { AboutCommand } from "./commands/core/AboutCommand";
 import { InviteCommand } from "./commands/core/InviteCommand";
 import { ServersCommand } from "./commands/core/ServersCommand";
@@ -19,10 +19,6 @@ import { PunchCommand } from "./commands/lisa/PunchCommand";
 import { ReplantCommand } from "./commands/lisa/ReplantCommand";
 import { StatusCommand } from "./commands/lisa/StatusCommand";
 import { WaterCommand } from "./commands/lisa/WaterCommand";
-import { inject, injectable } from "inversify";
-import { TYPES } from "../../types";
-import { PersistenceProvider } from "../../core/PersistenceProvider";
-import { rootLogger } from "../../logger";
 
 @injectable()
 class DiscordClient {
@@ -42,7 +38,7 @@ class DiscordClient {
         this.#commandoClient = new CommandoClient(discordConfig);
     }
 
-    public init(): void {
+    init(): void {
         this.#commandoClient
             .setProvider(new SQLiteProvider(this.#persistenceProvider.getDb()!))
             .catch((e) =>
@@ -102,15 +98,15 @@ class DiscordClient {
         );
     }
 
-    public async login(token: string): Promise<void> {
+    async login(token: string): Promise<void> {
         await this.#commandoClient.login(token);
     }
 
-    public async setPresence(data: PresenceData): Promise<void> {
+    async setPresence(data: PresenceData): Promise<void> {
         await this.#commandoClient.user!.setPresence(data);
     }
 
-    public getMessageObservable(): Observable<Message> {
+    getMessageObservable(): Observable<Message> {
         return new Observable((subscriber) => {
             this.#commandoClient.on("message", (message) => {
                 subscriber.next(message);
