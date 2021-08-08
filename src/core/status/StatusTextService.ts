@@ -1,13 +1,18 @@
+import { humanizer } from "humanize-duration";
 import { inject, injectable } from "inversify";
 import type { Duration } from "luxon";
-import { duration as momentDuration } from "moment";
 import { TYPES } from "../../types";
 import type { State } from "../state/State";
 import { StatusService } from "./StatusService";
 
+const statusHumanizer = humanizer({
+    language: "en",
+    round: true,
+});
+
 // Luxon does not support duration localization yet.
 const humanize = (duration: Duration): string =>
-    momentDuration(duration.toMillis()).humanize();
+    statusHumanizer(duration.toMillis());
 
 @injectable()
 class StatusTextService {
