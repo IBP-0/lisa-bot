@@ -1,4 +1,4 @@
-import type { Duration } from "luxon";
+import type { DateTime, Duration } from "luxon";
 
 const WATER_INITIAL = 100;
 const WATER_MIN = 0.1;
@@ -21,11 +21,11 @@ interface State {
         happiness: number;
     };
     birth: {
-        timestamp: Date;
+        timestamp: DateTime;
         initiator: string;
     };
     death: {
-        timestamp: Date | null;
+        timestamp: DateTime | null;
         initiator: string | null;
         cause: DeathCause | null;
     };

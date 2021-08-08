@@ -1,4 +1,4 @@
-import { Duration } from "luxon";
+import { DateTime, Duration } from "luxon";
 import { rootLogger } from "../../logger";
 import type { State } from "../state/State";
 import { HAPPINESS_INITIAL, WATER_INITIAL } from "../state/State";
@@ -15,14 +15,14 @@ class StatusService {
     }
 
     public getLifetime(state: State): Duration {
-        const birth = state.birth.timestamp.getTime();
+        const birth = state.birth.timestamp.toMillis();
 
         if (!this.isAlive(state)) {
-            const death = state.death.timestamp!.getTime();
+            const death = state.death.timestamp!.toMillis();
             return Duration.fromMillis(death - birth);
         }
 
-        const now = Date.now();
+        const now = DateTime.now().toMillis();
         return Duration.fromMillis(now - birth);
     }
 
@@ -31,8 +31,8 @@ class StatusService {
             return null;
         }
 
-        const death = state.death.timestamp!.getTime();
-        const now = Date.now();
+        const death = state.death.timestamp!.toMillis();
+        const now = DateTime.now().toMillis();
         return Duration.fromMillis(death - now);
     }
 

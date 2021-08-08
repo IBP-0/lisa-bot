@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Duration } from "luxon";
+import { DateTime, Duration } from "luxon";
 import type { DeathCause, State } from "./State";
 
 import { inject, injectable } from "inversify";
@@ -147,10 +147,10 @@ export class StateRepository {
             ":current_water": state.status.water,
             ":current_happiness": state.status.happiness,
 
-            ":birth_timestamp": state.birth.timestamp.getTime(),
+            ":birth_timestamp": state.birth.timestamp.toMillis(),
             ":birth_initiator": state.birth.initiator,
 
-            ":death_timestamp": state.death.timestamp?.getTime() ?? null,
+            ":death_timestamp": state.death.timestamp?.toMillis() ?? null,
             ":death_initiator": state.death.initiator,
             ":death_cause": state.death.cause,
 
@@ -165,13 +165,13 @@ export class StateRepository {
                 happiness: stateRow.current_happiness,
             },
             birth: {
-                timestamp: new Date(stateRow.birth_timestamp),
+                timestamp: DateTime.fromMillis(stateRow.birth_timestamp),
                 initiator: stateRow.birth_initiator,
             },
             death: {
                 timestamp:
                     stateRow.death_timestamp != null
-                        ? new Date(stateRow.death_timestamp)
+                        ? DateTime.fromMillis(stateRow.death_timestamp)
                         : null,
                 initiator: stateRow.death_initiator,
                 cause: stateRow.death_cause as DeathCause,

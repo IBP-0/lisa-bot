@@ -1,6 +1,6 @@
 import { inject, injectable } from "inversify";
 import { cloneDeep } from "lodash";
-import { Duration } from "luxon";
+import { DateTime, Duration } from "luxon";
 import { interval, Subject } from "rxjs";
 import { rootLogger } from "../../logger";
 import { TYPES } from "../../types";
@@ -53,7 +53,7 @@ class StateController {
                 happiness: HAPPINESS_INITIAL,
             },
             birth: {
-                timestamp: new Date(),
+                timestamp: DateTime.now(),
                 initiator: birthInitiator,
             },
             death: {
@@ -145,7 +145,7 @@ class StateController {
 
     #performKill(state: State, initiator: string, cause: DeathCause): void {
         state.death = {
-            timestamp: new Date(),
+            timestamp: DateTime.now(),
             initiator: initiator,
             cause,
         };

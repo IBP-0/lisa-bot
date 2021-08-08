@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import { Duration } from "luxon";
+import { DateTime, Duration } from "luxon";
 import type { State } from "../../../src/core/state/State";
 import {
     HAPPINESS_INITIAL,
@@ -18,7 +18,7 @@ const createState = (): State => {
             happiness: HAPPINESS_INITIAL,
         },
         birth: {
-            timestamp: new Date(),
+            timestamp: DateTime.fromMillis(0),
             initiator: "none",
         },
         death: {
