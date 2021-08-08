@@ -1,12 +1,10 @@
-import "reflect-metadata";
 import { DateTime, Duration } from "luxon";
+import "reflect-metadata";
 import type { State } from "../../../src/core/state/State";
-import {
-    HAPPINESS_INITIAL,
-    WATER_INITIAL,
-} from "../../../src/core/state/State";
+import { HAPPINESS_INITIAL, WATER_INITIAL, } from "../../../src/core/state/State";
 import { StatusService } from "../../../src/core/status/StatusService";
 import type { StatusTextService } from "../../../src/core/status/StatusTextService";
+import { TimeProvider } from "../../../src/core/time/TimeProvider";
 import { container } from "../../../src/inversify.config";
 import { TYPES } from "../../../src/types";
 
@@ -37,7 +35,7 @@ describe("StatusTextService", () => {
     beforeEach(() => {
         container.snapshot();
 
-        mockStatusService = new StatusService();
+        mockStatusService = new StatusService(new TimeProvider());
         container
             .rebind<StatusService>(TYPES.StatusService)
             .toConstantValue(mockStatusService);
