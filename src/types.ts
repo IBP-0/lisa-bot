@@ -1,4 +1,6 @@
 export const TYPES = {
+    TimeProvider: Symbol.for("TimeProvider"),
+
     PersistenceProvider: Symbol.for("PersistenceProvider"),
     StateRepository: Symbol.for("StateRepository"),
     StorageController: Symbol.for("StorageController"),

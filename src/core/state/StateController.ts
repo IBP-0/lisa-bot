@@ -1,10 +1,11 @@
 import { inject, injectable } from "inversify";
 import { cloneDeep } from "lodash";
-import { DateTime, Duration } from "luxon";
+import { Duration } from "luxon";
 import { interval, Subject } from "rxjs";
 import { rootLogger } from "../../logger";
 import { TYPES } from "../../types";
 import { StatusService } from "../status/StatusService";
+import { TimeProvider } from "../time/TimeProvider";
 import type { State } from "./State";
 import {
     DeathCause,
@@ -25,16 +26,24 @@ class StateController {
     private static readonly INITIATOR_SYSTEM = "System";
     private static readonly BEST_LIFETIME_CHECK_TIMEOUT = 5000;
 
-    public readonly stateChangeSubject: Subject<State>;
     readonly #statusService: StatusService;
+    readonly #timeProvider: TimeProvider;
+    public readonly stateChangeSubject: Subject<State>;
+
     #globalState: State;
 
-    constructor(@inject(TYPES.StatusService) statusService: StatusService) {
+    constructor(
+        @inject(TYPES.StatusService) statusService: StatusService,
+        @inject(TYPES.TimeProvider) timeProvider: TimeProvider
+    ) {
         this.#statusService = statusService;
-        this.#globalState = StateController.createNewLisaState(
+        this.#timeProvider = timeProvider;
+
+        this.#globalState = this.createNewLisaState(
             StateController.INITIATOR_SYSTEM,
             Duration.fromMillis(0)
         );
+
         this.stateChangeSubject = new Subject<State>();
 
         interval(StateController.BEST_LIFETIME_CHECK_TIMEOUT).subscribe(() =>
@@ -42,7 +51,7 @@ class StateController {
         );
     }
 
-    private static createNewLisaState(
+    private createNewLisaState(
         birthInitiator: string,
         bestLifetime: Duration
     ): State {
@@ -53,7 +62,7 @@ class StateController {
                 happiness: HAPPINESS_INITIAL,
             },
             birth: {
-                timestamp: DateTime.now().toUTC(),
+                timestamp: this.#timeProvider.now(),
                 initiator: birthInitiator,
             },
             death: {
@@ -136,16 +145,13 @@ class StateController {
     #performReplant(state: State, initiator: string): void {
         Object.assign(
             state,
-            StateController.createNewLisaState(
-                initiator,
-                state.bestLifetimeDuration
-            )
+            this.createNewLisaState(initiator, state.bestLifetimeDuration)
         );
     }
 
     #performKill(state: State, initiator: string, cause: DeathCause): void {
         state.death = {
-            timestamp: DateTime.now().toUTC(),
+            timestamp: this.#timeProvider.now(),
             initiator: initiator,
             cause,
         };

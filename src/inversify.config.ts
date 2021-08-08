@@ -1,20 +1,26 @@
+import type { CommandoClientOptions } from "discord.js-commando";
 import { Container } from "inversify";
+import { DiscordClient } from "./clients/discord/DiscordClient";
+import { DiscordCommandController } from "./clients/discord/DiscordCommandController";
+import { DiscordEventController } from "./clients/discord/DiscordEventController";
+import { DiscordService } from "./clients/discord/DiscordService";
+import { DISCORD_CLIENT_CONFIG } from "./config";
+import { PersistenceProvider } from "./core/PersistenceProvider";
+import { StateController } from "./core/state/StateController";
 import { StateRepository } from "./core/state/StateRepository";
-import { TYPES } from "./types";
+import { StateStorageController } from "./core/state/StateStorageController";
 import { StatusService } from "./core/status/StatusService";
 import { StatusTextService } from "./core/status/StatusTextService";
-import { StateController } from "./core/state/StateController";
-import type { CommandoClientOptions } from "discord.js-commando";
-import { DiscordCommandController } from "./clients/discord/DiscordCommandController";
-import { DISCORD_CLIENT_CONFIG } from "./config";
 import { TickController } from "./core/time/TickController";
-import { DiscordService } from "./clients/discord/DiscordService";
-import { DiscordClient } from "./clients/discord/DiscordClient";
-import { DiscordEventController } from "./clients/discord/DiscordEventController";
-import { PersistenceProvider } from "./core/PersistenceProvider";
-import { StateStorageController } from "./core/state/StateStorageController";
+import { TimeProvider } from "./core/time/TimeProvider";
+import { TYPES } from "./types";
 
 export const container = new Container();
+
+container
+    .bind<TimeProvider>(TYPES.TimeProvider)
+    .to(TimeProvider)
+    .inSingletonScope();
 
 container
     .bind<PersistenceProvider>(TYPES.PersistenceProvider)

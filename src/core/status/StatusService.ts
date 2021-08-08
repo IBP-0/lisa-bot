@@ -1,15 +1,22 @@
+import { inject, injectable } from "inversify";
 import type { Duration } from "luxon";
-import { DateTime } from "luxon";
 import { rootLogger } from "../../logger";
+import { TYPES } from "../../types";
 import type { State } from "../state/State";
 import { HAPPINESS_INITIAL, WATER_INITIAL } from "../state/State";
-import { injectable } from "inversify";
+import { TimeProvider } from "../time/TimeProvider";
 
 @injectable()
 class StatusService {
     private static readonly logger = rootLogger.child({
         target: StatusService,
     });
+
+    readonly #timeProvider: TimeProvider;
+
+    constructor(@inject(TYPES.TimeProvider) timeProvider: TimeProvider) {
+        this.#timeProvider = timeProvider;
+    }
 
     public isAlive(state: State): boolean {
         return state.death.timestamp == null;
@@ -22,9 +29,7 @@ class StatusService {
             const death = state.death.timestamp!;
             return birth.diff(death);
         }
-
-        const now = DateTime.now().toUTC();
-        return birth.diff(now);
+        return birth.diff(this.#timeProvider.now());
     }
 
     public getTimeSinceDeath(state: State): Duration | null {
@@ -33,8 +38,7 @@ class StatusService {
         }
 
         const death = state.death.timestamp!;
-        const now = DateTime.now().toUTC();
-        return death.diff(now);
+        return death.diff(this.#timeProvider.now());
     }
 
     /**
