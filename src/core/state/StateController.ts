@@ -53,7 +53,7 @@ class StateController {
                 happiness: HAPPINESS_INITIAL,
             },
             birth: {
-                timestamp: DateTime.now(),
+                timestamp: DateTime.now().toUTC(),
                 initiator: birthInitiator,
             },
             death: {
@@ -145,7 +145,7 @@ class StateController {
 
     #performKill(state: State, initiator: string, cause: DeathCause): void {
         state.death = {
-            timestamp: DateTime.now(),
+            timestamp: DateTime.now().toUTC(),
             initiator: initiator,
             cause,
         };

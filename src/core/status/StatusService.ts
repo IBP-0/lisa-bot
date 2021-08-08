@@ -23,7 +23,7 @@ class StatusService {
             return birth.diff(death);
         }
 
-        const now = DateTime.now();
+        const now = DateTime.now().toUTC();
         return birth.diff(now);
     }
 
@@ -33,7 +33,7 @@ class StatusService {
         }
 
         const death = state.death.timestamp!;
-        const now = DateTime.now();
+        const now = DateTime.now().toUTC();
         return death.diff(now);
     }
 
