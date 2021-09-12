@@ -1,5 +1,9 @@
 import type { Message, PresenceData } from "discord.js";
-import { CommandoClient, CommandoClientOptions, SQLiteProvider, } from "discord.js-commando";
+import {
+    CommandoClient,
+    CommandoClientOptions,
+    SQLiteProvider,
+} from "discord.js-commando";
 import { inject, injectable } from "inversify";
 
 import { Observable } from "rxjs";

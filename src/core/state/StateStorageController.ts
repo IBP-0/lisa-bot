@@ -18,7 +18,7 @@ class StateStorageController {
 
     constructor(
         @inject(TYPES.StateRepository)
-            stateRepository: StateRepository
+        stateRepository: StateRepository
     ) {
         this.#stateRepository = stateRepository;
     }
