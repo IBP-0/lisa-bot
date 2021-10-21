@@ -18,50 +18,50 @@ import { TYPES } from "./types";
 export const container = new Container();
 
 container
-    .bind<TimeProvider>(TYPES.TimeProvider)
-    .to(TimeProvider)
-    .inSingletonScope();
+	.bind<TimeProvider>(TYPES.TimeProvider)
+	.to(TimeProvider)
+	.inSingletonScope();
 
 container
-    .bind<PersistenceProvider>(TYPES.PersistenceProvider)
-    .to(PersistenceProvider)
-    .inSingletonScope();
+	.bind<PersistenceProvider>(TYPES.PersistenceProvider)
+	.to(PersistenceProvider)
+	.inSingletonScope();
 
 container.bind<StateRepository>(TYPES.StateRepository).to(StateRepository);
 
 container.bind<StatusService>(TYPES.StatusService).to(StatusService);
 container
-    .bind<StatusTextService>(TYPES.StatusTextService)
-    .to(StatusTextService);
+	.bind<StatusTextService>(TYPES.StatusTextService)
+	.to(StatusTextService);
 
 container
-    .bind<StateController>(TYPES.StateController)
-    .to(StateController)
-    .inSingletonScope();
+	.bind<StateController>(TYPES.StateController)
+	.to(StateController)
+	.inSingletonScope();
 container
-    .bind<TickController>(TYPES.TickController)
-    .to(TickController)
-    .inSingletonScope();
+	.bind<TickController>(TYPES.TickController)
+	.to(TickController)
+	.inSingletonScope();
 container
-    .bind<StateStorageController>(TYPES.StorageController)
-    .to(StateStorageController)
-    .inSingletonScope();
+	.bind<StateStorageController>(TYPES.StorageController)
+	.to(StateStorageController)
+	.inSingletonScope();
 
 container.bind<DiscordService>(TYPES.DiscordService).to(DiscordService);
 
 container
-    .bind<DiscordCommandController>(TYPES.DiscordCommandController)
-    .to(DiscordCommandController)
-    .inSingletonScope();
+	.bind<DiscordCommandController>(TYPES.DiscordCommandController)
+	.to(DiscordCommandController)
+	.inSingletonScope();
 container
-    .bind<DiscordEventController>(TYPES.DiscordEventController)
-    .to(DiscordEventController)
-    .inSingletonScope();
+	.bind<DiscordEventController>(TYPES.DiscordEventController)
+	.to(DiscordEventController)
+	.inSingletonScope();
 container
-    .bind<DiscordClient>(TYPES.DiscordClient)
-    .to(DiscordClient)
-    .inSingletonScope();
+	.bind<DiscordClient>(TYPES.DiscordClient)
+	.to(DiscordClient)
+	.inSingletonScope();
 
 container
-    .bind<CommandoClientOptions>(TYPES.DiscordConfig)
-    .toConstantValue(DISCORD_CLIENT_CONFIG);
+	.bind<CommandoClientOptions>(TYPES.DiscordConfig)
+	.toConstantValue(DISCORD_CLIENT_CONFIG);

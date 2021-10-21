@@ -6,34 +6,34 @@ import type { DiscordCommandController } from "../../DiscordCommandController";
 import { TYPES } from "../../../../types";
 
 class PunchCommand extends Command {
-    readonly #discordCommandController: DiscordCommandController;
+	readonly #discordCommandController: DiscordCommandController;
 
-    constructor(client: CommandoClient) {
-        super(client, {
-            name: "punch",
-            aliases: ["hit"],
-            group: "lisa",
-            memberName: "punch",
-            description: "Punch Lisa.",
-        });
-        this.#discordCommandController =
-            container.get<DiscordCommandController>(
-                TYPES.DiscordCommandController
-            );
-    }
+	constructor(client: CommandoClient) {
+		super(client, {
+			name: "punch",
+			aliases: ["hit"],
+			group: "lisa",
+			memberName: "punch",
+			description: "Punch Lisa.",
+		});
+		this.#discordCommandController =
+			container.get<DiscordCommandController>(
+				TYPES.DiscordCommandController
+			);
+	}
 
-    run(message: CommandoMessage): Promise<Message | Message[]> {
-        return message.say(
-            this.#discordCommandController.performAction(
-                message.author,
-                0,
-                -10,
-                null,
-                ["_Is being punched in the leaves._", "oof.", "ouch ouw owie."],
-                ["The dead feel no pain..."]
-            )
-        );
-    }
+	run(message: CommandoMessage): Promise<Message | Message[]> {
+		return message.say(
+			this.#discordCommandController.performAction(
+				message.author,
+				0,
+				-10,
+				null,
+				["_Is being punched in the leaves._", "oof.", "ouch ouw owie."],
+				["The dead feel no pain..."]
+			)
+		);
+	}
 }
 
 export { PunchCommand };

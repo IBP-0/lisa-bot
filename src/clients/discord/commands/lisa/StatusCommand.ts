@@ -6,25 +6,25 @@ import type { DiscordCommandController } from "../../DiscordCommandController";
 import { TYPES } from "../../../../types";
 
 class StatusCommand extends Command {
-    readonly #discordCommandController: DiscordCommandController;
+	readonly #discordCommandController: DiscordCommandController;
 
-    constructor(client: CommandoClient) {
-        super(client, {
-            name: "status",
-            aliases: [],
-            group: "lisa",
-            memberName: "status",
-            description: "Shows the status of Lisa.",
-        });
-        this.#discordCommandController =
-            container.get<DiscordCommandController>(
-                TYPES.DiscordCommandController
-            );
-    }
+	constructor(client: CommandoClient) {
+		super(client, {
+			name: "status",
+			aliases: [],
+			group: "lisa",
+			memberName: "status",
+			description: "Shows the status of Lisa.",
+		});
+		this.#discordCommandController =
+			container.get<DiscordCommandController>(
+				TYPES.DiscordCommandController
+			);
+	}
 
-    run(message: CommandoMessage): Promise<Message | Message[]> {
-        return message.say(this.#discordCommandController.createStatusText());
-    }
+	run(message: CommandoMessage): Promise<Message | Message[]> {
+		return message.say(this.#discordCommandController.createStatusText());
+	}
 }
 
 export { StatusCommand };

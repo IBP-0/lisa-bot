@@ -1,63 +1,64 @@
 {
-    "name": "lisa-bot",
-    "version": "9.1.1",
-    "private": true,
-    "description": "A discord bot with miscellaneous features",
-    "main": "./dist/src/main.js",
-    "types": "./dist/src/main.d.ts",
-    "scripts": {
-        "start": "npm run build && npm run serve",
-        "serve": "node ./dist/cjs/main.js",
-        "dist": "npm run clean && npm run lint && npm run build && npm run test",
-        "clean": "rimraf ./dist",
-        "build": "tsc --build tsconfig.json",
-        "lint": "eslint ./src/ ./spec/ --ext .ts",
-        "fix": "eslint ./src/ ./spec/ --ext .ts --fix",
-        "test": "ts-node --project spec/tsconfig.json node_modules/jasmine/bin/jasmine --config=jasmine.json"
-    },
-    "keywords": [
-        "discord",
-        "bot"
-    ],
-    "homepage": "https://github.com/FelixRilling/lisa-bot",
-    "author": {
-        "name": "Felix Rilling",
-        "email": "contact@rilling.dev",
-        "url": "https://rilling.dev"
-    },
-    "repository": "https://github.com/FelixRilling/lisa-bot",
-    "license": "MIT",
-    "dependencies": {
-        "discord.js": "github:discordjs/discord.js#12.5.3",
-        "discord.js-commando": "github:discordjs/Commando#v0.12.0",
-        "humanize-duration": "^3.27.0",
-        "inversify": "^6.0.1",
-        "lightdash": "^13.0.2",
-        "lodash": "^4.17.21",
-        "luxon": "^2.0.1",
-        "reflect-metadata": "^0.1.13",
-        "rxjs": "^7.1.0",
-        "sqlite": "^4.0.23",
-        "sqlite3": "^5.0.2",
-        "winston": "^3.3.3"
-    },
-    "devDependencies": {
-        "@types/humanize-duration": "^3.25.1",
-        "@types/jasmine": "^3.7.7",
-        "@types/lodash": "^4.14.170",
-        "@types/luxon": "^2.0.0",
-        "@types/node": "^16.4.13",
-        "@types/ws": "^7.4.4",
-        "@typescript-eslint/eslint-plugin": "^5.0.0",
-        "@typescript-eslint/parser": "^5.0.0",
-        "eslint": "^8.0.0",
-        "eslint-config-prettier": "^8.3.0",
-        "eslint-plugin-prettier": "^4.0.0",
-        "jasmine": "^3.7.0",
-        "prettier": "^2.3.2",
-        "rimraf": "^3.0.2",
-        "ts-mockito": "^2.6.1",
-        "ts-node": "^10.0.0",
-        "typescript": "^4.3.4"
-    }
+	"name": "lisa-bot",
+	"version": "9.1.1",
+	"private": true,
+	"description": "A discord bot with miscellaneous features",
+	"main": "./dist/src/main.js",
+	"types": "./dist/src/main.d.ts",
+	"scripts": {
+		"start": "npm run build && npm run serve",
+		"serve": "node ./dist/cjs/main.js",
+		"dist": "npm run clean && npm run lint && npm run build && npm run test",
+		"clean": "rimraf ./dist",
+		"build": "tsc --build tsconfig.json",
+		"lint": "eslint ./src/ ./spec/ --ext .ts",
+		"fix": "eslint ./src/ ./spec/ --ext .ts --fix",
+		"test": "ts-node --project spec/tsconfig.json node_modules/jasmine/bin/jasmine --config=jasmine.json"
+	},
+	"keywords": [
+		"discord",
+		"bot"
+	],
+	"homepage": "https://github.com/FelixRilling/lisa-bot",
+	"author": {
+		"name": "Felix Rilling",
+		"email": "contact@rilling.dev",
+		"url": "https://rilling.dev"
+	},
+	"repository": "https://github.com/FelixRilling/lisa-bot",
+	"license": "MIT",
+	"dependencies": {
+		"discord.js": "github:discordjs/discord.js#12.5.3",
+		"discord.js-commando": "github:discordjs/Commando#v0.12.0",
+		"humanize-duration": "^3.27.0",
+		"inversify": "^6.0.1",
+		"lightdash": "^13.0.2",
+		"lodash": "^4.17.21",
+		"luxon": "^2.0.1",
+		"reflect-metadata": "^0.1.13",
+		"rxjs": "^7.1.0",
+		"sqlite": "^4.0.23",
+		"sqlite3": "^5.0.2",
+		"winston": "^3.3.3"
+	},
+	"devDependencies": {
+		"@types/humanize-duration": "^3.25.1",
+		"@types/jasmine": "^3.7.7",
+		"@types/lodash": "^4.14.170",
+		"@types/luxon": "^2.0.0",
+		"@types/node": "^16.4.13",
+		"@types/ws": "^7.4.4",
+		"@typescript-eslint/eslint-plugin": "^5.0.0",
+		"@typescript-eslint/parser": "^5.0.0",
+		"eslint": "^8.0.0",
+		"eslint-config-prettier": "^8.3.0",
+		"eslint-plugin-import": "^2.25.2",
+		"eslint-plugin-prettier": "^4.0.0",
+		"jasmine": "^3.7.0",
+		"prettier": "^2.3.2",
+		"rimraf": "^3.0.2",
+		"ts-mockito": "^2.6.1",
+		"ts-node": "^10.0.0",
+		"typescript": "^4.3.4"
+	}
 }

@@ -6,10 +6,10 @@ import { DateTime } from "luxon";
  */
 @injectable()
 export class TimeProvider {
-    /**
-     * Returns current time in UTC.
-     */
-    now(): DateTime {
-        return DateTime.now().toUTC();
-    }
+	/**
+	 * Returns current time in UTC.
+	 */
+	now(): DateTime {
+		return DateTime.now().toUTC();
+	}
 }
