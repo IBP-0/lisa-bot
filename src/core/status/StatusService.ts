@@ -42,7 +42,7 @@ class StatusService {
 	}
 
 	/**
-	 * Returns an relative index from 0 to 1 how well lisa is doing, where 1 is the best and 0 the worst.
+	 * Returns a relative index from 0 to 1 how well lisa is doing, where 1 is the best and 0 the worst.
 	 *
 	 * @return relative index.
 	 */
