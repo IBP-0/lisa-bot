@@ -31,12 +31,11 @@ npm-debug.*
 tsconfig.tsbuildinfo
 tsconfig.*.tsbuildinfo
 
-
-
 # Build Output files
 dist/
 data/
 
+# CUSTOM
 
-### CUSTOM
-deploy.sh
+## Deployment
+.deploy/
