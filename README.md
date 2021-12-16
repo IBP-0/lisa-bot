@@ -1,4 +1,4 @@
-# Lisa
+# Lisa-Bot
 
 A discord bot with miscellaneous features.
 
@@ -11,8 +11,7 @@ To get started using Lisa, check `$help` for a list of commands.
 
 ## Getting Lisa
 
-If you want the bot to join your server,
-go to <https://discordapp.com/oauth2/authorize?&client_id=269802184571486218&scope=bot> and confirm your server.
+If you want the bot to join your server, go to <https://discord.com/api/oauth2/authorize?client_id=263671526279086092&permissions=51200&scope=bot> and confirm your server.
 
 ## Setting up Lisa yourself
 
