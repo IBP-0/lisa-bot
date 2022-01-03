@@ -1,65 +1,69 @@
-import type { Duration } from "moment";
-import { duration } from "moment";
+import { inject, injectable } from "inversify";
+import type { Duration } from "luxon";
 import { rootLogger } from "../../logger";
-import type { LisaState } from "../state/LisaState";
-import { HAPPINESS_INITIAL, WATER_INITIAL } from "../state/LisaState";
-import { injectable } from "inversify";
+import { TYPES } from "../../types";
+import type { State } from "../state/State";
+import { HAPPINESS_INITIAL, WATER_INITIAL } from "../state/State";
+import { TimeProvider } from "../time/TimeProvider";
 
 @injectable()
 class StatusService {
-    private static readonly logger = rootLogger.child({
-        target: StatusService,
-    });
+	private static readonly logger = rootLogger.child({
+		target: StatusService,
+	});
 
-    public isAlive(state: LisaState): boolean {
-        return state.death.timestamp == null;
-    }
+	readonly #timeProvider: TimeProvider;
 
-    public getLifetime(state: LisaState): Duration {
-        const birth = state.birth.timestamp.getTime();
+	constructor(@inject(TYPES.TimeProvider) timeProvider: TimeProvider) {
+		this.#timeProvider = timeProvider;
+	}
 
-        if (!this.isAlive(state)) {
-            const death = state.death.timestamp!.getTime();
-            return duration(death - birth);
-        }
+	isAlive(state: State): boolean {
+		return state.death.timestamp == null;
+	}
 
-        const now = Date.now();
-        return duration(now - birth);
-    }
+	getLifetime(state: State): Duration {
+		const birth = state.birth.timestamp;
 
-    public getTimeSinceDeath(state: LisaState): Duration | null {
-        if (this.isAlive(state)) {
-            return null;
-        }
+		if (!this.isAlive(state)) {
+			const death = state.death.timestamp!;
+			return birth.diff(death);
+		}
+		return birth.diff(this.#timeProvider.now());
+	}
 
-        const death = state.death.timestamp!.getTime();
-        const now = Date.now();
-        return duration(death - now);
-    }
+	getTimeSinceDeath(state: State): Duration | null {
+		if (this.isAlive(state)) {
+			return null;
+		}
 
-    /**
-     * Returns an relative index from 0 to 1 how well lisa is doing, where 1 is the best and 0 the worst.
-     *
-     * @return relative index.
-     */
-    public calculateRelativeIndex(state: LisaState): number {
-        let relativeWater = state.status.water / WATER_INITIAL;
-        if (relativeWater > 1) {
-            relativeWater = 1;
-        }
-        const relativeHappiness = state.status.happiness / HAPPINESS_INITIAL;
+		const death = state.death.timestamp!;
+		return death.diff(this.#timeProvider.now());
+	}
 
-        const relativeIndex =
-            relativeWater < relativeHappiness
-                ? relativeWater
-                : relativeHappiness;
-        StatusService.logger.debug(
-            `Calculated relative index ${relativeIndex.toFixed(2)} for water ${
-                state.status.water
-            } and happiness ${state.status.happiness}.`
-        );
-        return relativeIndex;
-    }
+	/**
+	 * Returns a relative index from 0 to 1 how well lisa is doing, where 1 is the best and 0 the worst.
+	 *
+	 * @return relative index.
+	 */
+	calculateRelativeIndex(state: State): number {
+		let relativeWater = state.status.water / WATER_INITIAL;
+		if (relativeWater > 1) {
+			relativeWater = 1;
+		}
+		const relativeHappiness = state.status.happiness / HAPPINESS_INITIAL;
+
+		const relativeIndex =
+			relativeWater < relativeHappiness
+				? relativeWater
+				: relativeHappiness;
+		StatusService.logger.debug(
+			`Calculated relative index ${relativeIndex.toFixed(2)} for water ${
+				state.status.water
+			} and happiness ${state.status.happiness}.`
+		);
+		return relativeIndex;
+	}
 }
 
 export { StatusService };

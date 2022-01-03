@@ -1,120 +1,120 @@
 import type { User } from "discord.js";
+import { inject, injectable } from "inversify";
 import { sample } from "lodash";
+import type { DeathCause } from "../../core/state/State";
 import { StateController } from "../../core/state/StateController";
-import type { LisaDeathCause } from "../../core/state/LisaState";
 import { StatusService } from "../../core/status/StatusService";
 import { StatusTextService } from "../../core/status/StatusTextService";
-import { DiscordService } from "./DiscordService";
 import { rootLogger } from "../../logger";
-import { inject, injectable } from "inversify";
 import { TYPES } from "../../types";
+import { DiscordService } from "./DiscordService";
 
 @injectable()
 class DiscordCommandController {
-    private static readonly logger = rootLogger.child({
-        target: DiscordCommandController,
-    });
-    private static readonly DISCORD_USER_INITIATOR = "Discord user";
+	private static readonly logger = rootLogger.child({
+		target: DiscordCommandController,
+	});
+	private static readonly DISCORD_USER_INITIATOR = "Discord user";
 
-    private readonly lisaStateController: StateController;
-    private readonly lisaStatusService: StatusService;
-    private readonly lisaTextService: StatusTextService;
-    private readonly lisaDiscordService: DiscordService;
+	readonly #stateController: StateController;
+	readonly #statusService: StatusService;
+	readonly #statusTextService: StatusTextService;
+	readonly #discordService: DiscordService;
 
-    constructor(
-        @inject(TYPES.LisaStateController)
-        lisaStateController: StateController,
-        @inject(TYPES.LisaStatusService) lisaStatusService: StatusService,
-        @inject(TYPES.LisaTextService) lisaTextService: StatusTextService,
-        @inject(TYPES.DiscordService) lisaDiscordService: DiscordService
-    ) {
-        this.lisaDiscordService = lisaDiscordService;
-        this.lisaTextService = lisaTextService;
-        this.lisaStatusService = lisaStatusService;
-        this.lisaStateController = lisaStateController;
-    }
+	constructor(
+		@inject(TYPES.StateController)
+		stateController: StateController,
+		@inject(TYPES.StatusService) statusService: StatusService,
+		@inject(TYPES.StatusTextService) statusTextService: StatusTextService,
+		@inject(TYPES.DiscordService) discordService: DiscordService
+	) {
+		this.#discordService = discordService;
+		this.#statusTextService = statusTextService;
+		this.#statusService = statusService;
+		this.#stateController = stateController;
+	}
 
-    public performAction(
-        author: User,
-        waterModifier: number,
-        happinessModifier: number,
-        allowedUserIds: string[] | null,
-        textSuccess: string[],
-        textDead: string[],
-        textNotAllowed: string[] = []
-    ): string {
-        if (!this.lisaDiscordService.isUserAllowed(allowedUserIds, author)) {
-            return sample(textNotAllowed)!;
-        }
-        if (!this.isAlive()) {
-            return sample(textDead)!;
-        }
+	performAction(
+		author: User,
+		waterModifier: number,
+		happinessModifier: number,
+		allowedUserIds: string[] | null,
+		textSuccess: string[],
+		textDead: string[],
+		textNotAllowed: string[] = []
+	): string {
+		if (!this.#discordService.isUserAllowed(allowedUserIds, author)) {
+			return sample(textNotAllowed)!;
+		}
+		if (!this.#isAlive()) {
+			return sample(textDead)!;
+		}
 
-        DiscordCommandController.logger.info(
-            `Discord user modified status; water modifier ${waterModifier}, happiness modifier ${happinessModifier}.`
-        );
-        this.lisaStateController.modifyLisaStatus(
-            waterModifier,
-            happinessModifier,
-            DiscordCommandController.DISCORD_USER_INITIATOR
-        );
+		DiscordCommandController.logger.info(
+			`Discord user modified status; water modifier ${waterModifier}, happiness modifier ${happinessModifier}.`
+		);
+		this.#stateController.modifyLisaStatus(
+			waterModifier,
+			happinessModifier,
+			DiscordCommandController.DISCORD_USER_INITIATOR
+		);
 
-        return [sample(textSuccess)!, this.createStatusText()].join("\n");
-    }
+		return [sample(textSuccess)!, this.createStatusText()].join("\n");
+	}
 
-    public performKill(
-        author: User,
-        cause: LisaDeathCause,
-        allowedUserIds: string[] | null,
-        textSuccess: string[],
-        textAlreadyDead: string[],
-        textNotAllowed: string[] = []
-    ): string {
-        if (!this.lisaDiscordService.isUserAllowed(allowedUserIds, author)) {
-            return sample(textNotAllowed)!;
-        }
-        if (!this.isAlive()) {
-            return sample(textAlreadyDead)!;
-        }
+	performKill(
+		author: User,
+		cause: DeathCause,
+		allowedUserIds: string[] | null,
+		textSuccess: string[],
+		textAlreadyDead: string[],
+		textNotAllowed: string[] = []
+	): string {
+		if (!this.#discordService.isUserAllowed(allowedUserIds, author)) {
+			return sample(textNotAllowed)!;
+		}
+		if (!this.#isAlive()) {
+			return sample(textAlreadyDead)!;
+		}
 
-        this.lisaStateController.killLisa(
-            cause,
-            DiscordCommandController.DISCORD_USER_INITIATOR
-        );
+		this.#stateController.killLisa(
+			cause,
+			DiscordCommandController.DISCORD_USER_INITIATOR
+		);
 
-        return [sample(textSuccess)!, this.createStatusText()].join("\n");
-    }
+		return [sample(textSuccess)!, this.createStatusText()].join("\n");
+	}
 
-    performReplant(
-        author: User,
-        allowedUserIds: string[] | null,
-        textWasAlive: string[],
-        textWasDead: string[],
-        textNotAllowed: string[] = []
-    ): string {
-        if (!this.lisaDiscordService.isUserAllowed(allowedUserIds, author)) {
-            return sample(textNotAllowed)!;
-        }
+	performReplant(
+		author: User,
+		allowedUserIds: string[] | null,
+		textWasAlive: string[],
+		textWasDead: string[],
+		textNotAllowed: string[] = []
+	): string {
+		if (!this.#discordService.isUserAllowed(allowedUserIds, author)) {
+			return sample(textNotAllowed)!;
+		}
 
-        const wasAlive = this.isAlive();
-        this.lisaStateController.replantLisa(
-            DiscordCommandController.DISCORD_USER_INITIATOR
-        );
+		const wasAlive = this.#isAlive();
+		this.#stateController.replantLisa(
+			DiscordCommandController.DISCORD_USER_INITIATOR
+		);
 
-        return sample(wasAlive ? textWasAlive : textWasDead)!;
-    }
+		return sample(wasAlive ? textWasAlive : textWasDead)!;
+	}
 
-    public createStatusText(): string {
-        return this.lisaTextService.createStatusText(
-            this.lisaStateController.getStateCopy()
-        );
-    }
+	createStatusText(): string {
+		return this.#statusTextService.createStatusText(
+			this.#stateController.getStateCopy()
+		);
+	}
 
-    private isAlive(): boolean {
-        return this.lisaStatusService.isAlive(
-            this.lisaStateController.getStateCopy()
-        );
-    }
+	#isAlive(): boolean {
+		return this.#statusService.isAlive(
+			this.#stateController.getStateCopy()
+		);
+	}
 }
 
 export { DiscordCommandController };

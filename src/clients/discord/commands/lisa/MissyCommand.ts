@@ -8,35 +8,36 @@ import { TYPES } from "../../../../types";
 const MISSY_ID = ["273221196001181697"];
 
 class MissyCommand extends Command {
-    private readonly lisaDiscordCommandController: DiscordCommandController;
+	readonly #discordCommandController: DiscordCommandController;
 
-    constructor(client: CommandoClient) {
-        super(client, {
-            name: "missy",
-            aliases: [],
-            group: "lisa",
-            memberName: "missy",
-            description: "baaff",
-            hidden: true,
-        });
-        this.lisaDiscordCommandController = container.get<DiscordCommandController>(
-            TYPES.DiscordCommandController
-        );
-    }
+	constructor(client: CommandoClient) {
+		super(client, {
+			name: "missy",
+			aliases: [],
+			group: "lisa",
+			memberName: "missy",
+			description: "baaff",
+			hidden: true,
+		});
+		this.#discordCommandController =
+			container.get<DiscordCommandController>(
+				TYPES.DiscordCommandController
+			);
+	}
 
-    run(message: CommandoMessage): Promise<Message | Message[]> {
-        return message.say(
-            this.lisaDiscordCommandController.performAction(
-                message.author,
-                0,
-                40,
-                MISSY_ID,
-                ["_Baaaaaaaaaaaaaa_"],
-                ["OwO whats this? a dead Lisa..."],
-                ["You're not a missy <w<"]
-            )
-        );
-    }
+	run(message: CommandoMessage): Promise<Message | Message[]> {
+		return message.say(
+			this.#discordCommandController.performAction(
+				message.author,
+				0,
+				40,
+				MISSY_ID,
+				["_Baaaaaaaaaaaaaa_"],
+				["OwO whats this? a dead Lisa..."],
+				["You're not a missy <w<"]
+			)
+		);
+	}
 }
 
 export { MissyCommand };

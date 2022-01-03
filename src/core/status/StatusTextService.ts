@@ -1,68 +1,73 @@
-import type { LisaState } from "../state/LisaState";
-import { StatusService } from "./StatusService";
+import { humanizer } from "humanize-duration";
 import { inject, injectable } from "inversify";
+import type { Duration } from "luxon";
 import { TYPES } from "../../types";
+import type { State } from "../state/State";
+import { StatusService } from "./StatusService";
+
+const statusHumanizer = humanizer({
+	language: "en",
+	round: true,
+});
+
+// Luxon does not support duration localization yet.
+const humanize = (duration: Duration): string =>
+	statusHumanizer(duration.toMillis());
 
 @injectable()
 class StatusTextService {
-    readonly #lisaStatusService: StatusService;
+	readonly #statusService: StatusService;
 
-    constructor(
-        @inject(TYPES.LisaStatusService) lisaStatusService: StatusService
-    ) {
-        this.#lisaStatusService = lisaStatusService;
-    }
+	constructor(@inject(TYPES.StatusService) statusService: StatusService) {
+		this.#statusService = statusService;
+	}
 
-    public createStatusText(state: LisaState): string {
-        const statusLabel = `Lisa is ${this.createStatusLabel(state)}.`;
-        const scoreText = this.createScoreText(state);
-        let text: string;
+	createStatusText(state: State): string {
+		const statusLabel = `Lisa is ${this.createStatusLabel(state)}.`;
+		const scoreText = this.#createScoreText(state);
+		let text: string;
 
-        if (!this.#lisaStatusService.isAlive(state)) {
-            const timeSinceDeathLabel = this.#lisaStatusService
-                .getTimeSinceDeath(state)!
-                .humanize();
+		if (!this.#statusService.isAlive(state)) {
+			const timeSinceDeathLabel = humanize(
+				this.#statusService.getTimeSinceDeath(state)!
+			);
 
-            text = `Lisa died ${timeSinceDeathLabel} ago, she was killed by ${
-                state.death.initiator ?? "anonymous"
-            } through ${state.death.cause ?? "unknown cause"}.`;
-        } else {
-            const waterLevel = state.status.water.toFixed(2);
-            const happinessLevel = state.status.happiness.toFixed(2);
+			text = `Lisa died ${timeSinceDeathLabel} ago, she was killed by ${
+				state.death.initiator ?? "anonymous"
+			} through ${state.death.cause ?? "unknown cause"}.`;
+		} else {
+			const waterLevel = state.status.water.toFixed(2);
+			const happinessLevel = state.status.happiness.toFixed(2);
 
-            text = `Water: ${waterLevel}% | Happiness: ${happinessLevel}%.`;
-        }
+			text = `Water: ${waterLevel}% | Happiness: ${happinessLevel}%.`;
+		}
 
-        return [statusLabel, text, scoreText].join("\n");
-    }
+		return [statusLabel, text, scoreText].join("\n");
+	}
 
-    public createStatusLabel(state: LisaState): string {
-        if (!this.#lisaStatusService.isAlive(state)) {
-            return "is dead";
-        }
+	createStatusLabel(state: State): string {
+		if (!this.#statusService.isAlive(state)) {
+			return "is dead";
+		}
 
-        const relativeIndex = this.#lisaStatusService.calculateRelativeIndex(
-            state
-        );
-        if (relativeIndex > 0.666) {
-            return "doing great";
-        } else if (relativeIndex > 0.333) {
-            return "doing fine";
-        }
-        return "close to dying";
-    }
+		const relativeIndex = this.#statusService.calculateRelativeIndex(state);
+		if (relativeIndex > 0.666) {
+			return "doing great";
+		} else if (relativeIndex > 0.333) {
+			return "doing fine";
+		}
+		return "close to dying";
+	}
 
-    private createScoreText(state: LisaState): string {
-        const lifetimeLabel = this.#lisaStatusService
-            .getLifetime(state)
-            .humanize();
-        const highScoreLabel = state.bestLifetimeDuration.humanize();
-        const currentLabel = this.#lisaStatusService.isAlive(state)
-            ? "Current lifetime"
-            : "Lifetime";
+	#createScoreText(state: State): string {
+		const lifetimeLabel = humanize(this.#statusService.getLifetime(state));
+		const highScoreLabel = humanize(state.bestLifetimeDuration);
+		const currentLabel = this.#statusService.isAlive(state)
+			? "Current lifetime"
+			: "Lifetime";
 
-        return `${currentLabel}: ${lifetimeLabel} | Best lifetime: ${highScoreLabel}.`;
-    }
+		return `${currentLabel}: ${lifetimeLabel} | Best lifetime: ${highScoreLabel}.`;
+	}
 }
 
 export { StatusTextService };

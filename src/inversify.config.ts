@@ -1,61 +1,67 @@
+import type { CommandoClientOptions } from "discord.js-commando";
 import { Container } from "inversify";
-import { LisaStateRepository } from "./core/state/LisaStateRepository";
-import { TYPES } from "./types";
+import { DiscordClient } from "./clients/discord/DiscordClient";
+import { DiscordCommandController } from "./clients/discord/DiscordCommandController";
+import { DiscordEventController } from "./clients/discord/DiscordEventController";
+import { DiscordService } from "./clients/discord/DiscordService";
+import { DISCORD_CLIENT_CONFIG } from "./config";
+import { PersistenceProvider } from "./core/PersistenceProvider";
+import { StateController } from "./core/state/StateController";
+import { StateRepository } from "./core/state/StateRepository";
+import { StateStorageController } from "./core/state/StateStorageController";
 import { StatusService } from "./core/status/StatusService";
 import { StatusTextService } from "./core/status/StatusTextService";
-import { StateController } from "./core/state/StateController";
-import type { CommandoClientOptions } from "discord.js-commando";
-import { DiscordCommandController } from "./clients/discord/DiscordCommandController";
-import { DISCORD_CLIENT_CONFIG } from "./config";
 import { TickController } from "./core/time/TickController";
-import { DiscordService } from "./clients/discord/DiscordService";
-import { DiscordClient } from "./clients/discord/DiscordClient";
-import { DiscordEventController } from "./clients/discord/DiscordEventController";
-import { PersistenceProvider } from "./core/PersistenceProvider";
-import { StateStorageController } from "./core/state/StateStorageController";
+import { TimeProvider } from "./core/time/TimeProvider";
+import { TYPES } from "./types";
 
 export const container = new Container();
 
 container
-    .bind<PersistenceProvider>(TYPES.PersistenceProvider)
-    .to(PersistenceProvider)
-    .inSingletonScope();
+	.bind<TimeProvider>(TYPES.TimeProvider)
+	.to(TimeProvider)
+	.inSingletonScope();
 
 container
-    .bind<LisaStateRepository>(TYPES.LisaStateRepository)
-    .to(LisaStateRepository);
+	.bind<PersistenceProvider>(TYPES.PersistenceProvider)
+	.to(PersistenceProvider)
+	.inSingletonScope();
 
-container.bind<StatusService>(TYPES.LisaStatusService).to(StatusService);
-container.bind<StatusTextService>(TYPES.LisaTextService).to(StatusTextService);
+container.bind<StateRepository>(TYPES.StateRepository).to(StateRepository);
+
+container.bind<StatusService>(TYPES.StatusService).to(StatusService);
+container
+	.bind<StatusTextService>(TYPES.StatusTextService)
+	.to(StatusTextService);
 
 container
-    .bind<StateController>(TYPES.LisaStateController)
-    .to(StateController)
-    .inSingletonScope();
+	.bind<StateController>(TYPES.StateController)
+	.to(StateController)
+	.inSingletonScope();
 container
-    .bind<TickController>(TYPES.LisaTickController)
-    .to(TickController)
-    .inSingletonScope();
+	.bind<TickController>(TYPES.TickController)
+	.to(TickController)
+	.inSingletonScope();
 container
-    .bind<StateStorageController>(TYPES.StateStorageController)
-    .to(StateStorageController)
-    .inSingletonScope();
+	.bind<StateStorageController>(TYPES.StorageController)
+	.to(StateStorageController)
+	.inSingletonScope();
 
 container.bind<DiscordService>(TYPES.DiscordService).to(DiscordService);
 
 container
-    .bind<DiscordCommandController>(TYPES.DiscordCommandController)
-    .to(DiscordCommandController)
-    .inSingletonScope();
+	.bind<DiscordCommandController>(TYPES.DiscordCommandController)
+	.to(DiscordCommandController)
+	.inSingletonScope();
 container
-    .bind<DiscordEventController>(TYPES.DiscordEventController)
-    .to(DiscordEventController)
-    .inSingletonScope();
+	.bind<DiscordEventController>(TYPES.DiscordEventController)
+	.to(DiscordEventController)
+	.inSingletonScope();
 container
-    .bind<DiscordClient>(TYPES.DiscordClient)
-    .to(DiscordClient)
-    .inSingletonScope();
+	.bind<DiscordClient>(TYPES.DiscordClient)
+	.to(DiscordClient)
+	.inSingletonScope();
 
 container
-    .bind<CommandoClientOptions>(TYPES.DiscordConfig)
-    .toConstantValue(DISCORD_CLIENT_CONFIG);
+	.bind<CommandoClientOptions>(TYPES.DiscordConfig)
+	.toConstantValue(DISCORD_CLIENT_CONFIG);
