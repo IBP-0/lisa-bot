@@ -19,8 +19,8 @@ If you want the bot to join your server, go
 to <https://discord.com/api/oauth2/authorize?client_id=263671526279086092&permissions=51200&scope=bot> and confirm your
 server.
 
-## Setting Up Lisa yourself
+## Setting Up Lisa Yourself
 
-After you cloned the repository, running `npm ci --prod` from your CLI should install all dependencies. Then, add your
-discord API token to the environment variables as `DISCORD_TOKEN`. After you've done that, running `npm run serve` will
+After you cloned the repository via Git, running `npm ci --prod` from your CLI should install all dependencies. Then, add your
+discord API token to the environment variables as `DISCORD_TOKEN`. After you've done that, running `npm run start` will
 start the bot.
