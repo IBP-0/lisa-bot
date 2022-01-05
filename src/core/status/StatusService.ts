@@ -29,7 +29,8 @@ class StatusService {
 			const death = state.death.timestamp!;
 			return birth.diff(death);
 		}
-		return birth.diff(this.#timeProvider.now());
+		const now = this.#timeProvider.now();
+		return birth.diff(now);
 	}
 
 	getTimeSinceDeath(state: State): Duration | null {
@@ -38,7 +39,8 @@ class StatusService {
 		}
 
 		const death = state.death.timestamp!;
-		return death.diff(this.#timeProvider.now());
+		const now = this.#timeProvider.now();
+		return death.diff(now);
 	}
 
 	/**
