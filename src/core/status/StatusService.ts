@@ -27,10 +27,10 @@ class StatusService {
 
 		if (!this.isAlive(state)) {
 			const death = state.death.timestamp!;
-			return birth.diff(death);
+			return death.diff(birth);
 		}
 		const now = this.#timeProvider.now();
-		return birth.diff(now);
+		return now.diff(birth);
 	}
 
 	getTimeSinceDeath(state: State): Duration | null {
@@ -40,7 +40,7 @@ class StatusService {
 
 		const death = state.death.timestamp!;
 		const now = this.#timeProvider.now();
-		return death.diff(now);
+		return now.diff(death);
 	}
 
 	/**
