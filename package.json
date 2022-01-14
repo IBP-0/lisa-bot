@@ -30,14 +30,8 @@
 	"dependencies": {
 		"discord.js": "github:discordjs/discord.js#12.5.3",
 		"discord.js-commando": "github:discordjs/Commando#v0.12.0",
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
 		"humanize-duration": "^3.27.1",
->>>>>>> Stashed changes
-=======
 		"humanize-duration": "^3.27.1",
->>>>>>> Stashed changes
 		"inversify": "^6.0.1",
 		"lightdash": "^13.0.2",
 		"lodash": "^4.17.21",
