@@ -202,7 +202,7 @@ class StateController {
 
 	#updateBestLifetimeIfRequired(state: State): void {
 		const lifetime = this.#statusService.getLifetime(state);
-		if (lifetime > state.bestLifetimeDuration) {
+		if (lifetime.toMillis() > state.bestLifetimeDuration.toMillis()) {
 			StateController.logger.silly(
 				`Increasing high score from ${state.bestLifetimeDuration.toMillis()} to ${lifetime.toMillis()}.`
 			);
